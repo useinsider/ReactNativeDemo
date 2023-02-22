@@ -1,7 +1,7 @@
 # Insider React-Native Demo
 
 <p align="center">
-  <img src="assets/insider-logo-read-me.jpg" width="250">
+  <img src="assets/insider-logo-read-me.jpg">
   
   <table align="center">
     <tr>
