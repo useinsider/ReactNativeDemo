@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { PropsWithChildren } from "react";
 import {
   SafeAreaView,
@@ -46,6 +46,9 @@ import ContentOptimizer from "./src/insider/ContentOptimizer";
 import RNInsider from "react-native-insider";
 import InsiderCallbackType from "react-native-insider/src/InsiderCallbackType";
 
+import messaging from "@react-native-firebase/messaging";
+import auth from "@react-native-firebase/auth";
+
 function Section({ children, title }: SectionProps): JSX.Element {
   const isDarkMode = useColorScheme() === "dark";
   return (
@@ -73,6 +76,29 @@ function Section({ children, title }: SectionProps): JSX.Element {
     </View>
   );
 }
+
+async function requestUserPermission() {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log("[FCM][requestUserPermission]: Authorization status:", authStatus);
+  }
+
+  getToken();
+}
+
+const getToken = async () => {
+  const newToken = await messaging().getToken();
+
+  if (newToken) {
+    console.log("[FCM][getToken]: Token:", newToken);
+  } else {
+    return newToken;
+  }
+};
 
 async function requestLocationPermission() {
   try {
@@ -149,14 +175,47 @@ const initInsider = () => {
 };
 
 function App(): JSX.Element {
+  useEffect(() => {
+    requestLocationPermission();
+    requestUserPermission();
+
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      console.log(
+        "[FCM][onMessage]: A new FCM message arrived! :" + JSON.stringify(remoteMessage)
+      );
+
+      if (((remoteMessage.data) || {}).source === "Insider") {
+        RNInsider.handleNotification(remoteMessage.data);
+      }
+    });
+
+    messaging().onNotificationOpenedApp((remoteMessage) => {
+      console.log(
+        "[FCM][onNotificationOpenedApp]: Notification caused app to open:" + JSON.stringify(remoteMessage)
+      );
+    });
+
+    messaging()
+      .getInitialNotification()
+      .then((remoteMessage) => {
+        if (remoteMessage) {
+          console.log(
+            "[FCM][getInitialNotification]: Notification caused app to open from quit state:",
+            remoteMessage.notification
+          );
+        }
+      });
+
+    initInsider();
+
+    return unsubscribe;
+  }, []);
+
   const isDarkMode = useColorScheme() === "dark";
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.black : Colors.white,
   };
-
-  requestLocationPermission();
-  initInsider();
 
   return (
     <SafeAreaView style={backgroundStyle}>

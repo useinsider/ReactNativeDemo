@@ -13,7 +13,10 @@
     "react": "18.2.0",
     "react-native": "0.71.3",
     "react-native-dropdown-picker": "^5.4.4",
-    "react-native-insider": "^5.5.1"
+    "react-native-insider": "^5.5.1",
+    "@react-native-firebase/app": "^17.3.0",
+    "@react-native-firebase/auth": "^17.3.0",
+    "@react-native-firebase/messaging": "^17.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
