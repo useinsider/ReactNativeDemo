@@ -1,4 +1,4 @@
-# Insider React-Native Demo
+# Insider React-Native Demo with Firebase Packages
 
 <p align="center">
   <img src="assets/insider-logo-read-me.jpg">
@@ -15,6 +15,8 @@
 ## Description
 
 This Demo contains simple methods that you can use with the Insider SDK.
+
+Note: You Can see the detailed usage of the methods used with the integration with Firebase by examining the `index.js`, `App.tsx`, and `ios/ReactNativeDemo/AppDelegate.mm` files.
 
 ## Preview
 
@@ -52,7 +54,8 @@ Note: Can easily find the warnings added as comments by searching the `FIXME-INS
 ### iOS
 
 1. Go to the iOS folder with terminal and run the `pod install` command.
-2. Open XCode and check the app group and bundle identifier for all targets.
-3. Replace `insider` URL type in main target Info -> URL Types with your partner name. (This step is important to add test device with QR or Email in the panel.)
-4. Change APP_GROUP variables value in `InsiderNotificationService/NotificationService.m` and `InsiderNotificationContent/NotificationViewController.m` files.
-5. And run project with XCode. 
+2. Add `GoogleService-Info.plist` to main target.
+3. Open XCode and check the app group and bundle identifier for all targets.
+4. Replace `insider` URL type in main target Info -> URL Types with your partner name. (This step is important to add test device with QR or Email in the panel.)
+5. Change APP_GROUP variables value in `InsiderNotificationService/NotificationService.m` and `InsiderNotificationContent/NotificationViewController.m` files.
+6. And run project with XCode. 
