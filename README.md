@@ -44,7 +44,7 @@ Note: Can easily find the warnings added as comments by searching the `FIXME-INS
 
 ### Android
 
-1. Add `google-service.json` and `agconnect-service.json` to `android/app` folder.
+1. Add `google-services.json` and `agconnect-services.json` to `android/app` folder.
 2. Add your keystore file to `android/app` folder and replace `signingConfigs` attributes in `android/app/build.gradle` file with your info.
 3. Replace manifestPlaceholders -> partner value with your partner name in `android/app/build.gradle` file. (This step is important to add test device with QR or Email in the panel.)
 4. And run project with `npm run android` command.
