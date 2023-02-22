@@ -19,10 +19,18 @@ This Demo contains simple methods that you can use with the Insider SDK.
 ## Preview
 
 <table align="center">
-  <tr>
-    <td><img src="assets/ios-preview.gif" width="250"></td>
-    <td><img src="assets/android-preview.gif" width="250"></td>
-  </tr>
+  <thead>
+    <tr>
+      <th>iOS</th>
+      <th>Android</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img src="assets/ios-preview.gif" width="250"></td>
+      <td><img src="assets/android-preview.gif" width="250"></td>
+    </tr>
+  </tbody>
 </table>
 
 
