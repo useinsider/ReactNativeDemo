@@ -21,15 +21,8 @@ Note: You Can see the detailed usage of the methods used with the integration wi
 ## Preview
 
 <table align="center">
-  <thead>
-    <tr>
-      <th>iOS</th>
-      <th>Android</th>
-    </tr>
-  </thead>
   <tbody>
     <tr>
-      <td><img src="assets/ios-preview.gif" width="250"></td>
       <td><img src="assets/android-preview.gif" width="250"></td>
     </tr>
   </tbody>
