@@ -2,7 +2,6 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <Firebase.h>
-#import <InsiderMobile/Insider.h>
 
 @implementation AppDelegate
 
@@ -38,52 +37,6 @@
 {
   return true;
 }
-
-+(void)load {
-  [Insider setIsUNUserNotificationSwizzlersDisabled:true];
-}
-
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
-    NSDictionary *userInfo = response.notification.request.content.userInfo;
-    
-    if (userInfo[@"source"] && [userInfo[@"source"] isEqualToString:@"Insider"]) {
-        [Insider triggerPushProcessWithUserInfo:userInfo];
-    }
-}
-
-// If you want to enable push view on foreground
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    NSDictionary *userInfo = notification.request.content.userInfo;
-    
-    if (userInfo[@"source"] && [userInfo[@"source"] isEqualToString:@"Insider"]) {
-        if (userInfo[@"inapp_test"]) {
-            [Insider triggerPushProcessWithUserInfo:userInfo];
-        } else {
-            if (@available(iOS 14, *)) {
-                completionHandler(UNNotificationPresentationOptionSound +
-                                  UNNotificationPresentationOptionBadge +
-                                  UNNotificationPresentationOptionBanner +
-                                  UNNotificationPresentationOptionList);
-            } else {
-                completionHandler(UNNotificationPresentationOptionSound +
-                                  UNNotificationPresentationOptionBadge +
-                                  UNNotificationPresentationOptionAlert);
-            }
-        }
-    }
-}
-
-/* If you want to disable push view on foreground use this code
- 
- - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-     NSDictionary *userInfo = notification.request.content.userInfo;
-     
-     if (userInfo[@"source"] && [userInfo[@"source"] isEqualToString:@"Insider"]) {
-        [Insider triggerPushProcessWithUserInfo:userInfo];
-     }
- }
- 
- */
 
 
 @end
