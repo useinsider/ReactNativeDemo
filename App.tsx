@@ -84,7 +84,10 @@ async function requestUserPermission() {
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
   if (enabled) {
-    console.log("[FCM][requestUserPermission]: Authorization status:", authStatus);
+    console.log(
+      "[FCM][requestUserPermission]: Authorization status:",
+      authStatus
+    );
   }
 
   getToken();
@@ -181,30 +184,34 @@ function App(): JSX.Element {
 
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
       console.log(
-        "[FCM][onMessage]: A new FCM message arrived! :" + JSON.stringify(remoteMessage)
+        "[FCM][onMessage]: A new FCM message arrived! :" +
+          JSON.stringify(remoteMessage)
       );
 
-      if (((remoteMessage.data) || {}).source === "Insider") {
+      if ((remoteMessage.data || {}).source === "Insider") {
         RNInsider.handleNotification(remoteMessage.data);
       }
     });
 
     messaging().onNotificationOpenedApp((remoteMessage) => {
       console.log(
-        "[FCM][onNotificationOpenedApp]: Notification caused app to open:" + JSON.stringify(remoteMessage)
+        "[FCM][onNotificationOpenedApp]: Notification caused app to open:" +
+          JSON.stringify(remoteMessage)
       );
     });
 
-    messaging()
-      .getInitialNotification()
-      .then((remoteMessage) => {
-        if (remoteMessage) {
-          console.log(
-            "[FCM][getInitialNotification]: Notification caused app to open from quit state:",
-            remoteMessage.notification
-          );
-        }
-      });
+    setInterval(() => {
+      messaging()
+        .getInitialNotification()
+        .then((remoteMessage) => {
+          if (remoteMessage) {
+            console.log(
+              "[FCM][getInitialNotification]: Notification caused app to open from quit state:",
+              remoteMessage.notification
+            );
+          }
+        });
+    }, 10000);
 
     initInsider();
 
