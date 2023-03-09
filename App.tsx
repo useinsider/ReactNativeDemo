@@ -200,18 +200,16 @@ function App(): JSX.Element {
       );
     });
 
-    setInterval(() => {
-      messaging()
-        .getInitialNotification()
-        .then((remoteMessage) => {
-          if (remoteMessage) {
-            console.log(
-              "[FCM][getInitialNotification]: Notification caused app to open from quit state:",
-              remoteMessage.notification
-            );
-          }
-        });
-    }, 10000);
+    messaging()
+      .getInitialNotification()
+      .then((remoteMessage) => {
+        if (remoteMessage) {
+          console.log(
+            "[FCM][getInitialNotification]: Notification caused app to open from quit state:",
+            remoteMessage.notification
+          );
+        }
+      });
 
     initInsider();
 
