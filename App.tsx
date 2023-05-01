@@ -132,6 +132,8 @@ const initInsider = () => {
             "[INSIDER][TEMP_STORE_CUSTOM_ACTION]: ",
             JSON.stringify(data)
           );
+        case InsiderCallbackType.INAPP_SEEN:
+          console.log("[INSIDER][INAPP_SEEN]: ", data);
           break;
       }
     }
