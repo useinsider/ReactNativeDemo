@@ -162,6 +162,9 @@ const initInsider = () => {
             JSON.stringify(data)
           );
           break;
+        case InsiderCallbackType.INAPP_SEEN:
+          console.log("[INSIDER][INAPP_SEEN]: ", data);
+          break;
       }
     }
   );
