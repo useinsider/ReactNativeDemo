@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, AsyncStorage } from "react-native";
+import { View } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import CustomButton from "../components/CustomButton";
 import RNInsider from "react-native-insider";
@@ -7,11 +8,11 @@ import RNInsider from "react-native-insider";
 const ReinitWithPartnerName = () => {
   setNewPartner = async () => {
     // --- REINIT --- //
-    val newPartnerName = "new_partner_name";
+    let newPartnerName = "your_partner_name";
 
     RNInsider.reinitWithPartnerName(newPartnerName);
 
-    AsyncStorage.setItem(newPartnerName);
+    AsyncStorage.setItem("insider_partner_name", newPartnerName);
 
     console.log("[INSIDER][reinitWithPartnerName]: Method is triggered.");
   };

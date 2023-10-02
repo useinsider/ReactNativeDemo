@@ -19,7 +19,6 @@ import {
   Alert,
   PermissionsAndroid,
   Platform,
-  AsyncStorage,
 } from "react-native";
 
 import {
@@ -28,6 +27,8 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from "react-native/Libraries/NewAppScreen";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Header from "./src/components/Header";
 import CustomSection from "./src/components/CustomSection";
@@ -119,11 +120,13 @@ async function requestLocationPermission() {
 
 const initInsider = async () => {
   // FIXME-INSIDER: Please change with your partner name and app group.
-  val partnerName = "your_partner_name"
-  val storedPartnerName = await AsyncStorage.getItem('insider_partner_name');
+  let partnerName = "your_default_partner_name"
+  let storedPartnerName = await AsyncStorage.getItem('insider_partner_name');
 
   if (storedPartnerName !== null) {
     partnerName = storedPartnerName;
+
+    console.log("[INSIDER][init]: Partner name updated from storage. New Partner Name: " + storedPartnerName);
   }
 
   RNInsider.init(
