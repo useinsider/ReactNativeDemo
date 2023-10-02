@@ -19,6 +19,7 @@ import {
   Alert,
   PermissionsAndroid,
   Platform,
+  AsyncStorage,
 } from "react-native";
 
 import {
@@ -42,6 +43,7 @@ import PageVisit from "./src/insider/PageVisit";
 import GDPR from "./src/insider/GDPR";
 import MessageCenter from "./src/insider/MessageCenter";
 import ContentOptimizer from "./src/insider/ContentOptimizer";
+import ReinitWithPartnerName from "./src/insider/ReinitWithPartnerName";
 
 import RNInsider from "react-native-insider";
 import InsiderCallbackType from "react-native-insider/src/InsiderCallbackType";
@@ -115,10 +117,17 @@ async function requestLocationPermission() {
   }
 }
 
-const initInsider = () => {
+const initInsider = async () => {
   // FIXME-INSIDER: Please change with your partner name and app group.
+  val partnerName = "your_partner_name"
+  val storedPartnerName = await AsyncStorage.getItem('insider_partner_name');
+
+  if (storedPartnerName !== null) {
+    partnerName = storedPartnerName;
+  }
+
   RNInsider.init(
-    "your_partner_name",
+    partnerName,
     "group.com.useinsider.ReactNativeDemo",
     (type, data) => {
       switch (type) {
@@ -177,6 +186,10 @@ function App(): JSX.Element {
             This Demo contains simple methods that you can use with the Insider
             SDK.
           </Section>
+
+          <CustomSection title="Reinit With Partner Name">
+            <ReinitWithPartnerName />
+          </CustomSection>
 
           <CustomSection title="User Attributes">
             <UserAttribute />
