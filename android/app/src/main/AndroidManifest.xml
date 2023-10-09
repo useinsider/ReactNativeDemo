@@ -24,6 +24,26 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+
+      <activity
+        android:name="com.useinsider.insider.InsiderLoginActivity"
+        android:taskAffinity=""
+        android:exported="true"
+        android:noHistory="true"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+
+            <!-- FIXME-INSIDER: Please edit this part according to your partner names. -->
+            <data android:scheme="insider{partner_name_1}" />
+            <data android:scheme="insider{partner_name_2}" />
+            <!-- Example: (Partner Name: examplepartnername) <data android:scheme="insiderexamplepartnername" /> -->
+        </intent-filter>
+      </activity>
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3940256099942544~3347511713"/>
