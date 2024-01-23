@@ -51,7 +51,7 @@ Note: Can easily find the warnings added as comments by searching the `FIXME-INS
 5. And run project with XCode. 
 
 
-## for Universal Link
+## For Universal Link
 
 ### Android
 
@@ -60,6 +60,7 @@ Note: Can easily find the warnings added as comments by searching the `FIXME-INS
 Note: 
 If you are not directed to the application when you click on the URL or scan it with QR, you may not have done the verify step for the URL you set. 
 To solve this problem, open the "Supported web addresses" settings from the "Set as default" settings in the application settings and enable the URL you set.
+
 Ref: https://developer.android.com/training/app-links/verify-android-applinks
 
 ### iOS
@@ -68,4 +69,5 @@ Ref: https://developer.android.com/training/app-links/verify-android-applinks
 
 If you are not directed to the application when you click on the URL or scan it with QR, you may not have done the verify step for the URL you set.
 To solve this problem, you can add a verification file to the root directory of your domain.
+
 Ref: https://developer.apple.com/documentation/xcode/supporting-associated-domains
