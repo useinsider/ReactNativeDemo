@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { PropsWithChildren } from "react";
 import {
   SafeAreaView,
@@ -19,6 +19,7 @@ import {
   Alert,
   PermissionsAndroid,
   Platform,
+  Linking,
 } from "react-native";
 
 import {
@@ -169,6 +170,29 @@ function App(): JSX.Element {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.black : Colors.white,
   };
+
+  const handleOpenURL = (event) => {
+    const url = event.url;
+
+    console.log("[INSIDER][handleOpenURL] triggered. URL: " + url);
+
+    RNInsider.handleUniversalLink(url);
+  };
+
+  useEffect(() => {
+    Linking.getInitialURL().then((initialUrl) => {
+      if (initialUrl) {
+        handleOpenURL({ url: initialUrl });
+      }
+    });
+
+    const urlEventListener = Linking.addEventListener('url', handleOpenURL);
+
+    return () => {
+      urlEventListener.remove();
+    };
+  }, []);
+
 
   requestLocationPermission();
   initInsider();
