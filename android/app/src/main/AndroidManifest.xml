@@ -31,7 +31,7 @@
 
               <data
                   android:scheme="https"
-                  android:host="mobilesdk.useinsider.com" />
+                  android:host="your.domain" />
           </intent-filter>
       </activity>
 
