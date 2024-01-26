@@ -42,6 +42,10 @@
    openURL:(NSURL *)url
    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
+  if ([[url scheme] containsString:@"insider"]) {
+      [Insider handleUrl:url];
+  }
+  
   return [RCTLinkingManager application:application openURL:url options:options];
 }
 
