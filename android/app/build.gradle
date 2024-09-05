@@ -83,7 +83,7 @@ android {
         versionCode 1
         versionName "1.0"
         // FIXME-INSIDER: Please change with your partner name.
-        manifestPlaceholders = ['partner': 'orkunbites']
+        manifestPlaceholders = ['partner': 'your_partner_name']
     }
     signingConfigs {
         release {
