@@ -66,3 +66,4 @@ android/app/agconnect-services.json
 android/app/mykeystore.jks
 ios/Podfile.lock
 ios/Pods
+package-lock.json
