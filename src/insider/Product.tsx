@@ -28,7 +28,8 @@ function Product(): JSX.Element {
       .setSalePrice(10.5)
       .setShippingCost(10.5)
       .setQuantity(10)
-      .setStock(10);
+      .setStock(10)
+      .setGroupCode("12345");
 
     // Setting custom attributes.
     // MARK: Your attribute key should be all lowercased and should not include any special or non Latin characters or any space, otherwise this attribute will be ignored. You can use underscore _.

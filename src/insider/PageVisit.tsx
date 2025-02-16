@@ -62,7 +62,7 @@ function PageVisitMethods(): JSX.Element {
         <CustomButton
           text="Product Page"
           onPress={() => {
-            triggerPage("visitListingPage");
+            triggerPage("visitProductDetailPage");
           }}
         />
       </View>
@@ -76,7 +76,7 @@ function PageVisitMethods(): JSX.Element {
         <CustomButton
           text="Category Page"
           onPress={() => {
-            triggerPage("visitProductDetailPage");
+            triggerPage("visitListingPage");
           }}
         />
       </View>

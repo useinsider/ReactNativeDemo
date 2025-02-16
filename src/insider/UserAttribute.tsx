@@ -26,7 +26,13 @@ const UserAttributes = () => {
       .setFacebookID("Facebook-ID")
       .setTwitterID("Twittter-ID")
       .setLanguage("TR")
-      .setLocale("tr_TR");
+      .setLocale("tr_TR")
+      .setCustomAttributeWithString("string_parameter", "Insider Example")
+      .setCustomAttributeWithInt("int_parameter", 10)
+      .setCustomAttributeWithDouble("double_parameter", 10.5)
+      .setCustomAttributeWithBoolean("bool_parameter", true)
+      .setCustomAttributeWithDate("date_parameter", new Date())
+      .setCustomAttributeWithArray("array_parameter", ["value1", "value2", "value3"]);
 
     console.log("[INSIDER][getCurrentUser]: Method is triggered.");
   };

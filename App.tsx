@@ -46,6 +46,7 @@ import GDPR from "./src/insider/GDPR";
 import MessageCenter from "./src/insider/MessageCenter";
 import ContentOptimizer from "./src/insider/ContentOptimizer";
 import ReinitWithPartnerName from "./src/insider/ReinitWithPartnerName";
+import BlockInApps from "./src/insider/BlockInApps";
 
 import RNInsider from "react-native-insider";
 import InsiderCallbackType from "react-native-insider/src/InsiderCallbackType";
@@ -260,6 +261,10 @@ function App(): JSX.Element {
 
           <CustomSection title="Content Optimizer">
             <ContentOptimizer />
+          </CustomSection>
+
+          <CustomSection title="Block In App">
+              <BlockInApps />
           </CustomSection>
         </View>
       </ScrollView>
