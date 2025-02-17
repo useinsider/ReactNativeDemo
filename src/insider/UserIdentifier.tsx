@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View } from "react-native";
 
 import CustomButton from "../components/CustomButton";
@@ -22,10 +22,13 @@ const UserIdentifiers = () => {
 
   const logout = () => {
     let currentUser = RNInsider.getCurrentUser();
-
     currentUser.logout();
-
     console.log("[INSIDER][logout]: Method is triggered.");
+  };
+
+  const signUp = () => {
+    RNInsider.signUpConfirmation();
+    console.log("[INSIDER][signUpConfirmation]: Method is triggered.");
   };
 
   return (
@@ -35,6 +38,11 @@ const UserIdentifiers = () => {
         text="Logout"
         buttonStyle={{ backgroundColor: "#E57F74" }}
         onPress={logout}
+      />
+      <CustomButton
+        text="Sign Up"
+        buttonStyle={{ backgroundColor: "#007BFF" }}
+        onPress={signUp}
       />
     </View>
   );
