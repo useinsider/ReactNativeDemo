@@ -1,10 +1,10 @@
-module.exports = {
-  presets: ['module:metro-react-native-babel-preset'],
-  overrides: [{
-    "plugins": [
-      ["@babel/plugin-transform-private-methods", {
-      "loose": true
-    }]
-    ]
-  }]
-};
+module.exports = function getBabelConfig(api) {
+  api.cache(true)
+
+  const plugins = []
+
+  return {
+    presets: ['module:@react-native/babel-preset'],
+    plugins,
+  }
+}

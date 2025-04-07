@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, JSX } from "react";
 import type { PropsWithChildren } from "react";
 import {
   SafeAreaView,
@@ -172,7 +172,7 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.black : Colors.white,
   };
 
-  const handleOpenURL = (event) => {
+  const handleOpenURL = (event: { url: string }) => {
     const url = event.url;
 
     console.log("[INSIDER][handleOpenURL] triggered. URL: " + url);
