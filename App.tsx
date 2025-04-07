@@ -43,6 +43,7 @@ import SmartRecommender from "./src/insider/SmartRecommender";
 import SocialProof from "./src/insider/SocialProof";
 import PageVisit from "./src/insider/PageVisit";
 import GDPR from "./src/insider/GDPR";
+import MobileAppAccess from "./src/insider/MobileAppAccess";
 import MessageCenter from "./src/insider/MessageCenter";
 import ContentOptimizer from "./src/insider/ContentOptimizer";
 import ReinitWithPartnerName from "./src/insider/ReinitWithPartnerName";
@@ -253,6 +254,10 @@ function App(): JSX.Element {
 
           <CustomSection title="GDPR">
             <GDPR />
+          </CustomSection>
+
+          <CustomSection title="Mobile App Access">
+            <MobileAppAccess />
           </CustomSection>
 
           <CustomSection title="Message Center">
