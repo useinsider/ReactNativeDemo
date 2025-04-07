@@ -122,7 +122,7 @@ async function requestLocationPermission() {
 
 const initInsider = async () => {
   // FIXME-INSIDER: Please change with your partner name and app group.
-  let partnerName = "your_default_partner_name"
+  let partnerName = "orkunbite"
   let storedPartnerName = await AsyncStorage.getItem('insider_partner_name');
 
   if (storedPartnerName !== null) {

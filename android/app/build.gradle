@@ -80,19 +80,19 @@ android {
     namespace "com.reactnativedemo"
     defaultConfig {
         // FIXME-INSIDER: Please change with your application ID.
-        applicationId "com.useinsider.reactnativedemo"
+        applicationId "com.useinsider.ecommerce"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         // FIXME-INSIDER: Please change with your partner name.
-        manifestPlaceholders = ['partner': 'your_partner_name']
+        manifestPlaceholders = ['partner': 'orkunbite']
     }
     signingConfigs {
         release {
             // FIXME-INSIDER: Please change with your key store information.
-            storeFile file('debug.jks')
-            keyAlias 'test'
+            storeFile file('mykeystore.jks')
+            keyAlias 'ecommerce'
             keyPassword '123456'
             storePassword '123456'
             v1SigningEnabled true

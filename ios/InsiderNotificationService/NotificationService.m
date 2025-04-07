@@ -9,7 +9,7 @@
 @end
 
 // FIXME-INSIDER: Please change with your app group.
-static NSString *APP_GROUP = @"group.com.useinsider.ReactNativeDemo";
+static NSString *APP_GROUP = @"group.com.useinsider.mobile-ios";
 
 @implementation NotificationService
 
