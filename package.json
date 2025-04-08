@@ -1,5 +1,5 @@
 {
-  "name": "ReactNativeDemo",
+  "name": "reactnativedemo",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -11,10 +11,9 @@
     "sync": "npm install \"$(npm pack ../react-native-insider)\""
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.24.0",
+    "@react-native-async-storage/async-storage": "^2.1.2",
     "react": "19.0.0",
     "react-native": "0.78.2",
-    "react-native-dropdown-picker": "^5.4.4",
     "react-native-insider": "file:react-native-insider-6.7.0.tgz",
     "react-native-svg-transformer": "^1.5.0"
   },
