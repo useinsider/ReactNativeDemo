@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { View } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import RNInsider from "react-native-insider";
+import Insider from "react-native-insider";
 
-function Product(): JSX.Element {
+function Product() {
   const createProduct = () => {
     const arr = ['value1', 'value2', 'value3'];
     const taxonomy = ["taxonomy1", "taxonomy2", "taxonomy3"];
-    let insiderExampleProduct = RNInsider.createNewProduct(
+    let insiderExampleProduct = Insider.createNewProduct(
       "productID",
       "productName",
       taxonomy,

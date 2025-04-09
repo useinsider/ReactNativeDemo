@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { View } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import CustomButton from "../components/CustomButton";
-import RNInsider from "react-native-insider";
+import Insider from "react-native-insider";
 
 const ReinitWithPartnerName = () => {
-  setNewPartner = async () => {
+  const setNewPartner = async () => {
     // --- REINIT --- //
     let newPartnerName = "your_partner_name";
 
-    RNInsider.reinitWithPartnerName(newPartnerName);
+    Insider.reinitWithPartnerName(newPartnerName);
 
     AsyncStorage.setItem("insider_partner_name", newPartnerName);
 

@@ -1,60 +1,59 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 
 import CustomButton from '../components/CustomButton';
 
-import RNInsider from 'react-native-insider';
-import ContentOptimizerDataType from 'react-native-insider/src/ContentOptimizerDataType';
+import Insider, {InsiderContentOptimizerDataType} from 'react-native-insider';
 
 function ContentOptimizer() {
   const triggerContentOptimizer = () => {
     // --- CONTENT OPTIMIZER --- //
 
-    // // String
-    // RNInsider.getContentStringWithName(
-    //   'string_variable_name',
-    //   'defaultValue', // Default Value
-    //   ContentOptimizerDataType.Element,
-    //   value => console.log('[INSIDER][getContentStringWithName]: ', value),
-    // );
-    //
+    // String
+    Insider.getContentStringWithName(
+      'string_variable_name',
+      'defaultValue', // Default Value
+      InsiderContentOptimizerDataType.Element,
+      value => console.log('[INSIDER][getContentStringWithName]: ', value),
+    );
+
     // // Boolean
-    // RNInsider.getContentBoolWithName(
-    //   'bool_variable_name',
-    //   true, // Default Value
-    //   ContentOptimizerDataType.Element,
-    //   value => console.log('[INSIDER][getContentBoolWithName]: ', value),
-    // );
-    //
+    Insider.getContentBoolWithName(
+      'bool_variable_name',
+      true, // Default Value
+      InsiderContentOptimizerDataType.Element,
+      value => console.log('[INSIDER][getContentBoolWithName]: ', value),
+    );
+
     // // Integer
-    // RNInsider.getContentIntWithName(
-    //   'int_variable_name',
-    //   10, // Default Value
-    //   ContentOptimizerDataType.Element,
-    //   value => console.log('[INSIDER][getContentIntWithName]: ', value),
-    // );
+    Insider.getContentIntWithName(
+      'int_variable_name',
+      10, // Default Value
+      InsiderContentOptimizerDataType.Element,
+      value => console.log('[INSIDER][getContentIntWithName]: ', value),
+    );
 
     // String Without Cache
-    RNInsider.getContentStringWithoutCache(
-      'humeyra',
+    Insider.getContentStringWithoutCache(
+      'string_variable_name',
       'defaultValue', // Default Value
-      ContentOptimizerDataType.Content,
+      InsiderContentOptimizerDataType.Element,
       value => console.log('[INSIDER][getContentStringWithoutCache]: ', value),
     );
 
     // Boolean Without Cache
-    RNInsider.getContentBoolWithoutCache(
-      'soner_test2',
+    Insider.getContentBoolWithoutCache(
+      'bool_variable_name',
       true, // Default Value
-      ContentOptimizerDataType.Content,
+      InsiderContentOptimizerDataType.Element,
       value => console.log('[INSIDER][getContentBoolWithoutCache]: ', value),
     );
 
     // Integer Without Cache
-    RNInsider.getContentIntWithoutCache(
-      'intGet',
-      250, // Default Value
-      ContentOptimizerDataType.Element,
+    Insider.getContentIntWithoutCache(
+      'int_variable_name',
+      10, // Default Value
+      InsiderContentOptimizerDataType.Element,
       value => console.log('[INSIDER][getContentIntWithoutCache]: ', value),
     );
   };

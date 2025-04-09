@@ -2,11 +2,11 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import RNInsider from "react-native-insider";
+import Insider from "react-native-insider";
 
-function PageVisitMethods(): JSX.Element {
+function PageVisitMethods() {
   const taxonomy = ["taxonomy1", "taxonomy2", "taxonomy3"];
-  const insiderExampleProduct = RNInsider.createNewProduct(
+  const insiderExampleProduct = Insider.createNewProduct(
     "productID",
     "productName",
     taxonomy,
@@ -27,23 +27,23 @@ function PageVisitMethods(): JSX.Element {
 
   // --- PAGE VISIT METHODS --- //
 
-  const triggerPage = (methodName) => {
+  const triggerPage = (methodName: string) => {
     switch (methodName) {
       case "visitHomePage":
-        RNInsider.visitHomePage();
+        Insider.visitHomePage();
         break;
       case "visitListingPage":
-        RNInsider.visitListingPage(taxonomy);
+        Insider.visitListingPage(taxonomy);
         break;
       case "visitCartPage":
         const insiderExampleProducts = [
           insiderExampleProduct,
           insiderExampleProduct,
         ];
-        RNInsider.visitCartPage(insiderExampleProducts);
+        Insider.visitCartPage(insiderExampleProducts);
         break;
       case "visitProductDetailPage":
-        RNInsider.visitProductDetailPage(insiderExampleProduct);
+        Insider.visitProductDetailPage(insiderExampleProduct);
         break;
     }
 

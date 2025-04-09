@@ -5,29 +5,21 @@
  * @format
  */
 
-import React, { useState, useEffect, JSX } from "react";
-import type { PropsWithChildren } from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   useColorScheme,
   View,
-  Button,
   Alert,
   PermissionsAndroid,
   Platform,
   Linking,
 } from "react-native";
 
-import {
-  Colors,
-  DebugInstructions,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from "react-native/Libraries/NewAppScreen";
+import {Colors} from "react-native/Libraries/NewAppScreen";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -49,10 +41,9 @@ import ContentOptimizer from "./src/insider/ContentOptimizer";
 import ReinitWithPartnerName from "./src/insider/ReinitWithPartnerName";
 import BlockInApps from "./src/insider/BlockInApps";
 
-import RNInsider from "react-native-insider";
-import InsiderCallbackType from "react-native-insider/src/InsiderCallbackType";
+import Insider, { InsiderCallbackType } from "react-native-insider";
 
-function Section({ children, title }: SectionProps): JSX.Element {
+function Section({ children, title }: SectionProps) {
   const isDarkMode = useColorScheme() === "dark";
   return (
     <View style={styles.sectionContainer}>
@@ -132,7 +123,7 @@ const initInsider = async () => {
     console.log("[INSIDER][init]: Partner name updated from storage. New Partner Name: " + storedPartnerName);
   }
 
-  RNInsider.init(
+  Insider.init(
     partnerName,
     "group.com.useinsider.ReactNativeDemo",
     (type, data) => {
@@ -151,22 +142,25 @@ const initInsider = async () => {
         case InsiderCallbackType.INAPP_SEEN:
           console.log("[INSIDER][INAPP_SEEN]: ", data);
           break;
+        case InsiderCallbackType.SESSION_STARTED:
+          console.log("[INSIDER][SESSION_STARTED]: ", data);
+          break;
       }
     }
   );
 
-  RNInsider.registerWithQuietPermission(false);
-  RNInsider.setActiveForegroundPushView();
-  RNInsider.startTrackingGeofence();
-  RNInsider.enableIDFACollection(false);
-  RNInsider.enableIpCollection(false);
-  RNInsider.enableLocationCollection(false);
-  RNInsider.enableCarrierCollection(false);
+  Insider.registerWithQuietPermission(false);
+  Insider.setActiveForegroundPushView();
+  Insider.startTrackingGeofence();
+  Insider.enableIDFACollection(false);
+  Insider.enableIpCollection(false);
+  Insider.enableLocationCollection(false);
+  Insider.enableCarrierCollection(false);
 
   console.log("[INSIDER] initialized");
 };
 
-function App(): JSX.Element {
+function App() {
   const isDarkMode = useColorScheme() === "dark";
 
   const backgroundStyle = {
@@ -178,7 +172,7 @@ function App(): JSX.Element {
 
     console.log("[INSIDER][handleOpenURL] triggered. URL: " + url);
 
-    RNInsider.handleUniversalLink(url);
+    Insider.handleUniversalLink(url);
   };
 
   useEffect(() => {

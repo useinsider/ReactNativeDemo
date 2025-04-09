@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image, useColorScheme } from 'react-native';
 
-function Header(): JSX.Element {
+function Header() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (

@@ -2,9 +2,9 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import RNInsider from "react-native-insider";
+import Insider from "react-native-insider";
 
-function BlockInApps(): JSX.Element {
+function BlockInApps() {
   const styles = StyleSheet.create({
     row: {
       width: "100%",
@@ -16,12 +16,12 @@ function BlockInApps(): JSX.Element {
   });
 
   const disableInAppMessages = () => {
-    RNInsider.disableInAppMessages();
+    Insider.disableInAppMessages();
     console.log("[INSIDER][disableInAppMessages]: Method is triggered.");
   };
 
   const enableInAppMessages = () => {
-    RNInsider.enableInAppMessages();
+    Insider.enableInAppMessages();
     console.log("[INSIDER][enableInAppMessages]: Method is triggered.");
   };
 

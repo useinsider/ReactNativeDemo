@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { View } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import RNInsider from "react-native-insider";
+import Insider from "react-native-insider";
 
-function SmartRecommender(): JSX.Element {
+function SmartRecommender() {
   const triggerSmartRecommender = () => {
     // --- RECOMMENDATION ENGINE --- //
     const taxonomy = ["taxonomy1", "taxonomy2", "taxonomy3"];
-    let insiderExampleProduct = RNInsider.createNewProduct(
+    let insiderExampleProduct = Insider.createNewProduct(
       "productID",
       "productName",
       taxonomy,
@@ -22,14 +22,14 @@ function SmartRecommender(): JSX.Element {
 
     console.log("[INSIDER][getSmartRecommendation]: Method is triggered , waiting response.");
 
-    RNInsider.getSmartRecommendation(1, "tr_TR", "TRY", (recommendation) => {
+    Insider.getSmartRecommendation(1, "tr_TR", "TRY", (recommendation) => {
       // Handle here
       console.log("[INSIDER][getSmartRecommendation]: ", recommendation);
     });
 
     console.log("[INSIDER][getSmartRecommendationWithProduct]: Method is triggered , waiting response.");
 
-    RNInsider.getSmartRecommendationWithProduct(
+    Insider.getSmartRecommendationWithProduct(
       insiderExampleProduct,
       1, // Recommendation ID
       "tr_TR",
@@ -44,7 +44,7 @@ function SmartRecommender(): JSX.Element {
 
     console.log("[INSIDER][getSmartRecommendationWithProductIDs]: Method is triggered , waiting response.");
 
-    RNInsider.getSmartRecommendationWithProductIDs(
+    Insider.getSmartRecommendationWithProductIDs(
       ["XX", "YY", "ZZ"], // Product IDs
       1, // Recommendation ID
       "en_US",
@@ -58,7 +58,7 @@ function SmartRecommender(): JSX.Element {
   const triggerSmartRecommenderPurchaseAndAddToCart = () => {
     // --- RECOMMENDATION ENGINE --- //
     const taxonomy = ["taxonomy1", "taxonomy2", "taxonomy3"];
-    let insiderExampleProduct = RNInsider.createNewProduct(
+    let insiderExampleProduct = Insider.createNewProduct(
       "productID",
       "productName",
       taxonomy,
@@ -72,21 +72,21 @@ function SmartRecommender(): JSX.Element {
 
     console.log("[INSIDER][getSmartRecommendation]: Method is triggered , waiting response.");
 
-    RNInsider.getSmartRecommendation(1, "tr_TR", "TRY", (recommendation) => {
+    Insider.getSmartRecommendation(1, "tr_TR", "TRY", (recommendation) => {
       // Handle here
       console.log("[INSIDER][getSmartRecommendation]: ", recommendation);
 
-      RNInsider.clickSmartRecommendationProduct(1, insiderExampleProduct)
+      Insider.clickSmartRecommendationProduct(1, insiderExampleProduct)
 
       console.log("[INSIDER][clickSmartRecommendationProduct]: Method is triggered.");
 
-      RNInsider.itemAddedToCart(insiderExampleProduct);
+      Insider.itemAddedToCart(insiderExampleProduct);
 
       console.log("[INSIDER][itemAddedToCart]: Method is triggered.");
 
       let uniqueSaleID = "sale_id_" + Date.now();
 
-      RNInsider.itemPurchased(uniqueSaleID, insiderExampleProduct);
+      Insider.itemPurchased(uniqueSaleID, insiderExampleProduct);
 
       console.log("[INSIDER][itemPurchased]: Method is triggered. Sale ID: " + uniqueSaleID);
     });

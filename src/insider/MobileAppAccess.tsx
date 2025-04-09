@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 
 import CustomButton from '../components/CustomButton';
-import RNInsider from 'react-native-insider';
+import Insider from 'react-native-insider';
 
 function MobileAppAccessMethods() {
   const styles = StyleSheet.create({
@@ -18,7 +18,7 @@ function MobileAppAccessMethods() {
   // --- MobileAppAccess --- //
 
   const setMobileAppAccess = (mobileAppAccess: boolean) => {
-    RNInsider.setMobileAppAccess(mobileAppAccess);
+    Insider.setMobileAppAccess(mobileAppAccess);
 
     console.log('INSIDER MobileAppAccess Status: ' + mobileAppAccess);
   };

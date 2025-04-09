@@ -2,9 +2,9 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import RNInsider from "react-native-insider";
+import Insider from "react-native-insider";
 
-function GDPRMethods(): JSX.Element {
+function GDPRMethods() {
   const styles = StyleSheet.create({
     row: {
       width: "100%",
@@ -17,8 +17,8 @@ function GDPRMethods(): JSX.Element {
 
   // --- GDPR --- //
 
-  const setGDPR = (gdprStatus) => {
-    RNInsider.setGDPRConsent(gdprStatus);
+  const setGDPR = (gdprStatus: boolean) => {
+    Insider.setGDPRConsent(gdprStatus);
 
     console.log("INSIDER GDPR Status: " + gdprStatus);
   };
