@@ -2,7 +2,8 @@ import React from "react";
 import { View } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import Insider, { InsiderGender } from "react-native-insider";
+import Insider from "react-native-insider";
+import InsiderGender from "react-native-insider/src/InsiderGender";
 
 const UserAttributes = () => {
   const setUserAttributes = () => {

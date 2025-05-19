@@ -2,7 +2,8 @@ import React from "react";
 import { View } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import Insider, { InsiderIdentifier } from "react-native-insider";
+import Insider from "react-native-insider";
+import InsiderIdentifier from "react-native-insider/src/InsiderIdentifier"
 
 const UserIdentifiers = () => {
   const login = () => {

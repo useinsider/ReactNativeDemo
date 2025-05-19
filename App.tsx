@@ -41,7 +41,8 @@ import ContentOptimizer from "./src/insider/ContentOptimizer";
 import ReinitWithPartnerName from "./src/insider/ReinitWithPartnerName";
 import BlockInApps from "./src/insider/BlockInApps";
 
-import Insider, { InsiderCallbackType } from "react-native-insider";
+import Insider from "react-native-insider";
+import InsiderCallbackType from "react-native-insider/src/InsiderCallbackType";
 
 function Section({ children, title }: SectionProps) {
   const isDarkMode = useColorScheme() === "dark";

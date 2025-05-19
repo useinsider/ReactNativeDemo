@@ -3,7 +3,8 @@ import {View} from 'react-native';
 
 import CustomButton from '../components/CustomButton';
 
-import Insider, {InsiderContentOptimizerDataType} from 'react-native-insider';
+import Insider from 'react-native-insider';
+import InsiderContentOptimizerDataType from 'react-native-insider/src/ContentOptimizerDataType';
 
 function ContentOptimizer() {
   const triggerContentOptimizer = () => {
