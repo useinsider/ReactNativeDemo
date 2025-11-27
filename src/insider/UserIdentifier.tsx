@@ -2,15 +2,15 @@ import React from "react";
 import { View } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import RNInsider from "react-native-insider";
-import RNInsiderIdentifier from 'react-native-insider/src/InsiderIdentifier';
+import Insider from "react-native-insider";
+import InsiderIdentifier from "react-native-insider/src/InsiderIdentifier"
 
 const UserIdentifiers = () => {
   const login = () => {
-    let currentUser = RNInsider.getCurrentUser();
+    let currentUser = Insider.getCurrentUser();
 
     // Setting User Identifiers.
-    let identifiers = new RNInsiderIdentifier();
+    let identifiers = new InsiderIdentifier();
     identifiers.addEmail("mobile.test@useinsider.com");
     identifiers.addPhoneNumber("+909876543210");
     identifiers.addUserID("{crmID}");
@@ -21,13 +21,13 @@ const UserIdentifiers = () => {
   };
 
   const logout = () => {
-    let currentUser = RNInsider.getCurrentUser();
+    let currentUser = Insider.getCurrentUser();
     currentUser.logout();
     console.log("[INSIDER][logout]: Method is triggered.");
   };
 
   const signUp = () => {
-    RNInsider.signUpConfirmation();
+    Insider.signUpConfirmation();
     console.log("[INSIDER][signUpConfirmation]: Method is triggered.");
   };
 

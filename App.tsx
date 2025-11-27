@@ -5,28 +5,28 @@
  * @format
  */
 
-import React, { useState } from "react";
-import type { PropsWithChildren } from "react";
+import React, { useEffect } from "react";
 import {
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   useColorScheme,
   View,
-  Button,
   Alert,
   PermissionsAndroid,
   Platform,
+  Linking,
 } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import {
-  Colors,
-  DebugInstructions,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from "react-native/Libraries/NewAppScreen";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const Colors = {
+  white: '#FFFFFF',
+  black: '#000000',
+  light: '#F3F3F3',
+  dark: '#333333',
+};
 
 import Header from "./src/components/Header";
 import CustomSection from "./src/components/CustomSection";
@@ -40,15 +40,16 @@ import SmartRecommender from "./src/insider/SmartRecommender";
 import SocialProof from "./src/insider/SocialProof";
 import PageVisit from "./src/insider/PageVisit";
 import GDPR from "./src/insider/GDPR";
+import MobileAppAccess from "./src/insider/MobileAppAccess";
 import MessageCenter from "./src/insider/MessageCenter";
 import ContentOptimizer from "./src/insider/ContentOptimizer";
-import ReInitSDK from "./src/insider/ReInitSDK";
+import ReinitWithPartnerName from "./src/insider/ReinitWithPartnerName";
 import BlockInApps from "./src/insider/BlockInApps";
 
-import RNInsider from "react-native-insider";
+import Insider from "react-native-insider";
 import InsiderCallbackType from "react-native-insider/src/InsiderCallbackType";
 
-function Section({ children, title }: SectionProps): JSX.Element {
+function Section({ children, title }: SectionProps) {
   const isDarkMode = useColorScheme() === "dark";
   return (
     <View style={styles.sectionContainer}>
@@ -117,11 +118,20 @@ async function requestLocationPermission() {
   }
 }
 
-const initInsider = () => {
+const initInsider = async () => {
   // FIXME-INSIDER: Please change with your partner name and app group.
-  RNInsider.init(
-    "your_partner_name",
-    "group.com.useinsider.ReactNativeDemo",
+  let partnerName = "your_partner_name";
+  let storedPartnerName = await AsyncStorage.getItem('insider_partner_name');
+
+  if (storedPartnerName !== null) {
+    partnerName = storedPartnerName;
+
+    console.log("[INSIDER][init]: Partner name updated from storage. New Partner Name: " + storedPartnerName);
+  }
+
+  Insider.init(
+    partnerName,
+    "group.com.useinsider.mobile-ios",
     (type, data) => {
       switch (type) {
         case InsiderCallbackType.NOTIFICATION_OPEN:
@@ -138,102 +148,135 @@ const initInsider = () => {
         case InsiderCallbackType.INAPP_SEEN:
           console.log("[INSIDER][INAPP_SEEN]: ", data);
           break;
+        case InsiderCallbackType.SESSION_STARTED:
+          console.log("[INSIDER][SESSION_STARTED]: ", data);
+          break;
       }
     }
   );
 
-  RNInsider.registerWithQuietPermission(false);
-  RNInsider.setActiveForegroundPushView();
-  RNInsider.startTrackingGeofence();
-  RNInsider.enableIDFACollection(false);
-  RNInsider.enableIpCollection(false);
-  RNInsider.enableLocationCollection(false);
-  RNInsider.enableCarrierCollection(false);
+  Insider.registerWithQuietPermission(false);
+  Insider.setActiveForegroundPushView();
+  Insider.startTrackingGeofence();
+  Insider.enableIDFACollection(false);
+  Insider.enableIpCollection(false);
+  Insider.enableLocationCollection(false);
+  Insider.enableCarrierCollection(false);
+  Insider.setAllowsBackgroundLocationUpdates(true);
 
   console.log("[INSIDER] initialized");
 };
 
-function App(): JSX.Element {
+function App() {
   const isDarkMode = useColorScheme() === "dark";
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.black : Colors.white,
   };
 
-  requestLocationPermission();
-  initInsider();
+  const handleOpenURL = (event: { url: string }) => {
+    const url = event.url;
+
+    console.log("[INSIDER][handleOpenURL] triggered. URL: " + url);
+
+    Insider.handleUniversalLink(url);
+  };
+
+  useEffect(() => {
+    // Initialize Insider SDK after component mounts
+    requestLocationPermission();
+    initInsider();
+
+    Linking.getInitialURL().then((initialUrl) => {
+      if (initialUrl) {
+        handleOpenURL({ url: initialUrl });
+      }
+    });
+
+    const urlEventListener = Linking.addEventListener('url', handleOpenURL);
+
+    return () => {
+      urlEventListener.remove();
+    };
+  }, []);
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}
-      >
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}
+    <SafeAreaProvider>
+      <SafeAreaView style={[backgroundStyle, { flex: 1 }]}>
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          style={backgroundStyle}
         >
-          <Section title="[RN] Insider SDK Demo">
-            This Demo contains simple methods that you can use with the Insider
-            SDK.
-          </Section>
+          <Header />
+          <View
+            style={{
+              backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            }}
+          >
+            <Section title="[RN] Insider SDK Demo">
+              This Demo contains simple methods that you can use with the Insider
+              SDK.
+            </Section>
 
-          <CustomSection title="User Attributes">
-            <UserAttribute />
-          </CustomSection>
+            <CustomSection title="Reinit With Partner Name">
+              <ReinitWithPartnerName />
+            </CustomSection>
 
-          <CustomSection title="User Identifiers">
-            <UserIdentifier />
-          </CustomSection>
+            <CustomSection title="User Attributes">
+              <UserAttribute />
+            </CustomSection>
 
-          <CustomSection title="Event">
-            <Event />
-          </CustomSection>
+            <CustomSection title="User Identifiers">
+              <UserIdentifier />
+            </CustomSection>
 
-          <CustomSection title="Product">
-            <Product />
-          </CustomSection>
+            <CustomSection title="Event">
+              <Event />
+            </CustomSection>
 
-          <CustomSection title="Purchase">
-            <Purchase />
-          </CustomSection>
+            <CustomSection title="Product">
+              <Product />
+            </CustomSection>
 
-          <CustomSection title="Smart Recommender">
-            <SmartRecommender />
-          </CustomSection>
+            <CustomSection title="Purchase">
+              <Purchase />
+            </CustomSection>
 
-          <CustomSection title="Social Proof">
-            <SocialProof />
-          </CustomSection>
+            <CustomSection title="Smart Recommender">
+              <SmartRecommender />
+            </CustomSection>
 
-          <CustomSection title="Page Visit Methods">
-            <PageVisit />
-          </CustomSection>
+            <CustomSection title="Social Proof">
+              <SocialProof />
+            </CustomSection>
 
-          <CustomSection title="GDPR">
-            <GDPR />
-          </CustomSection>
+            <CustomSection title="Page Visit Methods">
+              <PageVisit />
+            </CustomSection>
 
-          <CustomSection title="Re Init SDK">
-             <ReInitSDK />
-          </CustomSection>
+            <CustomSection title="GDPR">
+              <GDPR />
+            </CustomSection>
 
-          <CustomSection title="Message Center">
-            <MessageCenter />
-          </CustomSection>
+            <CustomSection title="Mobile App Access">
+              <MobileAppAccess />
+            </CustomSection>
 
-          <CustomSection title="Content Optimizer">
-            <ContentOptimizer />
-          </CustomSection>
+            <CustomSection title="Message Center">
+              <MessageCenter />
+            </CustomSection>
 
-          <CustomSection title="Block In App">
-              <BlockInApps />
-          </CustomSection>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+            <CustomSection title="Content Optimizer">
+              <ContentOptimizer />
+            </CustomSection>
+
+            <CustomSection title="Block In App">
+                <BlockInApps />
+            </CustomSection>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import RNInsider from "react-native-insider";
+import Insider from "react-native-insider";
 
-function Purchase(): JSX.Element {
+function Purchase() {
   const styles = StyleSheet.create({
     row: {
       width: "100%",
@@ -18,7 +18,7 @@ function Purchase(): JSX.Element {
   // --- REVENUE TRACKING --- //
 
   const taxonomy = ["taxonomy1", "taxonomy2", "taxonomy3"];
-  let insiderExampleProduct = RNInsider.createNewProduct(
+  let insiderExampleProduct = Insider.createNewProduct(
     "productID",
     "productName",
     taxonomy,
@@ -30,14 +30,14 @@ function Purchase(): JSX.Element {
   const itemPurchased = () => {
     const uniqueSaleID = 'uniqueSaleID';
 
-    RNInsider.itemPurchased(uniqueSaleID, insiderExampleProduct);
+    Insider.itemPurchased(uniqueSaleID, insiderExampleProduct);
 
     console.log("[INSIDER][itemPurchased]: Method is triggered.");
     console.log("[INSIDER][itemPurchased][uniqueSaleID]: " + uniqueSaleID);
   };
 
   const itemAddedToCart = () => {
-    RNInsider.itemAddedToCart(insiderExampleProduct);
+    Insider.itemAddedToCart(insiderExampleProduct);
 
     console.log("[INSIDER][itemAddedToCart]: Method is triggered.");
     console.log("[INSIDER][itemAddedToCart][productSummary]: ", insiderExampleProduct);
@@ -46,14 +46,14 @@ function Purchase(): JSX.Element {
   const itemRemovedFromCart = () => {
     const productID = 'productID';
 
-    RNInsider.itemRemovedFromCart(productID);
+    Insider.itemRemovedFromCart(productID);
 
     console.log("[INSIDER][itemRemovedFromCart]: Method is triggered.");
     console.log("[INSIDER][itemRemovedFromCart][productID]: " + productID);
   };
 
   const cartCleared = () => {
-    RNInsider.cartCleared();
+    Insider.cartCleared();
 
     console.log("[INSIDER][cartCleared]: Method is triggered.");
   };

@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { View } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import RNInsider from "react-native-insider";
-import InsiderGender from 'react-native-insider/src/InsiderGender';
+import Insider from "react-native-insider";
+import InsiderGender from "react-native-insider/src/InsiderGender";
 
 const UserAttributes = () => {
-  setUserAttributes = () => {
+  const setUserAttributes = () => {
     // --- USER --- //
 
     // You can crete Insider User and add attributes later on it.
-    let currentUser = RNInsider.getCurrentUser();
+    let currentUser = Insider.getCurrentUser();
 
     // Setting User Attributes in chainable way.
     currentUser

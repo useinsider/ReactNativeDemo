@@ -1,50 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
 import { View } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import RNInsider from "react-native-insider";
+import Insider from "react-native-insider";
 
-function Product(): JSX.Element {
+function Product() {
   const createProduct = () => {
-    const arr = ['value1', 'value2', 'value3'];
-    const taxonomy = ["taxonomy1", "taxonomy2", "taxonomy3"];
-    let insiderExampleProduct = RNInsider.createNewProduct(
-      "productID",
-      "productName",
-      taxonomy,
-      "imageURL",
-      1000.5,
-      "currency"
-    );
+  const numberArray: number[] = [10, 20, 30];
+  const stringArray: string[] = ["hello world", "selam"];
+Insider.tagEvent("custom_event")
+    .addParameterWithDouble("double_key", 10)
+    .addParameterWithInt("integer_key", 20)
+    .addParameterWithBoolean("boolean_key", true)
+    .addParameterWithString("string_key", "string")
+    .addParameterWithNumericArray("numeric_array_key", numberArray)
+    .addParameterWithStringArray("string_array_key", stringArray)
+    .addParameterWithDate("date_key", new Date(2025, 7, 26))
+    .build();
+const insiderProduct = Insider.createNewProduct("ProductID", "Product Name", ["category1", "category2"], "https://localhost", 10, "TRY");
+insiderProduct
+    .setCustomAttributeWithString("string_parameter", "This is Insider.")
+    .setCustomAttributeWithInt("int_parameter", 10)
+    .setCustomAttributeWithDouble("double_parameter", 10.5)
+    .setCustomAttributeWithBoolean("bool_parameter", true)
+    .setCustomAttributeWithDate("date_parameter", new Date())
+    .setCustomAttributeWithStringArray("string_array_parameter", stringArray)
+    .setCustomAttributeWithNumericArray("numeric_array_parameter", numberArray)
 
-    // Setting Product Attributes in chainable way.
-    insiderExampleProduct
-      .setColor("color")
-      .setVoucherName("voucherName")
-      .setVoucherDiscount(10.5)
-      .setPromotionName("promotionName")
-      .setPromotionDiscount(10.5)
-      .setSize("size")
-      .setSalePrice(10.5)
-      .setShippingCost(10.5)
-      .setQuantity(10)
-      .setStock(10)
-      .setGroupCode("12345");
-
-    // Setting custom attributes.
-    // MARK: Your attribute key should be all lowercased and should not include any special or non Latin characters or any space, otherwise this attribute will be ignored. You can use underscore _.
-    insiderExampleProduct
-      .setCustomAttributeWithString("string_parameter", "This is Insider.")
-      .setCustomAttributeWithInt("int_parameter", 10)
-      .setCustomAttributeWithDouble("double_parameter", 10.5)
-      .setCustomAttributeWithBoolean("bool_parameter", true)
-      .setCustomAttributeWithDate("date_parameter", new Date());
-
-    // MARK: You can only call the method with array of string otherwise this event will be ignored.
-    insiderExampleProduct.setCustomAttributeWithArray("array_parameter", arr);
-
-    console.log("[INSIDER][createNewProduct]: ", insiderExampleProduct);
-  };
+Insider.itemPurchased("saleID", insiderProduct);
+console.log("[INSIDER] Event sent", insiderProduct);
+};
 
   return (
     <View>

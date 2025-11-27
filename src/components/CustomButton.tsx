@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, TouchableHighlight, StyleSheet, Text, useColorScheme } from 'react-native';
+import { TouchableHighlight, StyleSheet, Text, useColorScheme } from 'react-native';
 
-function CustomButton({ text, buttonStyle, onPress }: DropDownProps): JSX.Element {
+function CustomButton({ text, buttonStyle, onPress }: DropDownProps) {
   const isDarkMode = useColorScheme() === 'dark';
   const styles = StyleSheet.create({
     button: {

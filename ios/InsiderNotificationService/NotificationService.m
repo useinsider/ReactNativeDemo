@@ -9,7 +9,7 @@
 @end
 
 // FIXME-INSIDER: Please change with your app group.
-static NSString *APP_GROUP = @"group.com.useinsider.ReactNativeDemo";
+static NSString *APP_GROUP = @"group.com.useinsider.mobile-ios";
 
 @implementation NotificationService
 
@@ -21,11 +21,10 @@ static NSString *APP_GROUP = @"group.com.useinsider.ReactNativeDemo";
     NSString *nextButtonText = @">>";
     NSString *goToAppText = @"Launch App";
     
-    [InsiderPushNotification showInsiderRichPush:request appGroup:APP_GROUP nextButtonText:nextButtonText goToAppText:goToAppText success:^(UNNotificationAttachment *attachment) {
+    [InsiderPushNotification showInsiderRichPush:self.bestAttemptContent appGroup:APP_GROUP nextButtonText:nextButtonText goToAppText:goToAppText success:^(UNNotificationAttachment *attachment) {
         if (attachment) {
             self.bestAttemptContent.attachments = [NSArray arrayWithObject:attachment];
         }
-        
         self.contentHandler(self.bestAttemptContent);
     }];
 }

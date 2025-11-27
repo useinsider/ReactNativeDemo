@@ -1,45 +1,63 @@
-import React, { useState } from "react";
-import { View } from "react-native";
+import React from 'react';
+import {View} from 'react-native';
 
-import CustomButton from "../components/CustomButton";
+import CustomButton from '../components/CustomButton';
 
-import RNInsider from "react-native-insider";
- import ContentOptimizerDataType from 'react-native-insider/src/ContentOptimizerDataType';
+import Insider from 'react-native-insider';
+import InsiderContentOptimizerDataType from 'react-native-insider/src/ContentOptimizerDataType';
 
-function ContentOptimizer(): JSX.Element {
+function ContentOptimizer() {
   const triggerContentOptimizer = () => {
-     // --- CONTENT OPTIMIZER --- //
+    // --- CONTENT OPTIMIZER --- //
 
-     // String
-     const contentOptimizerString = RNInsider.getContentStringWithName(
-       'string_variable_name',
-       'defaultValue', // Default Value
-       ContentOptimizerDataType.Element,
-       (contentOptimizerString) => {
-         console.log('[INSIDER][getContentStringWithName]: ', contentOptimizerString);
-       }
-     );
+    // String
+    Insider.getContentStringWithName(
+      'string_variable_name',
+      'defaultValue', // Default Value
+      InsiderContentOptimizerDataType.Element,
+      value => console.log('[INSIDER][getContentStringWithName]: ', value),
+    );
 
-     // Boolean
-     const contentOptimizerBool = RNInsider.getContentBoolWithName(
-       'bool_variable_name',
-       true, // Default Value
-       ContentOptimizerDataType.Element,
-       (contentOptimizerBoolean) => {
-         console.log('[INSIDER][getContentBoolWithName]: ', contentOptimizerBoolean);
-       }
-     );
+    // // Boolean
+    Insider.getContentBoolWithName(
+      'bool_variable_name',
+      true, // Default Value
+      InsiderContentOptimizerDataType.Element,
+      value => console.log('[INSIDER][getContentBoolWithName]: ', value),
+    );
 
-     // Integer
-     const contentOptimizerInt = RNInsider.getContentIntWithName(
-       'int_variable_name',
-       10, // Default Value
-       ContentOptimizerDataType.Element,
-       (contentOptimizerInt) => {
-         console.log('[INSIDER][getContentIntWithName]: ', contentOptimizerInt);
-       }
-     );
-  }
+    // // Integer
+    Insider.getContentIntWithName(
+      'int_variable_name',
+      10, // Default Value
+      InsiderContentOptimizerDataType.Element,
+      value => console.log('[INSIDER][getContentIntWithName]: ', value),
+    );
+
+    // String Without Cache
+    Insider.getContentStringWithoutCache(
+      'string_variable_name',
+      'defaultValue', // Default Value
+      InsiderContentOptimizerDataType.Element,
+      value => console.log('[INSIDER][getContentStringWithoutCache]: ', value),
+    );
+
+    // Boolean Without Cache
+    Insider.getContentBoolWithoutCache(
+      'bool_variable_name',
+      true, // Default Value
+      InsiderContentOptimizerDataType.Element,
+      value => console.log('[INSIDER][getContentBoolWithoutCache]: ', value),
+    );
+
+    // Integer Without Cache
+    Insider.getContentIntWithoutCache(
+      'int_variable_name',
+      10, // Default Value
+      InsiderContentOptimizerDataType.Element,
+      value => console.log('[INSIDER][getContentIntWithoutCache]: ', value),
+    );
+  };
 
   return (
     <View>

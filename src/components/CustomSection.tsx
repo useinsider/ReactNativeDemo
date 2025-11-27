@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 
-function CustomSection({ title, children, style }: CustomSectionProps): JSX.Element {
+function CustomSection({ title, children, style }: CustomSectionProps) {
   const isDarkMode = useColorScheme() === 'dark';
   const styles = StyleSheet.create({
     section: {

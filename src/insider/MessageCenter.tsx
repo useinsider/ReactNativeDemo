@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { View } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import RNInsider from "react-native-insider";
+import Insider from "react-native-insider";
 
-function MessageCenter(): JSX.Element {
+function MessageCenter() {
   const triggerMessageCenter = () => {
     // --- MESSAGE CENTER --- //
 
-    // You can able to see push campaigns in the last 90 days
+    // You can see push campaigns in the last 90 days
     const startDate = new Date(Date.now() - 86400000);
     const endDate = new Date(Date.now() + 86400000);
 
     console.log("[INSIDER][getMessageCenterData]: Method is triggered , waiting response.");
 
-    RNInsider.getMessageCenterData(
+    Insider.getMessageCenterData(
       100, // Max Data Limit
       startDate,
       endDate,

@@ -23,6 +23,35 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
-    </activity>
-</application>
+
+          <intent-filter>
+              <action android:name="android.intent.action.VIEW" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <category android:name="android.intent.category.BROWSABLE" />
+
+              <data
+                  android:scheme="https"
+                  android:host="your.domain" />
+          </intent-filter>
+      </activity>
+
+      <activity
+        android:name="com.useinsider.insider.InsiderLoginActivity"
+        android:taskAffinity=""
+        android:exported="true"
+        android:noHistory="true"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+
+            <!-- FIXME-INSIDER: Please edit this part according to your partner names. -->
+            <data android:scheme="insiderorkunbites" />
+            <!-- <data android:scheme="insider{partner_name_2}" /> -->
+            <!-- Example: (Partner Name: examplepartnername) <data android:scheme="insiderexamplepartnername" /> -->
+        </intent-filter>
+      </activity>
+    </application>
 </manifest>

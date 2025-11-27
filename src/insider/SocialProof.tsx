@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { View } from "react-native";
 
 import CustomButton from "../components/CustomButton";
-import RNInsider from "react-native-insider";
+import Insider from "react-native-insider";
 
-function SocialProof(): JSX.Element {
+function SocialProof() {
   const taxonomy = ["taxonomy1", "taxonomy2", "taxonomy3"];
-  let insiderExampleProduct = RNInsider.createNewProduct(
+  let insiderExampleProduct = Insider.createNewProduct(
     "productID",
     "productName",
     taxonomy,
@@ -16,7 +16,7 @@ function SocialProof(): JSX.Element {
   );
 
   const triggerSocialProof = () => {
-    RNInsider.visitProductDetailPage(insiderExampleProduct);
+    Insider.visitProductDetailPage(insiderExampleProduct);
 
     console.log("[INSIDER][visitProductDetailPage]: Method is triggered.");
   };
