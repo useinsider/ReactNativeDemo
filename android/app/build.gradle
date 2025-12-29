@@ -86,7 +86,7 @@ android {
         versionCode 1
         versionName "1.0"
         // FIXME-INSIDER: Please change with your partner name.
-        manifestPlaceholders = ['partner': 'orkunbites']
+        manifestPlaceholders = ['partner': 'qaautomation1']
     }
     signingConfigs {
         release {
@@ -113,6 +113,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+repositories {
+    flatDir { dirs 'libs' }
 }
 
 dependencies {

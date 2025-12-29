@@ -50,7 +50,7 @@
             <category android:name="android.intent.category.BROWSABLE" />
 
             <!-- FIXME-INSIDER: Please edit this part according to your partner names. -->
-            <data android:scheme="insiderorkunbites" />
+            <data android:scheme="insiderqaautomation1" />
             <!-- <data android:scheme="insider{partner_name_2}" /> -->
             <!-- Example: (Partner Name: examplepartnername) <data android:scheme="insiderexamplepartnername" /> -->
         </intent-filter>
