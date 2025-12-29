@@ -40,12 +40,12 @@ target 'InsiderNotificationContent' do
   use_frameworks!
   inherit! :search_paths
   # Pods for InsiderNotificationContent
-  pod "InsiderMobileAdvancedNotification"
+  pod 'InsiderMobileAdvancedNotification', :path => '../../InsiderMobileAdvancedNotification'
 end
 
 target 'InsiderNotificationService' do
   use_frameworks!
   inherit! :search_paths
   # Pods for InsiderNotificationService
-  pod "InsiderMobileAdvancedNotification"
+  pod 'InsiderMobileAdvancedNotification', :path => '../../InsiderMobileAdvancedNotification'
 end

@@ -5,8 +5,7 @@
 //  Created by Melih on 22.02.2023.
 //
 
-#import <UIKit/UIKit.h>
+#import <InsiderMobileAdvancedNotification/InsiderNotificationViewController.h>
 
-@interface NotificationViewController : UIViewController
-
+@interface NotificationViewController : InsiderNotificationViewController
 @end
