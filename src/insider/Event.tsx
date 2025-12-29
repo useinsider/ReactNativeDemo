@@ -15,6 +15,8 @@ function Event() {
     // You can create an event then add parameters and call the build method
     Insider.tagEvent("second_event")
       .addParameterWithInt("int_parameter", 10)
+      .addParameterWithStringArray("string_array_parameter", ["value1", "value2"])
+      .addParameterWithNumericArray("number_array_parameter", [2, 3.14, 100])
       .build();
 
     // You can create an object and add the parameters later

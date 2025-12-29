@@ -45,6 +45,11 @@ function PageVisitMethods() {
       case "visitProductDetailPage":
         Insider.visitProductDetailPage(insiderExampleProduct);
         break;
+      case "visitWishlistPage":
+        Insider.visitWishlistPage([
+          insiderExampleProduct,
+          insiderExampleProduct,
+        ]);
     }
 
     console.log("[INSIDER][" + methodName + "]: Method is triggered.");
@@ -77,6 +82,12 @@ function PageVisitMethods() {
           text="Category Page"
           onPress={() => {
             triggerPage("visitListingPage");
+          }}
+        />
+        <CustomButton
+          text="Wishlist Page"
+          onPress={() => {
+            triggerPage("visitWishlistPage");
           }}
         />
       </View>
