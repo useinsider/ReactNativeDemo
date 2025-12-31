@@ -14,6 +14,7 @@
 		74D01700730836DFEB5D6AB6 /* Pods_InsiderNotificationService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 51010AFBC79C18385AFB535D /* Pods_InsiderNotificationService.framework */; };
 		A9DD1B486A8813BF69BFCBC0 /* Pods_InsiderNotificationContent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF245C042CA555C0ED220EEE /* Pods_InsiderNotificationContent.framework */; };
 		B675D03F2EFC41A1005D3A3C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B675D03E2EFC419E005D3A3C /* AppDelegate.swift */; };
+		B681AFC32F02E02B00E18F53 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B681AFC22F02E02B00E18F53 /* MainInterface.storyboard */; };
 		D46883DE29A6132F00DB84D5 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D46883DD29A6132F00DB84D5 /* UserNotifications.framework */; };
 		D46883E029A6132F00DB84D5 /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D46883DF29A6132F00DB84D5 /* UserNotificationsUI.framework */; };
 		D46883E429A6132F00DB84D5 /* NotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D46883E329A6132F00DB84D5 /* NotificationViewController.m */; };
@@ -78,6 +79,7 @@
 		B33E84B64E08314B45CF45C7 /* Pods_ReactNativeDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactNativeDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B675D03E2EFC419E005D3A3C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B675D0402EFC41A2005D3A3C /* ReactNativeDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ReactNativeDemo-Bridging-Header.h"; sourceTree = "<group>"; };
+		B681AFC12F02E02B00E18F53 /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = MainInterface.storyboard; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		BF245C042CA555C0ED220EEE /* Pods_InsiderNotificationContent.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InsiderNotificationContent.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D46883DC29A6132F00DB84D5 /* InsiderNotificationContent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = InsiderNotificationContent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		D46883DD29A6132F00DB84D5 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
@@ -212,6 +214,7 @@
 				D468840129A61C4100DB84D5 /* InsiderNotificationContent.entitlements */,
 				D46883E229A6132F00DB84D5 /* NotificationViewController.h */,
 				D46883E329A6132F00DB84D5 /* NotificationViewController.m */,
+				B681AFC22F02E02B00E18F53 /* MainInterface.storyboard */,
 				D46883E829A6132F00DB84D5 /* Info.plist */,
 			);
 			path = InsiderNotificationContent;
@@ -282,6 +285,7 @@
 				D46883D829A6132F00DB84D5 /* Sources */,
 				D46883D929A6132F00DB84D5 /* Frameworks */,
 				D46883DA29A6132F00DB84D5 /* Resources */,
+				4D2C936C3C606C6EDB09235B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -300,6 +304,7 @@
 				D46883F029A6134C00DB84D5 /* Sources */,
 				D46883F129A6134C00DB84D5 /* Frameworks */,
 				D46883F229A6134C00DB84D5 /* Resources */,
+				A3275334BB497EEA2BD18B9D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -376,6 +381,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B681AFC32F02E02B00E18F53 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,6 +411,27 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"\\\"$WITH_ENVIRONMENT\\\" \\\"$REACT_NATIVE_XCODE\\\"\"\n";
 		};
+		4D2C936C3C606C6EDB09235B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-InsiderNotificationContent/Pods-InsiderNotificationContent-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-InsiderNotificationContent/Pods-InsiderNotificationContent-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-InsiderNotificationContent/Pods-InsiderNotificationContent-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		87FAFC343EC63BD98EE9A8CF /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -424,6 +451,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ReactNativeDemo/Pods-ReactNativeDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A3275334BB497EEA2BD18B9D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-InsiderNotificationService/Pods-InsiderNotificationService-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-InsiderNotificationService/Pods-InsiderNotificationService-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-InsiderNotificationService/Pods-InsiderNotificationService-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		AFF03300B917678EBB2B632F /* [CP] Check Pods Manifest.lock */ = {
@@ -585,6 +633,17 @@
 			targetProxy = D46883FA29A6134C00DB84D5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		B681AFC22F02E02B00E18F53 /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B681AFC12F02E02B00E18F53 /* MainInterface.storyboard */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {

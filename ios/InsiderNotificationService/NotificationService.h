@@ -5,7 +5,8 @@
 //  Created by Melih on 22.02.2023.
 //
 
-#import <InsiderMobileAdvancedNotification/InsiderNotificationServiceExtension.h>
+#import <UserNotifications/UserNotifications.h>
 
-@interface NotificationService : InsiderNotificationServiceExtension
+@interface NotificationService : UNNotificationServiceExtension
+
 @end
