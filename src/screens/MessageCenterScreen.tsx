@@ -22,6 +22,19 @@ const MessageItem = ({
         </TouchableOpacity>
       </View>
       <Text style={styles.messageBody}>{item.content?.description ?? 'No Description'}</Text>
+      {item.buttons && item.buttons.length > 0 && (
+        <View style={styles.buttonsContainer}>
+          {item.buttons.map((button, index) => (
+            <TouchableOpacity
+              key={button.buttonId}
+              style={styles.actionButton}
+              onPress={() => button.click()}
+            >
+              <Text style={styles.actionButtonText}>{button.text}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
     </View>
   );
 };
@@ -119,5 +132,23 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     color: '#999',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    marginTop: 12,
+    gap: 8,
+  },
+  actionButton: {
+    flex: 1,
+    backgroundColor: '#007AFF',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    alignItems: 'center',
+  },
+  actionButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
