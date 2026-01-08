@@ -10,8 +10,13 @@ const MessageItem = ({
   item: InsiderMessageCenterMessage;
   onToggleRead: (item: InsiderMessageCenterMessage) => void;
 }) => {
+  item.view();
+
   return (
-    <View style={[styles.messageItem, !item.isRead && styles.unreadMessage]}>
+    <TouchableOpacity onPress={() => {
+      item.click();
+    }}>
+      <View style={[styles.messageItem, !item.isRead && styles.unreadMessage]}>
       <View style={styles.messageHeader}>
         {!item.isRead && <View style={styles.unreadIndicator} />}
         <Text style={[styles.messageTitle, !item.isRead && styles.unreadText]}>
@@ -36,6 +41,7 @@ const MessageItem = ({
         </View>
       )}
     </View>
+    </TouchableOpacity>
   );
 };
 
