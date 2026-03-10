@@ -6,41 +6,56 @@ import { InsiderMessageCenterMessage } from 'react-native-insider/src/InsiderMes
 const MessageItem = ({
   item,
   onToggleRead,
+  onDelete,
 }: {
   item: InsiderMessageCenterMessage;
   onToggleRead: (item: InsiderMessageCenterMessage) => void;
+  onDelete: (item: InsiderMessageCenterMessage) => void;
 }) => {
   item.view();
 
+  const confirmDelete = () => {
+    Alert.alert('Delete Message', 'Are you sure you want to delete this message?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Delete', style: 'destructive', onPress: () => onDelete(item) },
+    ]);
+  };
+
   return (
-    <TouchableOpacity onPress={() => {
-      item.click();
-    }}>
+    <TouchableOpacity
+      onPress={() => item.click()}
+      onLongPress={confirmDelete}
+    >
       <View style={[styles.messageItem, !item.isRead && styles.unreadMessage]}>
-      <View style={styles.messageHeader}>
-        {!item.isRead && <View style={styles.unreadIndicator} />}
-        <Text style={[styles.messageTitle, !item.isRead && styles.unreadText]}>
-          {item.content?.title ?? 'No Title'}
-        </Text>
-        <TouchableOpacity style={styles.toggleButton} onPress={() => onToggleRead(item)}>
-          <Text style={styles.toggleButtonText}>{item.isRead ? 'Mark As Unread' : 'Mark As Read'}</Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.messageBody}>{item.content?.description ?? 'No Description'}</Text>
-      {item.buttons && item.buttons.length > 0 && (
-        <View style={styles.buttonsContainer}>
-          {item.buttons.map((button, index) => (
-            <TouchableOpacity
-              key={button.buttonId}
-              style={styles.actionButton}
-              onPress={() => button.click()}
-            >
-              <Text style={styles.actionButtonText}>{button.text}</Text>
-            </TouchableOpacity>
-          ))}
+        <View style={styles.messageHeader}>
+          {!item.isRead && <View style={styles.unreadIndicator} />}
+          <Text style={[styles.messageTitle, !item.isRead && styles.unreadText]}>
+            {item.content?.title ?? 'No Title'}
+          </Text>
         </View>
-      )}
-    </View>
+        <Text style={styles.messageBody}>{item.content?.description ?? 'No Description'}</Text>
+        {item.buttons && item.buttons.length > 0 && (
+          <View style={styles.buttonsContainer}>
+            {item.buttons.map((button) => (
+              <TouchableOpacity
+                key={button.buttonId}
+                style={styles.actionButton}
+                onPress={() => button.click()}
+              >
+                <Text style={styles.actionButtonText}>{button.text}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+        <View style={styles.bottomButtons}>
+          <TouchableOpacity style={styles.toggleButton} onPress={() => onToggleRead(item)}>
+            <Text style={styles.toggleButtonText}>{item.isRead ? 'Mark Unread' : 'Mark Read'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.deleteButton} onPress={confirmDelete}>
+            <Text style={styles.deleteButtonText}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -50,11 +65,22 @@ export default () => {
   const [error, setError] = useState<Error | null>(null);
   const [messages, setMessages] = useState<InsiderMessageCenterMessage[]>([]);
 
+  const refreshMessages = useCallback(async () => {
+    try {
+      const inbox = await Insider.messageCenter.getInbox();
+      if (inbox?.messages) {
+        setMessages(inbox.messages);
+      }
+    } catch (err) {
+      console.error('Failed to refresh messages:', err);
+    }
+  }, []);
+
   useEffect(() => {
     setLoading(true);
-    Insider.messageCenter.getInbox((error, result) => {
+    Insider.messageCenter.getInbox((err, result) => {
       setLoading(false);
-      if (error || !result) setError(error ?? new Error('Unknown error.'));
+      if (err || !result) setError(err ?? new Error('Unknown error.'));
       else setMessages(result.messages);
     });
   }, []);
@@ -66,15 +92,49 @@ export default () => {
       } else {
         await item.markAsRead();
       }
-
-      const updatedInbox = await Insider.messageCenter.getInbox();
-      if (updatedInbox?.messages) {
-        setMessages(updatedInbox.messages);
-      }
+      await refreshMessages();
     } catch (err) {
       Alert.alert('Error', err instanceof Error ? err.message : 'Failed to update message status');
     }
-  }, []);
+  }, [refreshMessages]);
+
+  const handleDelete = useCallback(async (item: InsiderMessageCenterMessage) => {
+    try {
+      await item.delete();
+      Alert.alert('Success', 'Message deleted');
+      await refreshMessages();
+    } catch (err) {
+      Alert.alert('Error', err instanceof Error ? err.message : 'Failed to delete message');
+    }
+  }, [refreshMessages]);
+
+  const handleRemoveAll = useCallback(() => {
+    if (messages.length === 0) {
+      Alert.alert('Info', 'No messages to delete');
+      return;
+    }
+    Alert.alert(
+      'Remove All Messages',
+      `Are you sure you want to delete all ${messages.length} messages?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete All',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              const ids = messages.map(m => m.messageId);
+              await Insider.messageCenter.deleteMessages(ids);
+              Alert.alert('Success', 'All messages deleted');
+              await refreshMessages();
+            } catch (err) {
+              Alert.alert('Error', err instanceof Error ? err.message : 'Failed to delete messages');
+            }
+          },
+        },
+      ],
+    );
+  }, [messages, refreshMessages]);
 
   if (loading) {
     return <Text>Loading...</Text>;
@@ -83,16 +143,42 @@ export default () => {
   }
 
   return (
-    <FlatList
-      data={messages}
-      keyExtractor={item => item.messageId}
-      renderItem={({ item }) => <MessageItem item={item} onToggleRead={handleToggleRead} />}
-      ListEmptyComponent={<Text style={styles.emptyText}>No messages</Text>}
-    />
+    <View style={styles.container}>
+      {messages.length > 0 && (
+        <TouchableOpacity style={styles.removeAllButton} onPress={handleRemoveAll}>
+          <Text style={styles.removeAllText}>Remove All</Text>
+        </TouchableOpacity>
+      )}
+      <FlatList
+        data={messages}
+        keyExtractor={item => item.messageId}
+        renderItem={({ item }) => (
+          <MessageItem item={item} onToggleRead={handleToggleRead} onDelete={handleDelete} />
+        )}
+        ListEmptyComponent={<Text style={styles.emptyText}>No messages</Text>}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  removeAllButton: {
+    backgroundColor: '#D32F2F',
+    paddingVertical: 12,
+    marginHorizontal: 16,
+    marginTop: 8,
+    marginBottom: 4,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  removeAllText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
   messageItem: {
     padding: 16,
     borderBottomWidth: 1,
@@ -121,14 +207,6 @@ const styles = StyleSheet.create({
   unreadText: {
     color: '#000',
   },
-  toggleButton: {
-    padding: 8,
-    marginLeft: 8,
-  },
-  toggleButtonText: {
-    fontSize: 14,
-    color: '#007AFF',
-  },
   messageBody: {
     fontSize: 14,
     color: '#666',
@@ -155,6 +233,35 @@ const styles = StyleSheet.create({
   actionButtonText: {
     color: '#fff',
     fontSize: 14,
+    fontWeight: '600',
+  },
+  bottomButtons: {
+    flexDirection: 'row',
+    marginTop: 12,
+    gap: 8,
+  },
+  toggleButton: {
+    flex: 1,
+    backgroundColor: '#f0f0f0',
+    paddingVertical: 10,
+    borderRadius: 6,
+    alignItems: 'center',
+  },
+  toggleButtonText: {
+    fontSize: 12,
+    color: '#007AFF',
+    fontWeight: '600',
+  },
+  deleteButton: {
+    flex: 1,
+    backgroundColor: '#D32F2F',
+    paddingVertical: 10,
+    borderRadius: 6,
+    alignItems: 'center',
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontSize: 12,
     fontWeight: '600',
   },
 });
