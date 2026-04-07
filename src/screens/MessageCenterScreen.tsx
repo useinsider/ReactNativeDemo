@@ -1,19 +1,17 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { Text, FlatList, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { Text, FlatList, View, StyleSheet, TouchableOpacity, Alert, ViewToken } from 'react-native';
 import Insider from 'react-native-insider';
-import { InsiderMessageCenterMessage } from 'react-native-insider/src/InsiderMessageCenterMessage';
+import { InsiderAppCard } from 'react-native-insider/src/InsiderAppCard';
 
 const MessageItem = ({
   item,
   onToggleRead,
   onDelete,
 }: {
-  item: InsiderMessageCenterMessage;
-  onToggleRead: (item: InsiderMessageCenterMessage) => void;
-  onDelete: (item: InsiderMessageCenterMessage) => void;
+  item: InsiderAppCard;
+  onToggleRead: (item: InsiderAppCard) => void;
+  onDelete: (item: InsiderAppCard) => void;
 }) => {
-  item.view();
-
   const confirmDelete = () => {
     Alert.alert('Delete Message', 'Are you sure you want to delete this message?', [
       { text: 'Cancel', style: 'cancel' },
@@ -63,13 +61,14 @@ const MessageItem = ({
 export default () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [messages, setMessages] = useState<InsiderMessageCenterMessage[]>([]);
+  const [messages, setMessages] = useState<InsiderAppCard[]>([]);
 
   const refreshMessages = useCallback(async () => {
     try {
-      const inbox = await Insider.messageCenter.getInbox();
-      if (inbox?.messages) {
-        setMessages(inbox.messages);
+      const inbox = await Insider.appCards.getCampaigns();
+      console.warn('------ ', inbox);
+      if (inbox?.appCards) {
+        setMessages(inbox.appCards);
       }
     } catch (err) {
       console.error('Failed to refresh messages:', err);
@@ -78,14 +77,15 @@ export default () => {
 
   useEffect(() => {
     setLoading(true);
-    Insider.messageCenter.getInbox((err, result) => {
+    Insider.appCards.getCampaigns((err, result) => {
+              console.warn('------ ', result);
       setLoading(false);
       if (err || !result) setError(err ?? new Error('Unknown error.'));
-      else setMessages(result.messages);
+      else setMessages(result.appCards);
     });
   }, []);
 
-  const handleToggleRead = useCallback(async (item: InsiderMessageCenterMessage) => {
+  const handleToggleRead = useCallback(async (item: InsiderAppCard) => {
     try {
       if (item.isRead) {
         await item.markAsUnread();
@@ -98,7 +98,7 @@ export default () => {
     }
   }, [refreshMessages]);
 
-  const handleDelete = useCallback(async (item: InsiderMessageCenterMessage) => {
+  const handleDelete = useCallback(async (item: InsiderAppCard) => {
     try {
       await item.delete();
       Alert.alert('Success', 'Message deleted');
@@ -123,8 +123,8 @@ export default () => {
           style: 'destructive',
           onPress: async () => {
             try {
-              const ids = messages.map(m => m.messageId);
-              await Insider.messageCenter.deleteMessages(ids);
+              const ids = messages.map(m => m.appCardId);
+              await Insider.appCards.delete(ids);
               Alert.alert('Success', 'All messages deleted');
               await refreshMessages();
             } catch (err) {
@@ -135,6 +135,20 @@ export default () => {
       ],
     );
   }, [messages, refreshMessages]);
+
+  const viewedRef = useRef<Set<string>>(new Set());
+
+  const viewabilityConfig = useRef({ itemVisiblePercentThreshold: 50 }).current;
+
+  const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
+    viewableItems.forEach(({ item }) => {
+      if (item && !viewedRef.current.has(item.appCardId)) {
+        viewedRef.current.add(item.appCardId);
+        console.warn('------- view called');
+        item.view();
+      }
+    });
+  }).current;
 
   if (loading) {
     return <Text>Loading...</Text>;
@@ -151,10 +165,12 @@ export default () => {
       )}
       <FlatList
         data={messages}
-        keyExtractor={item => item.messageId}
+        keyExtractor={item => item.appCardId}
         renderItem={({ item }) => (
           <MessageItem item={item} onToggleRead={handleToggleRead} onDelete={handleDelete} />
         )}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
         ListEmptyComponent={<Text style={styles.emptyText}>No messages</Text>}
       />
     </View>
