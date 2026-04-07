@@ -66,44 +66,54 @@ export default () => {
   const refreshMessages = useCallback(async () => {
     try {
       const inbox = await Insider.appCards.getCampaigns();
-      console.warn('------ ', inbox);
       if (inbox?.appCards) {
+        console.log('[INSIDER][AppCards]: Received ' + inbox.appCards.length + ' cards');
         setMessages(inbox.appCards);
       }
     } catch (err) {
-      console.error('Failed to refresh messages:', err);
+      console.log('[INSIDER][AppCards]: Error loading cards: ' + err);
     }
   }, []);
 
   useEffect(() => {
     setLoading(true);
     Insider.appCards.getCampaigns((err, result) => {
-              console.warn('------ ', result);
       setLoading(false);
-      if (err || !result) setError(err ?? new Error('Unknown error.'));
-      else setMessages(result.appCards);
+      if (err || !result) {
+        console.log('[INSIDER][AppCards]: Error loading cards: ' + err);
+        setError(err ?? new Error('Unknown error.'));
+      } else {
+        console.log('[INSIDER][AppCards]: Received ' + result.appCards.length + ' cards');
+        setMessages(result.appCards);
+      }
     });
   }, []);
 
   const handleToggleRead = useCallback(async (item: InsiderAppCard) => {
     try {
       if (item.isRead) {
+        console.log('[INSIDER][AppCardItem]: Marking card as unread: ' + item.appCardId);
         await item.markAsUnread();
       } else {
+        console.log('[INSIDER][AppCardItem]: Marking card as read: ' + item.appCardId);
         await item.markAsRead();
       }
       await refreshMessages();
     } catch (err) {
+      const action = item.isRead ? 'unread' : 'read';
+      console.log('[INSIDER][AppCardItem]: Error marking as ' + action + ': ' + err);
       Alert.alert('Error', err instanceof Error ? err.message : 'Failed to update message status');
     }
   }, [refreshMessages]);
 
   const handleDelete = useCallback(async (item: InsiderAppCard) => {
     try {
+      console.log('[INSIDER][AppCardItem]: Deleting card: ' + item.appCardId);
       await item.delete();
       Alert.alert('Success', 'Message deleted');
       await refreshMessages();
     } catch (err) {
+      console.log('[INSIDER][AppCardItem]: Error deleting card: ' + err);
       Alert.alert('Error', err instanceof Error ? err.message : 'Failed to delete message');
     }
   }, [refreshMessages]);
@@ -124,10 +134,12 @@ export default () => {
           onPress: async () => {
             try {
               const ids = messages.map(m => m.appCardId);
+              console.log('[INSIDER][AppCards]: Deleting all ' + ids.length + ' cards');
               await Insider.appCards.delete(ids);
               Alert.alert('Success', 'All messages deleted');
               await refreshMessages();
             } catch (err) {
+              console.log('[INSIDER][AppCards]: Error deleting all cards: ' + err);
               Alert.alert('Error', err instanceof Error ? err.message : 'Failed to delete messages');
             }
           },
@@ -144,7 +156,7 @@ export default () => {
     viewableItems.forEach(({ item }) => {
       if (item && !viewedRef.current.has(item.appCardId)) {
         viewedRef.current.add(item.appCardId);
-        console.warn('------- view called');
+        console.log('[INSIDER][AppCardItem]: View tracked: ' + item.appCardId);
         item.view();
       }
     });
