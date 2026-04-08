@@ -33,6 +33,25 @@ target 'ReactNativeDemo' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # Xcode 26: fmt 11.0.2 consteval is broken with Apple Clang.
+    # Line 122 only disables consteval for Apple Clang < 14, but Xcode 26's
+    # Clang also triggers it via __cpp_consteval (line 126) AND
+    # FMT_CLANG_VERSION >= 1101 (line 128). Fix: disable consteval for ALL
+    # Apple Clang versions by removing the version check on line 122.
+    fmt_base = "#{__dir__}/Pods/fmt/include/fmt/base.h"
+    if File.exist?(fmt_base)
+      text = File.read(fmt_base)
+      patched = text.gsub(
+        /defined\(__apple_build_version__\) && __apple_build_version__ < 14000029L/,
+        'defined(__apple_build_version__)'
+      )
+      if patched != text
+        File.chmod(0644, fmt_base)
+        File.write(fmt_base, patched)
+        Pod::UI.puts "[fmt] Disabled consteval for Apple Clang (Xcode 26 compatibility)"
+      end
+    end
   end
 end
 
