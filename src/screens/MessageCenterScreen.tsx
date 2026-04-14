@@ -1,7 +1,31 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Text, FlatList, View, StyleSheet, TouchableOpacity, Alert, ViewToken } from 'react-native';
 import Insider from 'react-native-insider';
-import { InsiderAppCard } from 'react-native-insider/src/InsiderAppCard';
+import {
+  InsiderAppCard,
+  InsiderAppCardAction,
+  InsiderAppCardDeeplinkAction,
+} from 'react-native-insider/src/InsiderAppCard';
+
+const logCardAction = (prefix: string, action?: InsiderAppCardAction | null) => {
+  if (!action) {
+    console.log(`${prefix} - no action`);
+    return;
+  }
+
+  console.log(`${prefix} - type=${action.type}`);
+
+  if (action.type === 'deep_link') {
+    const deeplink = action as InsiderAppCardDeeplinkAction;
+    console.log(`${prefix} - deeplinkType=${deeplink.deeplinkType} url=${deeplink.url}`);
+    if (deeplink.keysAndValues && deeplink.keysAndValues.length > 0) {
+      console.log(`${prefix} - keysAndValues=${JSON.stringify(deeplink.keysAndValues)}`);
+    }
+    if (deeplink.json !== null && deeplink.json !== undefined) {
+      console.log(`${prefix} - json=${JSON.stringify(deeplink.json)}`);
+    }
+  }
+};
 
 const MessageItem = ({
   item,
@@ -21,7 +45,10 @@ const MessageItem = ({
 
   return (
     <TouchableOpacity
-      onPress={() => item.click()}
+      onPress={() => {
+        logCardAction(`[INSIDER][AppCardItemClick]: card=${item.appCardId}`, item.action);
+        item.click();
+      }}
       onLongPress={confirmDelete}
     >
       <View style={[styles.messageItem, !item.isRead && styles.unreadMessage]}>
@@ -38,7 +65,13 @@ const MessageItem = ({
               <TouchableOpacity
                 key={button.buttonId}
                 style={styles.actionButton}
-                onPress={() => button.click()}
+                onPress={() => {
+                  logCardAction(
+                    `[INSIDER][AppCardButtonClick]: card=${button.appCardId} button=${button.buttonId}`,
+                    button.action,
+                  );
+                  button.click();
+                }}
               >
                 <Text style={styles.actionButtonText}>{button.text}</Text>
               </TouchableOpacity>
