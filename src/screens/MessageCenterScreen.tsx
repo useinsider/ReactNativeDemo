@@ -46,7 +46,7 @@ const MessageItem = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        logCardAction(`[INSIDER][AppCardItemClick]: card=${item.appCardId}`, item.action);
+        logCardAction(`[INSIDER][AppCardItemClick]: card=${item.id}`, item.action);
         item.click();
       }}
       onLongPress={confirmDelete}
@@ -63,11 +63,11 @@ const MessageItem = ({
           <View style={styles.buttonsContainer}>
             {item.buttons.map((button) => (
               <TouchableOpacity
-                key={button.buttonId}
+                key={button.id}
                 style={styles.actionButton}
                 onPress={() => {
                   logCardAction(
-                    `[INSIDER][AppCardButtonClick]: card=${button.appCardId} button=${button.buttonId}`,
+                    `[INSIDER][AppCardButtonClick]: card=${button.appCardId} button=${button.id}`,
                     button.action,
                   );
                   button.click();
@@ -125,10 +125,10 @@ export default () => {
   const handleToggleRead = useCallback(async (item: InsiderAppCard) => {
     try {
       if (item.isRead) {
-        console.log('[INSIDER][AppCardItem]: Marking card as unread: ' + item.appCardId);
+        console.log('[INSIDER][AppCardItem]: Marking card as unread: ' + item.id);
         await item.markAsUnread();
       } else {
-        console.log('[INSIDER][AppCardItem]: Marking card as read: ' + item.appCardId);
+        console.log('[INSIDER][AppCardItem]: Marking card as read: ' + item.id);
         await item.markAsRead();
       }
       await refreshMessages();
@@ -141,7 +141,7 @@ export default () => {
 
   const handleDelete = useCallback(async (item: InsiderAppCard) => {
     try {
-      console.log('[INSIDER][AppCardItem]: Deleting card: ' + item.appCardId);
+      console.log('[INSIDER][AppCardItem]: Deleting card: ' + item.id);
       await item.delete();
       Alert.alert('Success', 'Message deleted');
       await refreshMessages();
@@ -166,7 +166,7 @@ export default () => {
           style: 'destructive',
           onPress: async () => {
             try {
-              const ids = messages.map(m => m.appCardId);
+              const ids = messages.map(m => m.id);
               console.log('[INSIDER][AppCards]: Deleting all ' + ids.length + ' cards');
               await Insider.appCards.delete(ids);
               Alert.alert('Success', 'All messages deleted');
@@ -187,9 +187,9 @@ export default () => {
 
   const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
     viewableItems.forEach(({ item }) => {
-      if (item && !viewedRef.current.has(item.appCardId)) {
-        viewedRef.current.add(item.appCardId);
-        console.log('[INSIDER][AppCardItem]: View tracked: ' + item.appCardId);
+      if (item && !viewedRef.current.has(item.id)) {
+        viewedRef.current.add(item.id);
+        console.log('[INSIDER][AppCardItem]: View tracked: ' + item.id);
         item.view();
       }
     });
@@ -210,7 +210,7 @@ export default () => {
       )}
       <FlatList
         data={messages}
-        keyExtractor={item => item.appCardId}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <MessageItem item={item} onToggleRead={handleToggleRead} onDelete={handleDelete} />
         )}
