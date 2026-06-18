@@ -42,6 +42,7 @@ import PageVisit from "./src/insider/PageVisit";
 import GDPR from "./src/insider/GDPR";
 import MobileAppAccess from "./src/insider/MobileAppAccess";
 import MessageCenter from "./src/insider/MessageCenter";
+import AppCards from "./src/insider/AppCards";
 import ContentOptimizer from "./src/insider/ContentOptimizer";
 import ReinitWithPartnerName from "./src/insider/ReinitWithPartnerName";
 import BlockInApps from "./src/insider/BlockInApps";
@@ -264,6 +265,10 @@ function App() {
 
             <CustomSection title="Message Center">
               <MessageCenter />
+            </CustomSection>
+
+            <CustomSection title="App Cards">
+              <AppCards />
             </CustomSection>
 
             <CustomSection title="Content Optimizer">
