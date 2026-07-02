@@ -41,5 +41,8 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "overrides": {
+    "joi": "^18.2.1"
   }
 }
