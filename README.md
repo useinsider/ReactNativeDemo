@@ -51,6 +51,28 @@ Note: Can easily find the warnings added as comments by searching the `FIXME-INS
 5. And run project with XCode. 
 
 
+## New Architecture
+
+This demo runs on the New Architecture — Fabric and bridgeless — and `react-native-insider`
+works under it with no extra setup. There are no migration steps to follow: the SDK exports no
+native UI components, so Fabric is not involved, and it registers as a legacy native module that
+React Native bridges through its interop layer.
+
+A few things worth knowing:
+
+- **No API changes.** Every method available before the migration still exists and behaves the
+  same. Nothing was removed between 7.x and 8.x.
+- **Hermes and Fabric are not configured here.** On React Native 0.82+ `use_react_native!`
+  enables both regardless of what the Podfile asks for, so passing `:hermes_enabled` or
+  `:fabric_enabled` has no effect. This project leaves them out rather than setting values that
+  are silently ignored.
+- **Android** enables the New Architecture through `newArchEnabled=true` in
+  `android/gradle.properties`, which is the default for new projects.
+
+If you hit something that behaves differently with the New Architecture enabled, please open an
+issue with your React Native version and a log excerpt.
+
+
 ## About Universal Links
 
 ### Android
