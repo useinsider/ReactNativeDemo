@@ -44,6 +44,11 @@ import BlockInApps from "./src/insider/BlockInApps";
 import Insider from "react-native-insider";
 import InsiderCallbackType from "react-native-insider/src/InsiderCallbackType";
 
+type SectionProps = {
+  title: string;
+  children: React.ReactNode;
+};
+
 function Section({ children, title }: SectionProps) {
   return (
     <View style={styles.sectionContainer}>
@@ -265,11 +270,9 @@ const styles = StyleSheet.create({
   },
   sectionDescription: {
     ...typography.body,
+    fontSize: 18,
     marginTop: 8,
     color: colors.onSurfaceVariant,
-  },
-  highlight: {
-    fontWeight: "700",
   },
 });
 
