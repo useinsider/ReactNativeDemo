@@ -4,7 +4,7 @@ import { colors, typography } from '../src/theme';
 
 const REPO_ROOT = path.resolve(__dirname, '..');
 const THEME_DIR = path.join(REPO_ROOT, 'src', 'theme');
-const SKIPPED_DIRS = ['node_modules', 'ios', 'android', 'vendor', '.git', 'docs'];
+const SKIPPED_DIRS = ['node_modules', 'ios', 'android', 'vendor', '.git', 'docs', '__tests__'];
 
 function collectSourceFiles(dir: string, found: string[] = []): string[] {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
