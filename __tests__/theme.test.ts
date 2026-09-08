@@ -57,4 +57,32 @@ describe('theme tokens', () => {
 
     expect(offenders).toEqual([]);
   });
+
+  it('registers both Kufam font files with iOS in Info.plist', () => {
+    const plistPath = path.join(REPO_ROOT, 'ios', 'ReactNativeDemo', 'Info.plist');
+    const plist = fs.readFileSync(plistPath, 'utf8');
+    const appFontsMatch = plist.match(/<key>UIAppFonts<\/key>\s*<array>([\s\S]*?)<\/array>/);
+
+    expect(appFontsMatch).not.toBeNull();
+    const appFontsBlock = appFontsMatch![1];
+
+    expect(appFontsBlock).toContain('Kufam-Medium.ttf');
+    expect(appFontsBlock).toContain('Kufam-SemiBold.ttf');
+  });
+
+  it('registers both Kufam font files with Android as raw assets', () => {
+    const androidFontsDir = path.join(REPO_ROOT, 'android', 'app', 'src', 'main', 'assets', 'fonts');
+    const files = fs.readdirSync(androidFontsDir);
+
+    expect(files).toContain('Kufam-Medium.ttf');
+    expect(files).toContain('Kufam-SemiBold.ttf');
+  });
+
+  it('keeps both Kufam font files in the source assets directory', () => {
+    const assetsFontsDir = path.join(REPO_ROOT, 'assets', 'fonts');
+    const files = fs.readdirSync(assetsFontsDir);
+
+    expect(files).toContain('Kufam-Medium.ttf');
+    expect(files).toContain('Kufam-SemiBold.ttf');
+  });
 });
