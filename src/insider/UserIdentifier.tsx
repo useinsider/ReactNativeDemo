@@ -4,6 +4,7 @@ import { View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import Insider from "react-native-insider";
 import InsiderIdentifier from "react-native-insider/src/InsiderIdentifier"
+import { colors } from "../theme";
 
 const UserIdentifiers = () => {
   const login = () => {
@@ -36,12 +37,12 @@ const UserIdentifiers = () => {
       <CustomButton text="Login" onPress={login} />
       <CustomButton
         text="Logout"
-        buttonStyle={{ backgroundColor: "#E57F74" }}
+        buttonStyle={{ backgroundColor: colors.orangeDark }}
         onPress={logout}
       />
       <CustomButton
         text="Sign Up"
-        buttonStyle={{ backgroundColor: "#007BFF" }}
+        buttonStyle={{ backgroundColor: colors.navy }}
         onPress={signUp}
       />
     </View>

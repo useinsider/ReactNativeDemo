@@ -10,29 +10,18 @@ import {
   TouchableOpacity,
   Alert,
   ViewToken,
-  useColorScheme,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView, initialWindowMetrics } from "react-native-safe-area-context";
 
 import CustomButton from "../components/CustomButton";
+import Card from "../components/Card";
 import Insider from "react-native-insider";
 import {
   InsiderAppCard,
   InsiderAppCardAction,
   InsiderAppCardDeeplinkAction,
 } from "react-native-insider/src/InsiderAppCard";
-
-// Palette aligned with the rest of the demo (App.tsx Colors + the button
-// color overrides used in the other sections: coral = destructive like Logout,
-// blue = accent like Sign Up).
-const Colors = {
-  white: "#FFFFFF",
-  black: "#000000",
-  light: "#F3F3F3",
-  dark: "#333333",
-  coral: "#E57F74",
-  blue: "#007BFF",
-};
+import { colors, typography } from "../theme";
 
 // Logs the action attached to a card or button, expanding deeplink details.
 // Field/method names mirror the native SDK surface (mobileandroid / mobile-ios).
@@ -58,13 +47,11 @@ const logCardAction = (prefix: string, action?: InsiderAppCardAction | null) => 
 
 const AppCardItem = ({
   item,
-  isDarkMode,
   onOpenDetail,
   onToggleRead,
   onDelete,
 }: {
   item: InsiderAppCard;
-  isDarkMode: boolean;
   onOpenDetail: (item: InsiderAppCard) => void;
   onToggleRead: (item: InsiderAppCard) => void;
   onDelete: (item: InsiderAppCard) => void;
@@ -76,27 +63,14 @@ const AppCardItem = ({
     ]);
   };
 
-  const titleColor = isDarkMode ? Colors.white : Colors.black;
-  const bodyColor = isDarkMode ? Colors.light : Colors.dark;
-
   return (
     <TouchableOpacity onPress={() => onOpenDetail(item)} onLongPress={confirmDelete}>
-      <View
-        style={[
-          styles.card,
-          {
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            borderBottomColor: isDarkMode ? Colors.dark : Colors.light,
-          },
-        ]}
-      >
+      <Card style={styles.card}>
         <View style={styles.cardHeader}>
           {!item.isRead && <View style={styles.unreadIndicator} />}
-          <Text style={[styles.cardTitle, { color: titleColor }]}>
-            {item.content?.title ?? "No Title"}
-          </Text>
+          <Text style={styles.cardTitle}>{item.content?.title ?? "No Title"}</Text>
         </View>
-        <Text style={[styles.cardBody, { color: bodyColor }]} numberOfLines={2}>
+        <Text style={styles.cardBody} numberOfLines={2}>
           {item.content?.description ?? "No Description"}
         </Text>
 
@@ -107,11 +81,11 @@ const AppCardItem = ({
           />
           <CustomButton
             text="Delete"
-            buttonStyle={{ backgroundColor: Colors.coral }}
+            buttonStyle={{ backgroundColor: colors.orangeDark }}
             onPress={confirmDelete}
           />
         </View>
-      </View>
+      </Card>
     </TouchableOpacity>
   );
 };
@@ -123,32 +97,25 @@ const AppCardItem = ({
 const ModalScreen = ({
   visible = true,
   title,
-  isDarkMode,
   onClose,
   children,
 }: {
   visible?: boolean;
   title: string;
-  isDarkMode: boolean;
   onClose: () => void;
   children: React.ReactNode;
 }) => (
   <Modal visible={visible} animationType="slide" presentationStyle="fullScreen" onRequestClose={onClose}>
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <SafeAreaView
-        style={[styles.modalContainer, { backgroundColor: isDarkMode ? Colors.black : Colors.white }]}
-        edges={["top", "bottom"]}
-      >
-        <View style={[styles.modalHeader, { borderBottomColor: isDarkMode ? Colors.dark : Colors.light }]}>
-          <Text style={[styles.modalTitle, { color: isDarkMode ? Colors.white : Colors.black }]}>
-            {title}
-          </Text>
+      <SafeAreaView style={styles.modalContainer} edges={["top", "bottom"]}>
+        <View style={styles.modalHeader}>
+          <Text style={styles.modalTitle}>{title}</Text>
           <TouchableOpacity
             style={styles.closeButton}
             onPress={onClose}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Text style={[styles.closeIcon, { color: isDarkMode ? Colors.white : Colors.black }]}>✕</Text>
+            <Text style={styles.closeIcon}>✕</Text>
           </TouchableOpacity>
         </View>
         {children}
@@ -161,34 +128,25 @@ const ModalScreen = ({
 // matches the App Cards inbox (same header + Close) and the rest of the demo.
 const CardDetail = ({
   card,
-  isDarkMode,
   onClose,
   onToggleRead,
   onDelete,
 }: {
   card: InsiderAppCard;
-  isDarkMode: boolean;
   onClose: () => void;
   onToggleRead: (item: InsiderAppCard) => void;
   onDelete: (item: InsiderAppCard) => void;
 }) => {
-  const titleColor = isDarkMode ? Colors.white : Colors.black;
-  const bodyColor = isDarkMode ? Colors.light : Colors.dark;
-  const dividerColor = isDarkMode ? Colors.dark : Colors.light;
   const imageUrl = card.images && card.images.length > 0 ? card.images[0].url : null;
 
   return (
-    <ModalScreen title="Message" isDarkMode={isDarkMode} onClose={onClose}>
+    <ModalScreen title="Message" onClose={onClose}>
       <ScrollView contentContainerStyle={styles.detailScroll}>
         {imageUrl && (
           <Image source={{ uri: imageUrl }} style={styles.detailImage} resizeMode="cover" />
         )}
-        <Text style={[styles.detailTitle, { color: titleColor }]}>
-          {card.content?.title ?? "No Title"}
-        </Text>
-        <Text style={[styles.detailBody, { color: bodyColor }]}>
-          {card.content?.description ?? "No Description"}
-        </Text>
+        <Text style={styles.detailTitle}>{card.content?.title ?? "No Title"}</Text>
+        <Text style={styles.detailBody}>{card.content?.description ?? "No Description"}</Text>
 
         {card.buttons && card.buttons.length > 0 && (
           <View style={styles.detailCardButtons}>
@@ -196,7 +154,7 @@ const CardDetail = ({
               <CustomButton
                 key={button.buttonId}
                 text={button.text}
-                buttonStyle={{ backgroundColor: Colors.blue }}
+                buttonStyle={{ backgroundColor: colors.navy }}
                 onPress={() => {
                   logCardAction(
                     `[INSIDER][AppCardButtonClick]: card=${button.appCardId} button=${button.buttonId}`,
@@ -210,7 +168,7 @@ const CardDetail = ({
         )}
       </ScrollView>
 
-      <View style={[styles.detailFooter, { borderTopColor: dividerColor }]}>
+      <View style={styles.detailFooter}>
         {card.action && (
           <View style={styles.buttonRow}>
             <CustomButton
@@ -232,7 +190,7 @@ const CardDetail = ({
           />
           <CustomButton
             text="Delete"
-            buttonStyle={{ backgroundColor: Colors.coral }}
+            buttonStyle={{ backgroundColor: colors.orangeDark }}
             onPress={() => {
               onDelete(card);
               onClose();
@@ -246,13 +204,11 @@ const CardDetail = ({
 
 // The App Cards inbox. Mounted only while the modal is open, so campaigns are
 // fetched on open rather than on app start.
-const AppCardsInbox = ({ isDarkMode }: { isDarkMode: boolean }) => {
+const AppCardsInbox = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [messages, setMessages] = useState<InsiderAppCard[]>([]);
   const [selectedCard, setSelectedCard] = useState<InsiderAppCard | null>(null);
-
-  const stateTextColor = { color: isDarkMode ? Colors.light : Colors.dark };
 
   // Single source of truth for loading campaigns into state; callers layer
   // their own loading/error handling on top (full-screen on first load,
@@ -366,9 +322,9 @@ const AppCardsInbox = ({ isDarkMode }: { isDarkMode: boolean }) => {
   }).current;
 
   if (loading) {
-    return <Text style={[styles.stateText, stateTextColor]}>Loading...</Text>;
+    return <Text style={styles.stateText}>Loading...</Text>;
   } else if (error) {
-    return <Text style={[styles.stateText, stateTextColor]}>{error.message}</Text>;
+    return <Text style={styles.stateText}>{error.message}</Text>;
   }
 
   return (
@@ -377,7 +333,7 @@ const AppCardsInbox = ({ isDarkMode }: { isDarkMode: boolean }) => {
         <View style={styles.removeAllWrapper}>
           <CustomButton
             text="Remove All"
-            buttonStyle={{ backgroundColor: Colors.coral }}
+            buttonStyle={{ backgroundColor: colors.orangeDark }}
             onPress={handleRemoveAll}
           />
         </View>
@@ -388,7 +344,6 @@ const AppCardsInbox = ({ isDarkMode }: { isDarkMode: boolean }) => {
         renderItem={({ item }) => (
           <AppCardItem
             item={item}
-            isDarkMode={isDarkMode}
             onOpenDetail={handleOpenDetail}
             onToggleRead={handleToggleRead}
             onDelete={handleDelete}
@@ -396,13 +351,12 @@ const AppCardsInbox = ({ isDarkMode }: { isDarkMode: boolean }) => {
         )}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
-        ListEmptyComponent={<Text style={[styles.emptyText, stateTextColor]}>No messages</Text>}
+        ListEmptyComponent={<Text style={styles.emptyText}>No messages</Text>}
       />
 
       {selectedCard && (
         <CardDetail
           card={selectedCard}
-          isDarkMode={isDarkMode}
           onClose={() => setSelectedCard(null)}
           onToggleRead={handleToggleRead}
           onDelete={handleDelete}
@@ -413,20 +367,14 @@ const AppCardsInbox = ({ isDarkMode }: { isDarkMode: boolean }) => {
 };
 
 function AppCards() {
-  const isDarkMode = useColorScheme() === "dark";
   const [visible, setVisible] = useState(false);
 
   return (
     <View>
       <CustomButton text="Show App Cards" onPress={() => setVisible(true)} />
 
-      <ModalScreen
-        visible={visible}
-        title="App Cards"
-        isDarkMode={isDarkMode}
-        onClose={() => setVisible(false)}
-      >
-        {visible && <AppCardsInbox isDarkMode={isDarkMode} />}
+      <ModalScreen visible={visible} title="App Cards" onClose={() => setVisible(false)}>
+        {visible && <AppCardsInbox />}
       </ModalScreen>
     </View>
   );
@@ -437,6 +385,7 @@ export default AppCards;
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
+    backgroundColor: colors.surface,
   },
   modalHeader: {
     flexDirection: "row",
@@ -445,10 +394,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 14,
     borderBottomWidth: 1,
+    borderBottomColor: colors.outline,
   },
   modalTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
+    ...typography.title,
+    color: colors.onSurface,
   },
   closeButton: {
     paddingVertical: 6,
@@ -458,11 +408,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     lineHeight: 22,
+    color: colors.onSurface,
   },
   stateText: {
+    ...typography.body,
     textAlign: "center",
     marginTop: 20,
-    fontSize: 16,
+    color: colors.onSurfaceVariant,
   },
   container: {
     flex: 1,
@@ -473,9 +425,8 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   card: {
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    borderBottomWidth: 1,
+    marginHorizontal: 15,
+    marginTop: 8,
   },
   cardHeader: {
     flexDirection: "row",
@@ -486,21 +437,25 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: Colors.blue,
+    backgroundColor: colors.navy,
     marginRight: 8,
   },
   cardTitle: {
+    ...typography.title,
     fontSize: 18,
-    fontWeight: "bold",
     flex: 1,
+    color: colors.onSurface,
   },
   cardBody: {
+    ...typography.body,
     fontSize: 14,
+    color: colors.onSurfaceVariant,
   },
   emptyText: {
+    ...typography.body,
     textAlign: "center",
     marginTop: 20,
-    fontSize: 16,
+    color: colors.onSurfaceVariant,
   },
   buttonRow: {
     flexDirection: "row",
@@ -517,13 +472,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   detailTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
+    ...typography.title,
+    color: colors.onSurface,
   },
   detailBody: {
+    ...typography.body,
     fontSize: 16,
     lineHeight: 24,
     marginTop: 10,
+    color: colors.onSurfaceVariant,
   },
   detailCardButtons: {
     marginTop: 16,
@@ -532,5 +489,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 12,
     borderTopWidth: 1,
+    borderTopColor: colors.outline,
   },
 });

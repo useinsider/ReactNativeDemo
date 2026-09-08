@@ -10,7 +10,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
   Alert,
   PermissionsAndroid,
@@ -21,12 +20,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Colors = {
-  white: '#FFFFFF',
-  black: '#000000',
-  light: '#F3F3F3',
-  dark: '#333333',
-};
+import { colors, typography } from './src/theme';
 
 import Header from "./src/components/Header";
 import CustomSection from "./src/components/CustomSection";
@@ -51,29 +45,10 @@ import Insider from "react-native-insider";
 import InsiderCallbackType from "react-native-insider/src/InsiderCallbackType";
 
 function Section({ children, title }: SectionProps) {
-  const isDarkMode = useColorScheme() === "dark";
   return (
     <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}
-      >
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}
-      >
-        {children}
-      </Text>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <Text style={styles.sectionDescription}>{children}</Text>
     </View>
   );
 }
@@ -169,10 +144,8 @@ const initInsider = async () => {
 };
 
 function App() {
-  const isDarkMode = useColorScheme() === "dark";
-
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.black : Colors.white,
+    backgroundColor: colors.surface,
   };
 
   const handleOpenURL = (event: { url: string }) => {
@@ -209,11 +182,7 @@ function App() {
           style={backgroundStyle}
         >
           <Header />
-          <View
-            style={{
-              backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            }}
-          >
+          <View style={{ backgroundColor: colors.surface }}>
             <Section title="[RN] Insider SDK Demo">
               This Demo contains simple methods that you can use with the Insider
               SDK.
@@ -291,13 +260,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   sectionTitle: {
-    fontSize: 24,
-    fontWeight: "600",
+    ...typography.title,
+    color: colors.onSurface,
   },
   sectionDescription: {
+    ...typography.body,
     marginTop: 8,
-    fontSize: 18,
-    fontWeight: "400",
+    color: colors.onSurfaceVariant,
   },
   highlight: {
     fontWeight: "700",
