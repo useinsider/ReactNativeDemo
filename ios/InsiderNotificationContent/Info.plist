@@ -14,9 +14,11 @@
 			<real>0.5</real>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
-		<string>InsiderInterface</string>
+		<string>MainInterface</string>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.usernotifications.content-extension</string>
+		<key>NSExtensionPrincipalClass</key>
+		<string>$(PRODUCT_MODULE_NAME).NotificationViewController</string>
 	</dict>
 	<key>RCTNewArchEnabled</key>
 	<true/>

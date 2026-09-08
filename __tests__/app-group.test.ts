@@ -9,6 +9,8 @@ const FILES_DECLARING_APP_GROUP = [
   'ios/ReactNativeDemo/ReactNativeDemo.entitlements',
   'ios/InsiderNotificationService/InsiderNotificationService.entitlements',
   'ios/InsiderNotificationContent/InsiderNotificationContent.entitlements',
+  'ios/InsiderNotificationService/NotificationService.swift',
+  'ios/InsiderNotificationContent/NotificationViewController.swift',
 ];
 
 describe('app group identifier', () => {
