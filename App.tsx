@@ -132,7 +132,7 @@ const initInsider = async () => {
 
   Insider.init(
     partnerName,
-    "group.com.useinsider.mobile-ios",
+    "group.com.useinsider.reactnativedemo",
     (type, data) => {
       switch (type) {
         case InsiderCallbackType.NOTIFICATION_OPEN:
