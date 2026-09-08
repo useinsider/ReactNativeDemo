@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		165A446CD67D9EEC8760F5B1 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B74711A6AC358138083A392 /* NotificationService.swift */; };
 		3BB970ACBD2687B99CDD1992 /* Pods_InsiderNotificationContent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC305E41CD7407B2E8F1959C /* Pods_InsiderNotificationContent.framework */; };
 		55CB974DA11BBF9242DE38D1 /* Pods_ReactNativeDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DEC10ED159A1B054669C2F2 /* Pods_ReactNativeDemo.framework */; };
 		630BF0672DA41CA500C29361 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 630BF0612DA41C5100C29361 /* AppDelegate.mm */; };
@@ -21,7 +22,6 @@
 		D46883E029A6132F00DB84D5 /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D46883DF29A6132F00DB84D5 /* UserNotificationsUI.framework */; };
 		D46883E429A6132F00DB84D5 /* NotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D46883E329A6132F00DB84D5 /* NotificationViewController.m */; };
 		D46883E729A6132F00DB84D5 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D46883E529A6132F00DB84D5 /* MainInterface.storyboard */; };
-		D46883F829A6134C00DB84D5 /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = D46883F729A6134C00DB84D5 /* NotificationService.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +68,7 @@
 		0590C32BBDBE8AB029049FC6 /* Pods-InsiderNotificationService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsiderNotificationService.release.xcconfig"; path = "Target Support Files/Pods-InsiderNotificationService/Pods-InsiderNotificationService.release.xcconfig"; sourceTree = "<group>"; };
 		09FE132B393F7D31863A5536 /* Pods-ReactNativeDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeDemo.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeDemo/Pods-ReactNativeDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ReactNativeDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactNativeDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B74711A6AC358138083A392 /* NotificationService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		630BF05F2DA41C2700C29361 /* ReactNativeDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ReactNativeDemo.entitlements; sourceTree = "<group>"; };
 		630BF0602DA41C5100C29361 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		630BF0612DA41C5100C29361 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
@@ -88,8 +89,6 @@
 		D46883E629A6132F00DB84D5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		D46883E829A6132F00DB84D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D46883F429A6134C00DB84D5 /* InsiderNotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = InsiderNotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		D46883F629A6134C00DB84D5 /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
-		D46883F729A6134C00DB84D5 /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
 		D46883F929A6134C00DB84D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D468840029A61C3C00DB84D5 /* InsiderNotificationService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = InsiderNotificationService.entitlements; sourceTree = "<group>"; };
 		D468840129A61C4100DB84D5 /* InsiderNotificationContent.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = InsiderNotificationContent.entitlements; sourceTree = "<group>"; };
@@ -227,9 +226,8 @@
 			isa = PBXGroup;
 			children = (
 				D468840029A61C3C00DB84D5 /* InsiderNotificationService.entitlements */,
-				D46883F629A6134C00DB84D5 /* NotificationService.h */,
-				D46883F729A6134C00DB84D5 /* NotificationService.m */,
 				D46883F929A6134C00DB84D5 /* Info.plist */,
+				1B74711A6AC358138083A392 /* NotificationService.swift */,
 			);
 			path = InsiderNotificationService;
 			sourceTree = "<group>";
@@ -598,7 +596,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D46883F829A6134C00DB84D5 /* NotificationService.m in Sources */,
+				165A446CD67D9EEC8760F5B1 /* NotificationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1083,6 +1081,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 90BDFAC64D359E92DFA0C125 /* Pods-InsiderNotificationService.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1112,6 +1111,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1120,6 +1120,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0590C32BBDBE8AB029049FC6 /* Pods-InsiderNotificationService.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1149,6 +1150,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
