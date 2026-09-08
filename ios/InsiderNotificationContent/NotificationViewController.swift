@@ -30,8 +30,8 @@ final class NotificationViewController: UIViewController,
             notification: notification
         )
 
-        carousel.type = .rotary
-        carousel.reloadData()
+        carousel?.type = .rotary
+        carousel?.reloadData()
 
         InsiderPushNotification.interactivePushDidReceive()
     }
@@ -40,7 +40,7 @@ final class NotificationViewController: UIViewController,
         _ response: UNNotificationResponse,
         completionHandler completion: @escaping (UNNotificationContentExtensionResponseOption) -> Void
     ) {
-        if response.actionIdentifier == "insider_int_push_next" {
+        if let carousel = carousel, response.actionIdentifier == "insider_int_push_next" {
             let nextIndex = InsiderPushNotification.didReceiveResponse(carousel.currentItemIndex)
             carousel.scrollToItem(at: nextIndex, animated: true)
             completion(.doNotDismiss)
