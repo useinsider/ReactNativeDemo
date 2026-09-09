@@ -1,4 +1,5 @@
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { colors, typography } from '../src/theme';
 
@@ -12,7 +13,7 @@ function collectSourceFiles(dir: string, found: string[] = []): string[] {
     if (entry.isDirectory()) {
       if (SKIPPED_DIRS.includes(entry.name)) continue;
       collectSourceFiles(fullPath, found);
-    } else if (/\.tsx?$/.test(entry.name) && !fullPath.startsWith(THEME_DIR)) {
+    } else if (/\.(t|j)sx?$/.test(entry.name) && !fullPath.startsWith(THEME_DIR)) {
       found.push(fullPath);
     }
   }
@@ -33,6 +34,15 @@ describe('theme tokens', () => {
       outline: '#D6DAE8',
       white: '#FFFFFF',
       black: '#000000',
+    });
+  });
+
+  it('exposes the four text styles with their exact families and sizes', () => {
+    expect(typography).toEqual({
+      title: { fontFamily: 'Kufam-SemiBold', fontSize: 24 },
+      body: { fontFamily: 'Kufam-Medium', fontSize: 15 },
+      button: { fontFamily: 'Kufam-SemiBold', fontSize: 14 },
+      caption: { fontFamily: 'Kufam-Medium', fontSize: 12 },
     });
   });
 
@@ -77,12 +87,41 @@ describe('theme tokens', () => {
     expect(files).toContain('Kufam-Medium.ttf');
     expect(files).toContain('Kufam-SemiBold.ttf');
   });
+});
 
-  it('keeps both Kufam font files in the source assets directory', () => {
-    const assetsFontsDir = path.join(REPO_ROOT, 'assets', 'fonts');
-    const files = fs.readdirSync(assetsFontsDir);
+describe('collectSourceFiles', () => {
+  it('sweeps plain JavaScript files at the repository root', () => {
+    const swept = collectSourceFiles(REPO_ROOT).map(file => path.relative(REPO_ROOT, file));
 
-    expect(files).toContain('Kufam-Medium.ttf');
-    expect(files).toContain('Kufam-SemiBold.ttf');
+    expect(swept).toContain('react-native.config.js');
+    expect(swept).toContain('index.js');
+    expect(swept).toContain('babel.config.js');
+    expect(swept).toContain('metro.config.js');
+  });
+
+  it('returns a non-empty set for the repository, so the guard sweeps are not vacuous', () => {
+    expect(collectSourceFiles(REPO_ROOT).length).toBeGreaterThan(0);
+  });
+
+  it('flags a planted hex literal in a js file', () => {
+    const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'theme-sweep-'));
+    fs.writeFileSync(path.join(fixtureDir, 'planted.js'), 'const c = "#FF00FF";\n');
+
+    const offenders = collectSourceFiles(fixtureDir)
+      .filter(file => /#[0-9A-Fa-f]{3,8}\b/.test(fs.readFileSync(file, 'utf8')))
+      .map(file => path.basename(file));
+
+    expect(offenders).toEqual(['planted.js']);
+  });
+
+  it('flags a planted useColorScheme call in a tsx file', () => {
+    const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'theme-sweep-'));
+    fs.writeFileSync(path.join(fixtureDir, 'planted.tsx'), 'const s = useColorScheme();\n');
+
+    const offenders = collectSourceFiles(fixtureDir)
+      .filter(file => fs.readFileSync(file, 'utf8').includes('useColorScheme'))
+      .map(file => path.basename(file));
+
+    expect(offenders).toEqual(['planted.tsx']);
   });
 });
