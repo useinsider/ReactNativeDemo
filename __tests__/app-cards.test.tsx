@@ -151,8 +151,15 @@ describe('AppCardItem read/unread toggle', () => {
 describe('AppCardItem Delete action', () => {
   // Delete is behind a confirmation, so the test has to answer it. Pressing the button alone must
   // NOT delete anything — that is half of what this covers.
-  function confirmAlert(): void {
-    const spy = jest.spyOn(Alert, 'alert');
+  //
+  // Each test installs its own spy BEFORE pressing: reading the calls off a spy created afterwards
+  // only works while a sibling test happens to have installed one first, which makes the pass
+  // depend on test order.
+  function watchAlert(): jest.SpyInstance {
+    return jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+  }
+
+  function confirmAlert(spy: jest.SpyInstance): void {
     const buttons = spy.mock.calls[spy.mock.calls.length - 1][2] as any[];
     const destructive = buttons.find(button => button.style === 'destructive');
 
@@ -163,7 +170,7 @@ describe('AppCardItem Delete action', () => {
   it('asks before deleting, and does not delete on the prompt alone', async () => {
     const card = makeCard('unread-1', false);
     const root = await renderInbox([card]);
-    const spy = jest.spyOn(Alert, 'alert');
+    const spy = watchAlert();
 
     await act(async () => {
       touchableWithLabel(root, 'Delete')[0].props.onPress();
@@ -171,21 +178,24 @@ describe('AppCardItem Delete action', () => {
 
     expect(spy).toHaveBeenCalled();
     expect(card.delete).not.toHaveBeenCalled();
+    spy.mockRestore();
   });
 
   it('deletes the card and refetches the list once confirmed', async () => {
     const card = makeCard('unread-1', false);
     const root = await renderInbox([card]);
     (Insider as any).appCards.getCampaigns.mockClear();
+    const spy = watchAlert();
 
     await act(async () => {
       touchableWithLabel(root, 'Delete')[0].props.onPress();
     });
     await act(async () => {
-      confirmAlert();
+      confirmAlert(spy);
     });
 
     expect(card.delete).toHaveBeenCalledTimes(1);
     expect((Insider as any).appCards.getCampaigns).toHaveBeenCalled();
+    spy.mockRestore();
   });
 });
