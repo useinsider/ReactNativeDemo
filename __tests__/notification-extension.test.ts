@@ -79,17 +79,61 @@ describe('forceUnwraps', () => {
   });
 });
 
-describe('NotificationService.didReceive', () => {
+/**
+ * Returns the body of one Swift method. Assertions about a method have to be scoped to it: a
+ * whole-file regex happily matches a sibling method and reads as green for the wrong reason.
+ */
+function methodBody(source: string, signatureStart: string): string {
+  const start = source.indexOf(signatureStart);
+  expect(start).toBeGreaterThan(-1);
+
+  // Methods here are indented four spaces, so their closing brace is the next `\n    }`.
+  const end = source.indexOf('\n    }', start);
+  expect(end).toBeGreaterThan(start);
+
+  return source.slice(start, end);
+}
+
+describe('methodBody', () => {
+  it('stops at the end of the method it was asked for', () => {
+    const body = methodBody(read(SERVICE_SWIFT), 'override func didReceive(');
+
+    expect(body).toContain('showInsiderRichPush');
+    expect(body).not.toContain('serviceExtensionTimeWillExpire');
+  });
+});
+
+describe('NotificationService', () => {
   it('never force-unwraps contentHandler or bestAttemptContent', () => {
     expect(forceUnwraps(read(SERVICE_SWIFT), 'contentHandler|bestAttemptContent')).toEqual([]);
   });
+});
 
-  // Any conditional binding is fine — `if let`, `guard let`, or a nil comparison. What matters is
-  // that neither property is force-unwrapped, which the sweep above covers.
+describe('NotificationService.didReceive', () => {
+  // The mutable copy is the one cast in this method. As a force cast it would crash the extension
+  // whenever the copy fails, and the force-unwrap sweep above cannot see an `as!`.
+  it('conditionally casts the mutable copy rather than force-casting it', () => {
+    const body = methodBody(read(SERVICE_SWIFT), 'override func didReceive(');
+
+    expect(body).toContain('guard let content = request.content.mutableCopy() as? UNMutableNotificationContent');
+    expect(body).not.toMatch(/as!\s/);
+  });
+
+  it('still delivers the original content when that copy fails', () => {
+    const body = methodBody(read(SERVICE_SWIFT), 'override func didReceive(');
+
+    expect(body).toContain('contentHandler(request.content)');
+  });
+});
+
+describe('NotificationService.serviceExtensionTimeWillExpire', () => {
+  // This is the method that binds the stored properties; the assertion used to sit under
+  // didReceive, where nothing could satisfy it, and passed only by matching this one.
   it('binds both stored properties before calling back', () => {
-    expect(read(SERVICE_SWIFT)).toMatch(
-      /(if|guard)\s+let\s+contentHandler.*bestAttemptContent|contentHandler\?\(/s,
-    );
+    const body = methodBody(read(SERVICE_SWIFT), 'override func serviceExtensionTimeWillExpire()');
+
+    expect(body).toMatch(/(if|guard)\s+let\s+contentHandler,\s*let\s+bestAttemptContent/);
+    expect(body).toContain('contentHandler(bestAttemptContent)');
   });
 });
 
