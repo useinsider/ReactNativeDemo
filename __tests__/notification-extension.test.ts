@@ -104,7 +104,9 @@ describe('NotificationViewController.didReceive', () => {
   it('branches on the action alone, so a missing outlet cannot reach the placeholder path', () => {
     const source = read(CONTENT_SWIFT);
 
-    expect(source).toMatch(/guard response\.actionIdentifier == "[^"]+" else \{/);
+    // Pin the literal, not just its shape: this identifier is the contract with the SDK, and a
+    // typo in it sends every Next tap down the placeholder path.
+    expect(source).toMatch(/guard response\.actionIdentifier == "insider_int_push_next" else \{/);
     expect(source).not.toMatch(/if let carousel[^\n]*actionIdentifier/);
   });
 
