@@ -83,6 +83,10 @@ describe('forceUnwraps', () => {
  * Returns the body of one Swift method. Assertions about a method have to be scoped to it: a
  * whole-file regex happily matches a sibling method and reads as green for the wrong reason.
  */
+function occurrences(source: string, needle: string): number {
+  return source.split(needle).length - 1;
+}
+
 function methodBody(source: string, signatureStart: string): string {
   const start = source.indexOf(signatureStart);
   expect(start).toBeGreaterThan(-1);
@@ -152,6 +156,28 @@ describe('NotificationViewController.didReceive', () => {
     // typo in it sends every Next tap down the placeholder path.
     expect(source).toMatch(/guard response\.actionIdentifier == "insider_int_push_next" else \{/);
     expect(source).not.toMatch(/if let carousel[^\n]*actionIdentifier/);
+  });
+
+  // The regression this port introduced: a nil outlet fell through to the placeholder path, so a
+  // Next tap was reported as a body tap and the notification was dismissed. Counting is what pins
+  // it — slicing between markers silently passes when a marker moves, which is how an earlier
+  // version of this test let the regression back in.
+  it('takes the placeholder path exactly once, for non-Next actions only', () => {
+    const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
+
+    expect(occurrences(body, 'logPlaceholderClick')).toBe(1);
+    expect(occurrences(body, 'dismissAndForwardAction')).toBe(1);
+  });
+
+  it('puts that single placeholder path in the action guard, ahead of any carousel handling', () => {
+    const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
+    const placeholder = body.indexOf('logPlaceholderClick');
+    const carousel = body.indexOf('didReceiveResponse');
+
+    expect(placeholder).toBeGreaterThan(-1);
+    expect(carousel).toBeGreaterThan(-1);
+    // A nil outlet reaching the placeholder path would have to sit after the carousel work.
+    expect(placeholder).toBeLessThan(carousel);
   });
 
   it('still scrolls and keeps the notification open when the outlet is there', () => {
