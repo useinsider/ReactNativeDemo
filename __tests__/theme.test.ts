@@ -80,6 +80,16 @@ describe('theme tokens', () => {
     expect(appFontsBlock).toContain('Kufam-SemiBold.ttf');
   });
 
+  it('keeps the Kufam font files in the source assets directory', () => {
+    // ios/ReactNativeDemo.xcodeproj bundles these straight from ../../assets/fonts, so losing them
+    // here ships an iOS build with no fonts. Nothing else asserts this directory's contents.
+    const assetsFontsDir = path.join(REPO_ROOT, 'assets', 'fonts');
+    const files = fs.readdirSync(assetsFontsDir);
+
+    expect(files).toContain('Kufam-Medium.ttf');
+    expect(files).toContain('Kufam-SemiBold.ttf');
+  });
+
   it('registers both Kufam font files with Android as raw assets', () => {
     const androidFontsDir = path.join(REPO_ROOT, 'android', 'app', 'src', 'main', 'assets', 'fonts');
     const files = fs.readdirSync(androidFontsDir);

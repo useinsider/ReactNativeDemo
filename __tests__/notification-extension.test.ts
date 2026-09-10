@@ -96,11 +96,9 @@ describe('NotificationService.didReceive', () => {
 describe('NotificationViewController.didReceive', () => {
   // The fix landed in this file, so the sweep has to cover it too.
   it('never force-unwraps the carousel outlet', () => {
-    const offenders = forceUnwraps(read(CONTENT_SWIFT), 'carousel').filter(
-      match => !match.includes('iCarousel'),
-    );
-
-    expect(offenders).toEqual([]);
+    // The `iCarousel!` in the outlet declaration is a type annotation, not a force unwrap: the
+    // sweep looks for `carousel!`, so the declaration never matches and needs no exclusion.
+    expect(forceUnwraps(read(CONTENT_SWIFT), 'carousel')).toEqual([]);
   });
 
   it('branches on the action alone, so a missing outlet cannot reach the placeholder path', () => {
