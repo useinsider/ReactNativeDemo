@@ -6,6 +6,7 @@
 import UIKit
 import UserNotifications
 import UserNotificationsUI
+import os.log
 import InsiderMobileAdvancedNotification
 
 // FIXME-INSIDER: Please change with your app group.
@@ -40,14 +41,24 @@ final class NotificationViewController: UIViewController,
         _ response: UNNotificationResponse,
         completionHandler completion: @escaping (UNNotificationContentExtensionResponseOption) -> Void
     ) {
-        if let carousel = carousel, response.actionIdentifier == "insider_int_push_next" {
-            let nextIndex = InsiderPushNotification.didReceiveResponse(carousel.currentItemIndex)
-            carousel.scrollToItem(at: nextIndex, animated: true)
-            completion(.doNotDismiss)
-        } else {
+        // Branch on the action alone, as the Objective-C original did. Folding the carousel's
+        // nil-check in here sent a missing outlet down the placeholder path, which reports a body
+        // tap that never happened and dismisses the notification instead of keeping it open.
+        guard response.actionIdentifier == "insider_int_push_next" else {
             InsiderPushNotification.logPlaceholderClick(response)
             completion(.dismissAndForwardAction)
+            return
         }
+
+        if let carousel = carousel {
+            let nextIndex = InsiderPushNotification.didReceiveResponse(carousel.currentItemIndex)
+            carousel.scrollToItem(at: nextIndex, animated: true)
+        } else {
+            // Only reachable if the storyboard outlet came unwired; scrolling was a no-op on nil
+            // in Objective-C too, but there it stayed silent, so say so rather than mis-report it.
+            os_log("Next tapped with no carousel outlet", log: .default, type: .error)
+        }
+        completion(.doNotDismiss)
     }
 
     // MARK: - iCarouselDataSource

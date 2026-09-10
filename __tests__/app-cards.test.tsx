@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import renderer, { act } from 'react-test-renderer';
 
 jest.mock('react-native-safe-area-context', () => ({
@@ -99,5 +99,93 @@ describe('AppCardItem Delete button', () => {
 
     expect(deleteButton).toBeDefined();
     expect(StyleSheet.flatten(deleteButton.props.style).backgroundColor).toBe(colors.orangeDark);
+  });
+});
+
+function touchableWithLabel(root: any, label: string): any[] {
+  return root
+    .findAllByType(TouchableHighlight)
+    .filter((node: any) => node.findAllByType(Text)[0]?.props.children === label);
+}
+
+describe('AppCardItem read/unread toggle', () => {
+  // The label and the method have to move together: a card showing "Mark Read" must call
+  // markAsRead, not markAsUnread. Asserting only the label lets the two drift apart.
+  it('marks an unread card as read', async () => {
+    const card = makeCard('unread-1', false);
+    const root = await renderInbox([card]);
+
+    await act(async () => {
+      touchableWithLabel(root, 'Mark Read')[0].props.onPress();
+    });
+
+    expect(card.markAsRead).toHaveBeenCalledTimes(1);
+    expect(card.markAsUnread).not.toHaveBeenCalled();
+  });
+
+  it('marks a read card as unread', async () => {
+    const card = makeCard('read-1', true);
+    const root = await renderInbox([card]);
+
+    await act(async () => {
+      touchableWithLabel(root, 'Mark Unread')[0].props.onPress();
+    });
+
+    expect(card.markAsUnread).toHaveBeenCalledTimes(1);
+    expect(card.markAsRead).not.toHaveBeenCalled();
+  });
+
+  it('refetches the list so the row reflects its new state', async () => {
+    const card = makeCard('unread-1', false);
+    const root = await renderInbox([card]);
+    (Insider as any).appCards.getCampaigns.mockClear();
+
+    await act(async () => {
+      touchableWithLabel(root, 'Mark Read')[0].props.onPress();
+    });
+
+    expect((Insider as any).appCards.getCampaigns).toHaveBeenCalled();
+  });
+});
+
+describe('AppCardItem Delete action', () => {
+  // Delete is behind a confirmation, so the test has to answer it. Pressing the button alone must
+  // NOT delete anything — that is half of what this covers.
+  function confirmAlert(): void {
+    const spy = jest.spyOn(Alert, 'alert');
+    const buttons = spy.mock.calls[spy.mock.calls.length - 1][2] as any[];
+    const destructive = buttons.find(button => button.style === 'destructive');
+
+    expect(destructive).toBeDefined();
+    destructive.onPress();
+  }
+
+  it('asks before deleting, and does not delete on the prompt alone', async () => {
+    const card = makeCard('unread-1', false);
+    const root = await renderInbox([card]);
+    const spy = jest.spyOn(Alert, 'alert');
+
+    await act(async () => {
+      touchableWithLabel(root, 'Delete')[0].props.onPress();
+    });
+
+    expect(spy).toHaveBeenCalled();
+    expect(card.delete).not.toHaveBeenCalled();
+  });
+
+  it('deletes the card and refetches the list once confirmed', async () => {
+    const card = makeCard('unread-1', false);
+    const root = await renderInbox([card]);
+    (Insider as any).appCards.getCampaigns.mockClear();
+
+    await act(async () => {
+      touchableWithLabel(root, 'Delete')[0].props.onPress();
+    });
+    await act(async () => {
+      confirmAlert();
+    });
+
+    expect(card.delete).toHaveBeenCalledTimes(1);
+    expect((Insider as any).appCards.getCampaigns).toHaveBeenCalled();
   });
 });

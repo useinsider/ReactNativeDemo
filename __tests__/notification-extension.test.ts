@@ -52,15 +52,68 @@ describe('notification extension Info.plist wiring', () => {
   });
 });
 
+const CONTENT_SWIFT = 'ios/InsiderNotificationContent/NotificationViewController.swift';
+
+/**
+ * A force unwrap is `name!` followed by something other than `=`; `name != nil` is a comparison and
+ * must not be flagged, or a correct nil-check reads as a violation.
+ */
+function forceUnwraps(source: string, name: string): string[] {
+  return source.match(new RegExp(`\\b(?:${name})\\s*!(?!=)`, 'g')) ?? [];
+}
+
+describe('forceUnwraps', () => {
+  it('flags a real force unwrap', () => {
+    expect(
+      forceUnwraps('contentHandler!(bestAttemptContent!)', 'contentHandler|bestAttemptContent'),
+    ).toHaveLength(2);
+  });
+
+  it('leaves a nil comparison alone', () => {
+    expect(
+      forceUnwraps(
+        'if contentHandler != nil, bestAttemptContent != nil {',
+        'contentHandler|bestAttemptContent',
+      ),
+    ).toEqual([]);
+  });
+});
+
 describe('NotificationService.didReceive', () => {
   it('never force-unwraps contentHandler or bestAttemptContent', () => {
-    const offenders =
-      read(SERVICE_SWIFT).match(/\b(contentHandler|bestAttemptContent)\s*!/g) ?? [];
+    expect(forceUnwraps(read(SERVICE_SWIFT), 'contentHandler|bestAttemptContent')).toEqual([]);
+  });
+
+  // Any conditional binding is fine — `if let`, `guard let`, or a nil comparison. What matters is
+  // that neither property is force-unwrapped, which the sweep above covers.
+  it('binds both stored properties before calling back', () => {
+    expect(read(SERVICE_SWIFT)).toMatch(
+      /(if|guard)\s+let\s+contentHandler.*bestAttemptContent|contentHandler\?\(/s,
+    );
+  });
+});
+
+describe('NotificationViewController.didReceive', () => {
+  // The fix landed in this file, so the sweep has to cover it too.
+  it('never force-unwraps the carousel outlet', () => {
+    const offenders = forceUnwraps(read(CONTENT_SWIFT), 'carousel').filter(
+      match => !match.includes('iCarousel'),
+    );
 
     expect(offenders).toEqual([]);
   });
 
-  it('unwraps both stored properties conditionally before calling back', () => {
-    expect(read(SERVICE_SWIFT)).toContain('if let contentHandler, let bestAttemptContent');
+  it('branches on the action alone, so a missing outlet cannot reach the placeholder path', () => {
+    const source = read(CONTENT_SWIFT);
+
+    expect(source).toMatch(/guard response\.actionIdentifier == "[^"]+" else \{/);
+    expect(source).not.toMatch(/if let carousel[^\n]*actionIdentifier/);
+  });
+
+  it('still scrolls and keeps the notification open when the outlet is there', () => {
+    const source = read(CONTENT_SWIFT);
+
+    expect(source).toContain('carousel.scrollToItem(at: nextIndex, animated: true)');
+    expect(source).toContain('completion(.doNotDismiss)');
   });
 });
