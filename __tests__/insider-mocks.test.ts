@@ -1,6 +1,14 @@
 import { enumModule, safeAreaModule, sdkModule } from '../test-utils/insiderMocks';
 
 /**
+ * Both stubs answer arbitrary property paths through a Proxy, so their useful surface is invisible
+ * to the type checker by construction. Reading them through these accessors states that once,
+ * rather than sprinkling casts over every assertion.
+ */
+const enumMembers = (): any => enumModule().default;
+const sdkRoot = (): any => sdkModule().default;
+
+/**
  * These stubs stand in for real modules across several suites, so their shape is a contract: a
  * suite only discovers a wrong shape once the code under test reaches for the missing member.
  */
@@ -34,11 +42,11 @@ describe('enumModule', () => {
   });
 
   it('answers every string member with its own name', () => {
-    expect(enumModule().default.SOME_MEMBER).toBe('SOME_MEMBER');
+    expect(enumMembers().SOME_MEMBER).toBe('SOME_MEMBER');
   });
 
   it('leaves symbol members undefined so it is not mistaken for an iterable', () => {
-    expect((enumModule().default as any)[Symbol.iterator]).toBeUndefined();
+    expect(enumMembers()[Symbol.iterator]).toBeUndefined();
   });
 });
 
@@ -48,17 +56,17 @@ describe('sdkModule', () => {
   });
 
   it('auto-vivifies a nested property path into a jest mock', () => {
-    expect(jest.isMockFunction(sdkModule().default.appCards.getCampaigns)).toBe(true);
+    expect(jest.isMockFunction(sdkRoot().appCards.getCampaigns)).toBe(true);
   });
 
   it('returns the same stub for repeated access to one path', () => {
-    const module = sdkModule();
+    const root = sdkRoot();
 
-    expect(module.default.a.b).toBe(module.default.a.b);
+    expect(root.a.b).toBe(root.a.b);
   });
 
   it('leaves then undefined so the stub is not awaited as a thenable', () => {
-    expect(sdkModule().default.then).toBeUndefined();
+    expect(sdkRoot().then).toBeUndefined();
   });
 });
 
