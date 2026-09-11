@@ -240,6 +240,87 @@ describe('NotificationViewController.didReceive unwired outlet diagnostics', () 
   });
 });
 
+/**
+ * Returns the `else` arm of the action guard — the placeholder path. Position, not presence, is
+ * what matters here: hoisted above the guard, these calls also run on a Next tap while every
+ * counting or ordering assertion stays green, so scope the assertions to this arm.
+ */
+function actionGuardElseArm(body: string): string {
+  const start = body.indexOf(
+    'guard response.actionIdentifier == "insider_int_push_next" else {',
+  );
+  expect(start).toBeGreaterThan(-1);
+
+  // The guard sits at method level, so its closing brace is the next `\n        }`.
+  const end = body.indexOf('\n        }', start);
+  expect(end).toBeGreaterThan(start);
+
+  return body.slice(start, end);
+}
+
+describe('actionGuardElseArm', () => {
+  // The regression variant: the placeholder path hoisted above the guard, so it runs on every tap.
+  const hoisted = [
+    '    func didReceive(',
+    '        _ response: UNNotificationResponse,',
+    '        completionHandler completion: @escaping (Option) -> Void',
+    '    ) {',
+    '        InsiderPushNotification.logPlaceholderClick(response)',
+    '        completion(.dismissAndForwardAction)',
+    '        guard response.actionIdentifier == "insider_int_push_next" else {',
+    '            return',
+    '        }',
+    '',
+    '        if let carousel = carousel {',
+    '            carousel.scrollToItem(at: nextIndex, animated: true)',
+    '        }',
+    '        completion(.doNotDismiss)',
+  ].join('\n');
+
+  it('excludes a placeholder call hoisted above the guard', () => {
+    expect(actionGuardElseArm(hoisted)).not.toContain('logPlaceholderClick');
+  });
+
+  it('stops at the guard, not at a later block closing at the same depth', () => {
+    expect(actionGuardElseArm(hoisted)).not.toContain('scrollToItem');
+  });
+});
+
+describe('NotificationViewController.didReceive placeholder path scoping', () => {
+  // Containment in the guard arm is the assertion the ordering check could not make: a Next tap
+  // must never report a body/placeholder click.
+  it('reports the placeholder click only on the non-Next arm', () => {
+    const arm = actionGuardElseArm(methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse'));
+
+    expect(arm).toContain('InsiderPushNotification.logPlaceholderClick(response)');
+  });
+
+  // Hoisted out of this arm, the completion handler is called twice on a Next tap.
+  it('dismisses and forwards only on the non-Next arm', () => {
+    const arm = actionGuardElseArm(methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse'));
+
+    expect(arm).toContain('completion(.dismissAndForwardAction)');
+  });
+});
+
+describe('NotificationViewController.didReceive unwired outlet log contents', () => {
+  // The arm is the only signal an outlet came unwired, so the text and the severity are the
+  // signal — a reworded or downgraded log is indistinguishable from silence in Console.
+  it('names the unwired outlet in the logged message', () => {
+    const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
+    const elseArm = body.slice(body.indexOf('} else {'));
+
+    expect(elseArm).toContain('os_log("Next tapped with no carousel outlet"');
+  });
+
+  it('logs that message at error severity', () => {
+    const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
+    const elseArm = body.slice(body.indexOf('} else {'));
+
+    expect(elseArm).toContain('type: .error');
+  });
+});
+
 const PODFILE = 'ios/Podfile';
 
 /**
