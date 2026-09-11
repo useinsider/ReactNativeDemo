@@ -141,7 +141,7 @@ describe('collectSourceFiles', () => {
   });
 
   // Both widths are planted on purpose: the guard is written for /#[0-9A-Fa-f]{3,8}/, so a later
-  // narrowing to {3,8} has to fail here rather than pass against a fixture that only uses six.
+  // narrowing to {6,8} has to fail here rather than pass against a fixture that only uses six.
   it.each([
     ['six-digit', '#FF00FF'],
     ['three-digit', '#F0F'],

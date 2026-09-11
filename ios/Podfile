@@ -63,20 +63,22 @@ target 'InsiderNotificationContent' do
   use_frameworks!
   inherit! :search_paths
   # Pods for InsiderNotificationContent
-  # 2.4.0 is the newest published release and the one this port was built and verified against.
-  # The SDK's current source makes the InsiderPushNotification helpers this extension calls
-  # private and renames iCarousel, so a future minor would not compile here — hence the bound.
-  # Patch releases still flow, since integrators copy this Podfile as-is.
-  pod "InsiderMobileAdvancedNotification", "~> 2.4.0"
+  # Exact pin: 2.4.0 is the version this port was built and verified against. The SDK's current
+  # source already makes the InsiderPushNotification helpers this extension calls private and
+  # renames iCarousel, and nothing here settles whether that ships as a patch or a minor — so a
+  # range would be a guess. ios/Podfile.lock is gitignored, which makes this the only reproducible
+  # resolution every developer and integrator gets. See MOB-26644 review.
+  pod "InsiderMobileAdvancedNotification", "2.4.0"
 end
 
 target 'InsiderNotificationService' do
   use_frameworks!
   inherit! :search_paths
   # Pods for InsiderNotificationService
-  # 2.4.0 is the newest published release and the one this port was built and verified against.
-  # The SDK's current source makes the InsiderPushNotification helpers this extension calls
-  # private and renames iCarousel, so a future minor would not compile here — hence the bound.
-  # Patch releases still flow, since integrators copy this Podfile as-is.
-  pod "InsiderMobileAdvancedNotification", "~> 2.4.0"
+  # Exact pin: 2.4.0 is the version this port was built and verified against. The SDK's current
+  # source already makes the InsiderPushNotification helpers this extension calls private and
+  # renames iCarousel, and nothing here settles whether that ships as a patch or a minor — so a
+  # range would be a guess. ios/Podfile.lock is gitignored, which makes this the only reproducible
+  # resolution every developer and integrator gets. See MOB-26644 review.
+  pod "InsiderMobileAdvancedNotification", "2.4.0"
 end

@@ -79,6 +79,17 @@ describe('AppCardItem', () => {
     expect(style.backgroundColor).toBe(colors.navy);
   });
 
+  it('draws that indicator as an 8pt circle', async () => {
+    const root = await renderInbox([makeCard('unread-1', false)]);
+    const style = StyleSheet.flatten(unreadIndicators(root)[0].props.style);
+
+    // The selector used to match on these numbers, which made it the only thing asserting them.
+    // Now that it matches on testID, the geometry needs its own assertion or a square dot ships.
+    expect(style.width).toBe(8);
+    expect(style.height).toBe(8);
+    expect(style.borderRadius).toBe(4);
+  });
+
   it('omits the unread indicator once the card is read', async () => {
     const root = await renderInbox([makeCard('read-1', true)]);
 
