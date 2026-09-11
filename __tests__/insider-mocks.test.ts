@@ -1,4 +1,4 @@
-import { enumModule, safeAreaModule } from '../test-utils/insiderMocks';
+import { enumModule, safeAreaModule, sdkModule } from '../test-utils/insiderMocks';
 
 /**
  * These stubs stand in for real modules across several suites, so their shape is a contract: a
@@ -29,5 +29,29 @@ describe('safeAreaModule', () => {
 describe('enumModule', () => {
   it('answers every string member with its own name', () => {
     expect(enumModule().default.SOME_MEMBER).toBe('SOME_MEMBER');
+  });
+
+  it('leaves symbol members undefined so it is not mistaken for an iterable', () => {
+    expect((enumModule().default as any)[Symbol.iterator]).toBeUndefined();
+  });
+});
+
+describe('sdkModule', () => {
+  it('exposes a callable default export', () => {
+    expect(typeof sdkModule().default).toBe('function');
+  });
+
+  it('auto-vivifies a nested property path into a jest mock', () => {
+    expect(jest.isMockFunction(sdkModule().default.appCards.getCampaigns)).toBe(true);
+  });
+
+  it('returns the same stub for repeated access to one path', () => {
+    const module = sdkModule();
+
+    expect(module.default.a.b).toBe(module.default.a.b);
+  });
+
+  it('leaves then undefined so the stub is not awaited as a thenable', () => {
+    expect(sdkModule().default.then).toBeUndefined();
   });
 });
