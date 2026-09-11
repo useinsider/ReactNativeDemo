@@ -199,3 +199,86 @@ describe('NotificationViewController.didReceive', () => {
     expect(source).toContain('completion(.doNotDismiss)');
   });
 });
+
+describe('NotificationViewController.didReceive forwards the live slide index', () => {
+  // The SDK is told which slide the user was on. A literal `0` here keeps every existing
+  // ordering assertion green while reporting slide 0 for every Next tap, so pin the argument.
+  it('forwards the carousel index, defaulting to 0 only when the outlet is missing', () => {
+    const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
+
+    expect(body).toContain(
+      'InsiderPushNotification.didReceiveResponse(carousel?.currentItemIndex ?? 0)',
+    );
+  });
+});
+
+describe('NotificationViewController.didReceive completion handling', () => {
+  // Indentation is what discriminates: at method level the call runs on both arms, nested in
+  // either arm it is eight spaces deeper and a nil outlet never calls the completion handler,
+  // which hangs the extension until iOS times it out.
+  it('calls the completion handler once, outside the carousel branch', () => {
+    const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
+
+    expect(occurrences(body, 'completion(.doNotDismiss)')).toBe(1);
+    expect(body).toMatch(/\n {8}completion\(\.doNotDismiss\)/);
+  });
+});
+
+describe('NotificationViewController.didReceive unwired outlet diagnostics', () => {
+  // Slice the else arm: a body-wide match would survive the arm being deleted and the log
+  // reappearing somewhere else. This log is the only signal an outlet came unwired.
+  it('logs on the arm reached when the carousel outlet is nil', () => {
+    const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
+    const elseArm = body.slice(body.indexOf('} else {'));
+
+    expect(body).toContain('} else {');
+    expect(elseArm).toContain('os_log(');
+  });
+
+  it('imports the logging module that arm depends on', () => {
+    expect(read(CONTENT_SWIFT)).toMatch(/^import os\.log$/m);
+  });
+});
+
+const PODFILE = 'ios/Podfile';
+
+/**
+ * Returns one `target '…' do` block. A non-anchored slice to the next `end` stops at the `end` of
+ * a nested `do`/`begin` block, so split on the target lines instead and keep the matching chunk.
+ */
+function podfileTarget(source: string, name: string): string {
+  const chunk = source.split(/^target /m).find(part => part.startsWith(`'${name}' do`));
+
+  expect(chunk).toBeDefined();
+
+  return chunk!;
+}
+
+describe('podfileTarget', () => {
+  it('returns only the requested target, not the whole file', () => {
+    const fixture = [
+      "target 'WithPin' do",
+      '  pod "SomePod", "1.0.0"',
+      'end',
+      '',
+      "target 'WithoutPin' do",
+      'end',
+      '',
+    ].join('\n');
+
+    expect(podfileTarget(fixture, 'WithoutPin')).not.toContain('SomePod');
+  });
+});
+
+describe('InsiderMobileAdvancedNotification pin', () => {
+  // Scope per target: a file-wide grep for the version passes with one of the two extensions
+  // reverted, which builds the content and service extensions against different SDK versions.
+  it.each(['InsiderNotificationContent', 'InsiderNotificationService'])(
+    'target %s pins the exact SDK version',
+    target => {
+      expect(podfileTarget(read(PODFILE), target)).toContain(
+        'pod "InsiderMobileAdvancedNotification", "2.4.0"',
+      );
+    },
+  );
+});
