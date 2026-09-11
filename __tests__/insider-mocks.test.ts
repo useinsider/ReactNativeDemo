@@ -55,3 +55,12 @@ describe('sdkModule', () => {
     expect(sdkModule().default.then).toBeUndefined();
   });
 });
+
+describe('sdkModule symbol members', () => {
+  // The proxy hands symbol keys straight to the underlying jest.fn instead of auto-vivifying a
+  // stub. Vivified, the stub would answer Symbol.iterator with a function and any spread or
+  // destructure of it would take the iterable path instead of failing loudly.
+  it('leaves symbol members undefined so the stub is not mistaken for an iterable', () => {
+    expect((sdkModule().default as any)[Symbol.iterator]).toBeUndefined();
+  });
+});

@@ -363,3 +363,24 @@ describe('InsiderMobileAdvancedNotification pin', () => {
     },
   );
 });
+
+describe('NotificationViewController.didReceive carousel scroll scoping', () => {
+  // The scroll is the one call that needs a live outlet. Counting pins it to a single site: a
+  // second copy hoisted out of the branch runs on a nil carousel and crashes the extension,
+  // while every containment assertion in this file stays green. The needle keeps the receiver
+  // so the method comment naming the Objective-C `scrollToItemAtIndex:` — no receiver dot, no
+  // paren — is not counted as a call. Keeping the receiver itself out of the needle matters: a
+  // hoisted duplicate would be written `carousel?.scrollToItem(...)` and evade a bound needle.
+  it('scrolls the carousel exactly once', () => {
+    const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
+
+    expect(occurrences(body, '.scrollToItem(')).toBe(1);
+  });
+
+  it('puts that single scroll inside the outlet check, not on the nil arm', () => {
+    const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
+    const thenArm = body.slice(body.indexOf('if let carousel = carousel {'), body.indexOf('} else {'));
+
+    expect(thenArm).toContain('carousel.scrollToItem(at: nextIndex, animated: true)');
+  });
+});
