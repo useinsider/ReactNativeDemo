@@ -63,12 +63,22 @@ target 'InsiderNotificationContent' do
   use_frameworks!
   inherit! :search_paths
   # Pods for InsiderNotificationContent
-  pod "InsiderMobileAdvancedNotification"
+  # Exact pin: 2.4.0 is the version this port was built and verified against. The SDK's current
+  # source already makes the InsiderPushNotification helpers this extension calls private and
+  # renames iCarousel, and nothing here settles whether that ships as a patch or a minor — so a
+  # range would be a guess. ios/Podfile.lock is gitignored, which makes this the only reproducible
+  # resolution every developer and integrator gets. See MOB-26644 review.
+  pod "InsiderMobileAdvancedNotification", "2.4.0"
 end
 
 target 'InsiderNotificationService' do
   use_frameworks!
   inherit! :search_paths
   # Pods for InsiderNotificationService
-  pod "InsiderMobileAdvancedNotification"
+  # Exact pin: 2.4.0 is the version this port was built and verified against. The SDK's current
+  # source already makes the InsiderPushNotification helpers this extension calls private and
+  # renames iCarousel, and nothing here settles whether that ships as a patch or a minor — so a
+  # range would be a guess. ios/Podfile.lock is gitignored, which makes this the only reproducible
+  # resolution every developer and integrator gets. See MOB-26644 review.
+  pod "InsiderMobileAdvancedNotification", "2.4.0"
 end

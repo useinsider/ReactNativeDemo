@@ -50,6 +50,11 @@
 	<string>We need your location information to monitor geofencing.</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Kufam-Medium.ttf</string>
+		<string>Kufam-SemiBold.ttf</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

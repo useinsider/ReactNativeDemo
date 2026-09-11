@@ -1,0 +1,80 @@
+import { enumModule, safeAreaModule, sdkModule } from '../test-utils/insiderMocks';
+
+/**
+ * Both stubs answer arbitrary property paths through a Proxy, so their useful surface is invisible
+ * to the type checker by construction. Reading them through these accessors states that once,
+ * rather than sprinkling casts over every assertion.
+ */
+const enumMembers = (): any => enumModule().default;
+const sdkRoot = (): any => sdkModule().default;
+
+/**
+ * These stubs stand in for real modules across several suites, so their shape is a contract: a
+ * suite only discovers a wrong shape once the code under test reaches for the missing member.
+ */
+describe('safeAreaModule', () => {
+  it('reports zero insets on every edge', () => {
+    expect(safeAreaModule().useSafeAreaInsets()).toEqual({
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+    });
+  });
+
+  it('has no initial window metrics', () => {
+    expect(safeAreaModule().initialWindowMetrics).toBeNull();
+  });
+
+  it('renders its providers as pass-throughs', () => {
+    const module = safeAreaModule();
+
+    expect(module.SafeAreaProvider({ children: 'child' })).toBe('child');
+    expect(module.SafeAreaView({ children: 'child' })).toBe('child');
+  });
+});
+
+describe('enumModule', () => {
+  // The stub replaces an ESM module, so jest's interop has to see the flag: without it the
+  // default export is handed back wrapped and every enum member reads as undefined.
+  it('marks itself as an ES module so the default export is unwrapped', () => {
+    expect(enumModule().__esModule).toBe(true);
+  });
+
+  it('answers every string member with its own name', () => {
+    expect(enumMembers().SOME_MEMBER).toBe('SOME_MEMBER');
+  });
+
+  it('leaves symbol members undefined so it is not mistaken for an iterable', () => {
+    expect(enumMembers()[Symbol.iterator]).toBeUndefined();
+  });
+});
+
+describe('sdkModule', () => {
+  it('exposes a callable default export', () => {
+    expect(typeof sdkModule().default).toBe('function');
+  });
+
+  it('auto-vivifies a nested property path into a jest mock', () => {
+    expect(jest.isMockFunction(sdkRoot().appCards.getCampaigns)).toBe(true);
+  });
+
+  it('returns the same stub for repeated access to one path', () => {
+    const root = sdkRoot();
+
+    expect(root.a.b).toBe(root.a.b);
+  });
+
+  it('leaves then undefined so the stub is not awaited as a thenable', () => {
+    expect(sdkRoot().then).toBeUndefined();
+  });
+});
+
+describe('sdkModule symbol members', () => {
+  // The proxy hands symbol keys straight to the underlying jest.fn instead of auto-vivifying a
+  // stub. Vivified, the stub would answer Symbol.iterator with a function and any spread or
+  // destructure of it would take the iterable path instead of failing loudly.
+  it('leaves symbol members undefined so the stub is not mistaken for an iterable', () => {
+    expect((sdkModule().default as any)[Symbol.iterator]).toBeUndefined();
+  });
+});

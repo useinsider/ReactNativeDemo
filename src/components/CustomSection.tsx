@@ -1,32 +1,34 @@
 import React from 'react';
-import { View, Text, StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { colors, typography } from '../theme';
+import Card from './Card';
+
+type CustomSectionProps = {
+  title: string;
+  children: React.ReactNode;
+  style?: ViewStyle;
+};
 
 function CustomSection({ title, children, style }: CustomSectionProps) {
-  const isDarkMode = useColorScheme() === 'dark';
-  const styles = StyleSheet.create({
-    section: {
-      paddingRight: 20,
-      paddingLeft: 20,
-      marginTop: 10,
-      flex: 1,
-      ...style
-    },
-    title: {
-      marginBottom: 10,
-      fontSize: 24,
-      fontWeight: 'bold',
-      color: isDarkMode ? 'white' : 'black'
-    },
-  });
-
   return (
-    <View style={styles.section}>
+    <View style={[styles.section, style]}>
       <Text style={styles.title}>{title}</Text>
-      <View style={{ flex: 1 }}>
-        {children}
-      </View>
+      <Card>{children}</Card>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  section: {
+    paddingHorizontal: 20,
+    marginTop: 10,
+    flex: 1,
+  },
+  title: {
+    ...typography.title,
+    marginBottom: 10,
+    color: colors.onSurface,
+  },
+});
 
 export default CustomSection;

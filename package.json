@@ -31,6 +31,7 @@
     "@react-native/metro-config": "^0.82.1",
     "@react-native/typescript-config": "^0.82.1",
     "@types/jest": "^30.0.0",
+    "@types/node": "^26.5.0",
     "@types/react": "^19.1.1",
     "@types/react-test-renderer": "19.1.0",
     "eslint": "^8.57.1",
@@ -44,5 +45,8 @@
   },
   "overrides": {
     "joi": "^18.2.1"
+  },
+  "jest": {
+    "preset": "react-native"
   }
 }
