@@ -21,6 +21,20 @@ describe('notification content extension storyboard', () => {
     expect(read(STORYBOARD)).toContain('customModule="InsiderNotificationContent"');
   });
 
+  // iCarousel is an Objective-C class. customModule makes ibtool write the Swift-mangled name
+  // (_TtC33InsiderMobileAdvancedNotification9iCarousel) into the nib, but the framework only
+  // exports the plain ObjC symbol _OBJC_CLASS_$_iCarousel — UIKit then cannot resolve the view,
+  // substitutes a bare UIView, and the carousel never scrolls. The vendor's own storyboard binds
+  // it with customClass alone. The extension compiles either way, so only this catches it.
+  it('binds the carousel by its Objective-C class name, with no module', () => {
+    const carouselView = read(STORYBOARD)
+      .split('\n')
+      .find(line => line.includes('customClass="iCarousel"'));
+
+    expect(carouselView).toBeDefined();
+    expect(carouselView).not.toContain('customModule');
+  });
+
   it('exposes the carousel outlet expected by the view controller', () => {
     expect(read(STORYBOARD)).toContain('property="carousel"');
   });
