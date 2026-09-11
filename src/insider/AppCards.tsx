@@ -67,7 +67,7 @@ const AppCardItem = ({
     <TouchableOpacity onPress={() => onOpenDetail(item)} onLongPress={confirmDelete}>
       <Card style={styles.card}>
         <View style={styles.cardHeader}>
-          {!item.isRead && <View style={styles.unreadIndicator} />}
+          {!item.isRead && <View testID="unread-indicator" style={styles.unreadIndicator} />}
           <Text style={styles.cardTitle}>{item.content?.title ?? "No Title"}</Text>
         </View>
         <Text style={styles.cardBody} numberOfLines={2}>

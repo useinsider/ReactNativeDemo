@@ -50,12 +50,16 @@ final class NotificationViewController: UIViewController,
             return
         }
 
+        // The SDK hears about the tap either way: in Objective-C this call was an argument to
+        // scrollToItemAtIndex:, so it ran even when the outlet was nil (currentItemIndex on nil
+        // gave 0). Only the scroll itself needs a live outlet.
+        let nextIndex = InsiderPushNotification.didReceiveResponse(carousel?.currentItemIndex ?? 0)
+
         if let carousel = carousel {
-            let nextIndex = InsiderPushNotification.didReceiveResponse(carousel.currentItemIndex)
             carousel.scrollToItem(at: nextIndex, animated: true)
         } else {
-            // Only reachable if the storyboard outlet came unwired; scrolling was a no-op on nil
-            // in Objective-C too, but there it stayed silent, so say so rather than mis-report it.
+            // Only reachable if the storyboard outlet came unwired. Objective-C stayed silent
+            // here; say so instead, rather than mis-reporting it as a body tap.
             os_log("Next tapped with no carousel outlet", log: .default, type: .error)
         }
         completion(.doNotDismiss)

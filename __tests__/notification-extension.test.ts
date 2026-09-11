@@ -180,6 +180,18 @@ describe('NotificationViewController.didReceive', () => {
     expect(placeholder).toBeLessThan(carousel);
   });
 
+  it('tells the SDK about the tap even when the outlet is missing', () => {
+    // Objective-C evaluated this as an argument to scrollToItemAtIndex:, so it ran on a nil
+    // carousel too. Moving it inside the outlet check would silently drop those taps.
+    const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
+    const sdkCall = body.indexOf('didReceiveResponse');
+    const outletCheck = body.indexOf('if let carousel');
+
+    expect(sdkCall).toBeGreaterThan(-1);
+    expect(outletCheck).toBeGreaterThan(-1);
+    expect(sdkCall).toBeLessThan(outletCheck);
+  });
+
   it('still scrolls and keeps the notification open when the outlet is there', () => {
     const source = read(CONTENT_SWIFT);
 

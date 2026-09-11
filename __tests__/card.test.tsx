@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import renderer, { act } from 'react-test-renderer';
 import Card from '../src/components/Card';
 import { colors } from '../src/theme';
@@ -9,21 +9,14 @@ function flattenCardStyle(element: React.ReactElement): any {
   act(() => {
     component = renderer.create(element);
   });
-  const rawStyle = component.toJSON().props.style;
-  return Array.isArray(rawStyle)
-    ? Object.assign({}, ...rawStyle.flat().filter(Boolean))
-    : rawStyle;
+  // StyleSheet.flatten recurses; a hand-rolled `.flat()` stops at one level and turns a nested
+  // style array into index-keyed junk.
+  return StyleSheet.flatten(component.toJSON().props.style);
 }
 
 describe('Card', () => {
   it('renders a white, 18-radius, 1px outlined surface without shadow', () => {
-    let component: any;
-    act(() => {
-      component = renderer.create(<Card><Text>content</Text></Card>);
-    });
-    const tree: any = component.toJSON();
-    const rawStyle = tree.props.style;
-    const style = Array.isArray(rawStyle) ? Object.assign({}, ...rawStyle.flat().filter(Boolean)) : rawStyle;
+    const style = flattenCardStyle(<Card><Text>content</Text></Card>);
 
     expect(style.backgroundColor).toBe(colors.white);
     expect(style.borderRadius).toBe(18);

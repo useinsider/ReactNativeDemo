@@ -2,12 +2,7 @@ import React from 'react';
 import { Alert, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import renderer, { act } from 'react-test-renderer';
 
-jest.mock('react-native-safe-area-context', () => ({
-  __esModule: true,
-  SafeAreaProvider: ({ children }: any) => children,
-  SafeAreaView: ({ children }: any) => children,
-  initialWindowMetrics: null,
-}));
+jest.mock('react-native-safe-area-context', () => require('../test-utils/insiderMocks').safeAreaModule());
 
 jest.mock('react-native-insider', () => ({
   __esModule: true,
@@ -59,10 +54,11 @@ async function renderInbox(cards: any[]): Promise<any> {
 }
 
 function unreadIndicators(root: any): any[] {
-  return root.findAllByType(View).filter((node: any) => {
-    const style = StyleSheet.flatten(node.props.style);
-    return !!style && style.width === 8 && style.height === 8 && style.borderRadius === 4;
-  });
+  // Found by identity, not by size: a selector that re-states the dot's geometry stops matching
+  // the moment the dot is resized, and then `toHaveLength(0)` passes whether the guard works or not.
+  return root.findAllByProps({ testID: 'unread-indicator' }).filter(
+    (node: any) => node.type === View,
+  );
 }
 
 beforeEach(() => {

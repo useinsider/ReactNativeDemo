@@ -63,18 +63,20 @@ target 'InsiderNotificationContent' do
   use_frameworks!
   inherit! :search_paths
   # Pods for InsiderNotificationContent
-  # Pinned: 2.4.0 is the last release this port compiles against. The next one makes the
-  # InsiderPushNotification helpers it calls private and renames iCarousel, so an unpinned
-  # resolve would break the copy integrators take from this demo. See MOB-26644 review.
-  pod "InsiderMobileAdvancedNotification", "2.4.0"
+  # 2.4.0 is the newest published release and the one this port was built and verified against.
+  # The SDK's current source makes the InsiderPushNotification helpers this extension calls
+  # private and renames iCarousel, so a future minor would not compile here — hence the bound.
+  # Patch releases still flow, since integrators copy this Podfile as-is.
+  pod "InsiderMobileAdvancedNotification", "~> 2.4.0"
 end
 
 target 'InsiderNotificationService' do
   use_frameworks!
   inherit! :search_paths
   # Pods for InsiderNotificationService
-  # Pinned: 2.4.0 is the last release this port compiles against. The next one makes the
-  # InsiderPushNotification helpers it calls private and renames iCarousel, so an unpinned
-  # resolve would break the copy integrators take from this demo. See MOB-26644 review.
-  pod "InsiderMobileAdvancedNotification", "2.4.0"
+  # 2.4.0 is the newest published release and the one this port was built and verified against.
+  # The SDK's current source makes the InsiderPushNotification helpers this extension calls
+  # private and renames iCarousel, so a future minor would not compile here — hence the bound.
+  # Patch releases still flow, since integrators copy this Podfile as-is.
+  pod "InsiderMobileAdvancedNotification", "~> 2.4.0"
 end

@@ -7,73 +7,17 @@ import 'react-native';
 
 // The Insider SDK ships untranspiled ESM, which the react-native jest preset
 // does not transform, so the whole SDK surface is stubbed for this suite.
-jest.mock('react-native-insider', () => {
-  const stub = (): any =>
-    new Proxy(jest.fn(), {
-      get: (target: any, prop: string | symbol) => {
-        if (typeof prop === 'symbol' || prop === 'then') {
-          return (target as any)[prop];
-        }
-        if (!(prop in target)) {
-          target[prop] = stub();
-        }
-        return target[prop];
-      },
-    });
-  return { __esModule: true, default: stub() };
-});
+jest.mock('react-native-insider', () => require('../test-utils/insiderMocks').sdkModule());
 
-jest.mock('react-native-insider/src/ContentOptimizerDataType', () => ({
-  __esModule: true,
-  default: new Proxy(
-    {},
-    {
-      get: (_target: any, prop: string | symbol) =>
-        typeof prop === 'string' ? prop : undefined,
-    },
-  ),
-}));
+jest.mock('react-native-insider/src/ContentOptimizerDataType', () => require('../test-utils/insiderMocks').enumModule());
 
-jest.mock('react-native-insider/src/InsiderCallbackType', () => ({
-  __esModule: true,
-  default: new Proxy(
-    {},
-    {
-      get: (_target: any, prop: string | symbol) =>
-        typeof prop === 'string' ? prop : undefined,
-    },
-  ),
-}));
+jest.mock('react-native-insider/src/InsiderCallbackType', () => require('../test-utils/insiderMocks').enumModule());
 
-jest.mock('react-native-insider/src/InsiderGender', () => ({
-  __esModule: true,
-  default: new Proxy(
-    {},
-    {
-      get: (_target: any, prop: string | symbol) =>
-        typeof prop === 'string' ? prop : undefined,
-    },
-  ),
-}));
+jest.mock('react-native-insider/src/InsiderGender', () => require('../test-utils/insiderMocks').enumModule());
 
-jest.mock('react-native-insider/src/InsiderIdentifier', () => ({
-  __esModule: true,
-  default: new Proxy(
-    {},
-    {
-      get: (_target: any, prop: string | symbol) =>
-        typeof prop === 'string' ? prop : undefined,
-    },
-  ),
-}));
+jest.mock('react-native-insider/src/InsiderIdentifier', () => require('../test-utils/insiderMocks').enumModule());
 
-jest.mock('react-native-safe-area-context', () => ({
-  __esModule: true,
-  SafeAreaProvider: ({ children }: any) => children,
-  SafeAreaView: ({ children }: any) => children,
-  useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
-  initialWindowMetrics: null,
-}));
+jest.mock('react-native-safe-area-context', () => require('../test-utils/insiderMocks').safeAreaModule());
 
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),

@@ -7,6 +7,27 @@ const REPO_ROOT = path.resolve(__dirname, '..');
 const THEME_DIR = path.join(REPO_ROOT, 'src', 'theme');
 const SKIPPED_DIRS = ['node_modules', 'ios', 'android', 'vendor', '.git', 'docs', '__tests__'];
 
+// One definition each, shared by the real sweeps and the planted-fixture tests that prove they
+// are not vacuous. Re-stating them inline would let the real guard narrow while its proof stays
+// green against its own copy.
+const HEX_LITERAL = /#[0-9A-Fa-f]{3,8}\b/;
+const hasHexLiteral = (source: string): boolean => HEX_LITERAL.test(source);
+const hasColorScheme = (source: string): boolean => source.includes('useColorScheme');
+
+const fixtureDirs: string[] = [];
+
+function makeFixtureDir(): string {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'theme-sweep-'));
+  fixtureDirs.push(dir);
+  return dir;
+}
+
+afterEach(() => {
+  while (fixtureDirs.length > 0) {
+    fs.rmSync(fixtureDirs.pop()!, { recursive: true, force: true });
+  }
+});
+
 function collectSourceFiles(dir: string, found: string[] = []): string[] {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const fullPath = path.join(dir, entry.name);
@@ -54,7 +75,7 @@ describe('theme tokens', () => {
 
   it('leaves no hex literal outside src/theme', () => {
     const offenders = collectSourceFiles(REPO_ROOT)
-      .filter(file => /#[0-9A-Fa-f]{3,8}\b/.test(fs.readFileSync(file, 'utf8')))
+      .filter(file => hasHexLiteral(fs.readFileSync(file, 'utf8')))
       .map(file => path.relative(REPO_ROOT, file));
 
     expect(offenders).toEqual([]);
@@ -62,7 +83,7 @@ describe('theme tokens', () => {
 
   it('leaves no useColorScheme call in the app', () => {
     const offenders = collectSourceFiles(REPO_ROOT)
-      .filter(file => fs.readFileSync(file, 'utf8').includes('useColorScheme'))
+      .filter(file => hasColorScheme(fs.readFileSync(file, 'utf8')))
       .map(file => path.relative(REPO_ROOT, file));
 
     expect(offenders).toEqual([]);
@@ -78,6 +99,12 @@ describe('theme tokens', () => {
 
     expect(appFontsBlock).toContain('Kufam-Medium.ttf');
     expect(appFontsBlock).toContain('Kufam-SemiBold.ttf');
+  });
+
+  it('links that assets directory as a react-native asset root', () => {
+    // Without this the fonts never reach either platform's build, so it belongs with the iOS and
+    // Android registration checks rather than in a suite of its own.
+    expect(require('../react-native.config').assets).toEqual(['./assets/fonts']);
   });
 
   it('keeps the Kufam font files in the source assets directory', () => {
@@ -113,23 +140,28 @@ describe('collectSourceFiles', () => {
     expect(collectSourceFiles(REPO_ROOT).length).toBeGreaterThan(0);
   });
 
-  it('flags a planted hex literal in a js file', () => {
-    const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'theme-sweep-'));
-    fs.writeFileSync(path.join(fixtureDir, 'planted.js'), 'const c = "#FF00FF";\n');
+  // Both widths are planted on purpose: the guard is written for /#[0-9A-Fa-f]{3,8}/, so a later
+  // narrowing to {3,8} has to fail here rather than pass against a fixture that only uses six.
+  it.each([
+    ['six-digit', '#FF00FF'],
+    ['three-digit', '#F0F'],
+  ])('flags a planted %s hex literal in a js file', (_label, literal) => {
+    const fixtureDir = makeFixtureDir();
+    fs.writeFileSync(path.join(fixtureDir, 'planted.js'), `const c = "${literal}";\n`);
 
     const offenders = collectSourceFiles(fixtureDir)
-      .filter(file => /#[0-9A-Fa-f]{3,8}\b/.test(fs.readFileSync(file, 'utf8')))
+      .filter(file => hasHexLiteral(fs.readFileSync(file, 'utf8')))
       .map(file => path.basename(file));
 
     expect(offenders).toEqual(['planted.js']);
   });
 
   it('flags a planted useColorScheme call in a tsx file', () => {
-    const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'theme-sweep-'));
+    const fixtureDir = makeFixtureDir();
     fs.writeFileSync(path.join(fixtureDir, 'planted.tsx'), 'const s = useColorScheme();\n');
 
     const offenders = collectSourceFiles(fixtureDir)
-      .filter(file => fs.readFileSync(file, 'utf8').includes('useColorScheme'))
+      .filter(file => hasColorScheme(fs.readFileSync(file, 'utf8')))
       .map(file => path.basename(file));
 
     expect(offenders).toEqual(['planted.tsx']);
