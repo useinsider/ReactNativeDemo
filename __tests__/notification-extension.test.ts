@@ -224,12 +224,51 @@ describe('NotificationViewController.didReceive completion handling', () => {
   });
 });
 
+/**
+ * Returns the `else` arm of the carousel outlet check — the arm reached when the outlet is nil.
+ * The bound is what makes the slice an assertion about that arm: an unbounded slice runs to the
+ * end of the method, so a diagnostic hoisted out of the arm to method level — where it fires on
+ * every Next tap, outlet or not — still reads as contained.
+ */
+function outletElseArm(body: string): string {
+  const start = body.indexOf('} else {');
+  expect(start).toBeGreaterThan(-1);
+
+  // The if/else sits at method level, so the arm's closing brace is the next `\n        }`.
+  const end = body.indexOf('\n        }', start);
+  expect(end).toBeGreaterThan(start);
+
+  return body.slice(start, end);
+}
+
+describe('outletElseArm', () => {
+  // The regression variant: the diagnostic hoisted below the arm, at method level, where it is
+  // logged even when the outlet is wired and the scroll happened.
+  const hoisted = [
+    '        if let carousel = carousel {',
+    '            carousel.scrollToItem(at: nextIndex, animated: true)',
+    '        } else {',
+    '            return',
+    '        }',
+    '        os_log("Next tapped with no carousel outlet", log: .default, type: .error)',
+    '        completion(.doNotDismiss)',
+  ].join('\n');
+
+  it('excludes a diagnostic hoisted below the arm', () => {
+    expect(outletElseArm(hoisted)).not.toContain('os_log(');
+  });
+
+  it('stops at the arm, not at the end of the method', () => {
+    expect(outletElseArm(hoisted)).not.toContain('completion(.doNotDismiss)');
+  });
+});
+
 describe('NotificationViewController.didReceive unwired outlet diagnostics', () => {
   // Slice the else arm: a body-wide match would survive the arm being deleted and the log
   // reappearing somewhere else. This log is the only signal an outlet came unwired.
   it('logs on the arm reached when the carousel outlet is nil', () => {
     const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
-    const elseArm = body.slice(body.indexOf('} else {'));
+    const elseArm = outletElseArm(body);
 
     expect(body).toContain('} else {');
     expect(elseArm).toContain('os_log(');
@@ -308,14 +347,14 @@ describe('NotificationViewController.didReceive unwired outlet log contents', ()
   // signal — a reworded or downgraded log is indistinguishable from silence in Console.
   it('names the unwired outlet in the logged message', () => {
     const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
-    const elseArm = body.slice(body.indexOf('} else {'));
+    const elseArm = outletElseArm(body);
 
     expect(elseArm).toContain('os_log("Next tapped with no carousel outlet"');
   });
 
   it('logs that message at error severity', () => {
     const body = methodBody(read(CONTENT_SWIFT), '_ response: UNNotificationResponse');
-    const elseArm = body.slice(body.indexOf('} else {'));
+    const elseArm = outletElseArm(body);
 
     expect(elseArm).toContain('type: .error');
   });

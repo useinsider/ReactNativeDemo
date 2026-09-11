@@ -27,6 +27,12 @@ describe('safeAreaModule', () => {
 });
 
 describe('enumModule', () => {
+  // The stub replaces an ESM module, so jest's interop has to see the flag: without it the
+  // default export is handed back wrapped and every enum member reads as undefined.
+  it('marks itself as an ES module so the default export is unwrapped', () => {
+    expect(enumModule().__esModule).toBe(true);
+  });
+
   it('answers every string member with its own name', () => {
     expect(enumModule().default.SOME_MEMBER).toBe('SOME_MEMBER');
   });
