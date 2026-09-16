@@ -38,6 +38,7 @@ import MobileAppAccess from "./src/insider/MobileAppAccess";
 import MessageCenter from "./src/insider/MessageCenter";
 import AppCards from "./src/insider/AppCards";
 import ContentOptimizer from "./src/insider/ContentOptimizer";
+import AppFrames from "./src/insider/AppFrames";
 import ReinitWithPartnerName from "./src/insider/ReinitWithPartnerName";
 import BlockInApps from "./src/insider/BlockInApps";
 
@@ -247,6 +248,10 @@ function App() {
 
             <CustomSection title="Content Optimizer">
               <ContentOptimizer />
+            </CustomSection>
+
+            <CustomSection title="App Frames">
+              <AppFrames />
             </CustomSection>
 
             <CustomSection title="Block In App">

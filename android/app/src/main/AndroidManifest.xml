@@ -12,6 +12,12 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:allowBackup="false"
     android:theme="@style/AppTheme">
+
+    <!-- App Frames is off by default in the SDK; without this every frame reports DISABLED. -->
+    <meta-data
+        android:name="com.useinsider.insider.APP_FRAMES_ENABLED"
+        android:value="true" />
+
     <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
