@@ -1,29 +1,37 @@
 import React from 'react';
-import { TouchableHighlight, StyleSheet, Text, useColorScheme } from 'react-native';
+import { StyleSheet, Text, TouchableHighlight, ViewStyle } from 'react-native';
+import { colors, typography } from '../theme';
 
-function CustomButton({ text, buttonStyle, onPress }: DropDownProps) {
-  const isDarkMode = useColorScheme() === 'dark';
-  const styles = StyleSheet.create({
-    button: {
-      flex: 1,
-      margin: 5,
-      padding: 10,
-      backgroundColor: isDarkMode ? '#F0F0F0' : 'black',
-      borderRadius: 5,
-      ...buttonStyle
-    },
-    buttonText: {
-      fontSize: 14,
-      color:  isDarkMode ? 'black': 'white',
-      textAlign: 'center'
-    }
-  });
+type CustomButtonProps = {
+  text: string;
+  buttonStyle?: ViewStyle;
+  onPress: () => void;
+};
 
+function CustomButton({ text, buttonStyle, onPress }: CustomButtonProps) {
   return (
-    <TouchableHighlight style={styles.button} onPress={onPress} underlayColor="#a8a8a8">
+    <TouchableHighlight
+      style={[styles.button, buttonStyle]}
+      onPress={onPress}
+      underlayColor={colors.orangeDark}>
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableHighlight>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    flex: 1,
+    margin: 5,
+    padding: 10,
+    backgroundColor: colors.orange,
+    borderRadius: 18,
+  },
+  buttonText: {
+    ...typography.button,
+    color: colors.white,
+    textAlign: 'center',
+  },
+});
 
 export default CustomButton;

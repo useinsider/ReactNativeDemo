@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		165A446CD67D9EEC8760F5B1 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B74711A6AC358138083A392 /* NotificationService.swift */; };
+		23A4AA436A49C2F0EF15DAAC /* Kufam-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C4ACCA2AF92525EADF31487 /* Kufam-SemiBold.ttf */; };
 		3BB970ACBD2687B99CDD1992 /* Pods_InsiderNotificationContent.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC305E41CD7407B2E8F1959C /* Pods_InsiderNotificationContent.framework */; };
 		55CB974DA11BBF9242DE38D1 /* Pods_ReactNativeDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DEC10ED159A1B054669C2F2 /* Pods_ReactNativeDemo.framework */; };
 		630BF0672DA41CA500C29361 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 630BF0612DA41C5100C29361 /* AppDelegate.mm */; };
@@ -17,11 +19,11 @@
 		8C3F61ACB23E113F28F28FD3 /* Pods_InsiderNotificationService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D516D7356D9CAFDD10D9E553 /* Pods_InsiderNotificationService.framework */; };
 		98B2608D2ED84131008EC8EB /* InsiderNotificationContent.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D46883DC29A6132F00DB84D5 /* InsiderNotificationContent.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		98B260902ED84131008EC8EB /* InsiderNotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D46883F429A6134C00DB84D5 /* InsiderNotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B356233B2F0917C7C3923B96 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4BEB4FC0824FF828FE6DAB /* NotificationViewController.swift */; };
+		C0DA1B67B372821852BF6552 /* Kufam-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38FC931C0110A3F6466B9221 /* Kufam-Medium.ttf */; };
 		D46883DE29A6132F00DB84D5 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D46883DD29A6132F00DB84D5 /* UserNotifications.framework */; };
 		D46883E029A6132F00DB84D5 /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D46883DF29A6132F00DB84D5 /* UserNotificationsUI.framework */; };
-		D46883E429A6132F00DB84D5 /* NotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D46883E329A6132F00DB84D5 /* NotificationViewController.m */; };
 		D46883E729A6132F00DB84D5 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D46883E529A6132F00DB84D5 /* MainInterface.storyboard */; };
-		D46883F829A6134C00DB84D5 /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = D46883F729A6134C00DB84D5 /* NotificationService.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +70,8 @@
 		0590C32BBDBE8AB029049FC6 /* Pods-InsiderNotificationService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsiderNotificationService.release.xcconfig"; path = "Target Support Files/Pods-InsiderNotificationService/Pods-InsiderNotificationService.release.xcconfig"; sourceTree = "<group>"; };
 		09FE132B393F7D31863A5536 /* Pods-ReactNativeDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeDemo.debug.xcconfig"; path = "Target Support Files/Pods-ReactNativeDemo/Pods-ReactNativeDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* ReactNativeDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactNativeDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B74711A6AC358138083A392 /* NotificationService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		38FC931C0110A3F6466B9221 /* Kufam-Medium.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "../../assets/fonts/Kufam-Medium.ttf"; sourceTree = "<group>"; };
 		630BF05F2DA41C2700C29361 /* ReactNativeDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ReactNativeDemo.entitlements; sourceTree = "<group>"; };
 		630BF0602DA41C5100C29361 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		630BF0612DA41C5100C29361 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
@@ -78,18 +82,16 @@
 		630BF06E2DA4261500C29361 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6DEC10ED159A1B054669C2F2 /* Pods_ReactNativeDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ReactNativeDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74F54B75C1C6FC6B40C9282E /* Pods-InsiderNotificationContent.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsiderNotificationContent.debug.xcconfig"; path = "Target Support Files/Pods-InsiderNotificationContent/Pods-InsiderNotificationContent.debug.xcconfig"; sourceTree = "<group>"; };
+		8C4ACCA2AF92525EADF31487 /* Kufam-SemiBold.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "../../assets/fonts/Kufam-SemiBold.ttf"; sourceTree = "<group>"; };
+		8E4BEB4FC0824FF828FE6DAB /* NotificationViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		90BDFAC64D359E92DFA0C125 /* Pods-InsiderNotificationService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsiderNotificationService.debug.xcconfig"; path = "Target Support Files/Pods-InsiderNotificationService/Pods-InsiderNotificationService.debug.xcconfig"; sourceTree = "<group>"; };
 		C6DDCB4BF0C4289F263FAA8B /* Pods-ReactNativeDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ReactNativeDemo.release.xcconfig"; path = "Target Support Files/Pods-ReactNativeDemo/Pods-ReactNativeDemo.release.xcconfig"; sourceTree = "<group>"; };
 		D46883DC29A6132F00DB84D5 /* InsiderNotificationContent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = InsiderNotificationContent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		D46883DD29A6132F00DB84D5 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		D46883DF29A6132F00DB84D5 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
-		D46883E229A6132F00DB84D5 /* NotificationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationViewController.h; sourceTree = "<group>"; };
-		D46883E329A6132F00DB84D5 /* NotificationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationViewController.m; sourceTree = "<group>"; };
 		D46883E629A6132F00DB84D5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		D46883E829A6132F00DB84D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D46883F429A6134C00DB84D5 /* InsiderNotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = InsiderNotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		D46883F629A6134C00DB84D5 /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
-		D46883F729A6134C00DB84D5 /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
 		D46883F929A6134C00DB84D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D468840029A61C3C00DB84D5 /* InsiderNotificationService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = InsiderNotificationService.entitlements; sourceTree = "<group>"; };
 		D468840129A61C4100DB84D5 /* InsiderNotificationContent.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = InsiderNotificationContent.entitlements; sourceTree = "<group>"; };
@@ -160,6 +162,8 @@
 				630BF0642DA41C6900C29361 /* LaunchScreen.storyboard */,
 				630BF0652DA41C6900C29361 /* PrivacyInfo.xcprivacy */,
 				630BF05F2DA41C2700C29361 /* ReactNativeDemo.entitlements */,
+				38FC931C0110A3F6466B9221 /* Kufam-Medium.ttf */,
+				8C4ACCA2AF92525EADF31487 /* Kufam-SemiBold.ttf */,
 			);
 			path = ReactNativeDemo;
 			sourceTree = "<group>";
@@ -215,10 +219,9 @@
 			isa = PBXGroup;
 			children = (
 				D468840129A61C4100DB84D5 /* InsiderNotificationContent.entitlements */,
-				D46883E229A6132F00DB84D5 /* NotificationViewController.h */,
-				D46883E329A6132F00DB84D5 /* NotificationViewController.m */,
 				D46883E529A6132F00DB84D5 /* MainInterface.storyboard */,
 				D46883E829A6132F00DB84D5 /* Info.plist */,
+				8E4BEB4FC0824FF828FE6DAB /* NotificationViewController.swift */,
 			);
 			path = InsiderNotificationContent;
 			sourceTree = "<group>";
@@ -227,9 +230,8 @@
 			isa = PBXGroup;
 			children = (
 				D468840029A61C3C00DB84D5 /* InsiderNotificationService.entitlements */,
-				D46883F629A6134C00DB84D5 /* NotificationService.h */,
-				D46883F729A6134C00DB84D5 /* NotificationService.m */,
 				D46883F929A6134C00DB84D5 /* Info.plist */,
+				1B74711A6AC358138083A392 /* NotificationService.swift */,
 			);
 			path = InsiderNotificationService;
 			sourceTree = "<group>";
@@ -377,6 +379,8 @@
 				630BF06B2DA41F8100C29361 /* PrivacyInfo.xcprivacy in Resources */,
 				630BF0692DA41CAC00C29361 /* Images.xcassets in Resources */,
 				630BF06A2DA41CB000C29361 /* LaunchScreen.storyboard in Resources */,
+				C0DA1B67B372821852BF6552 /* Kufam-Medium.ttf in Resources */,
+				23A4AA436A49C2F0EF15DAAC /* Kufam-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -590,7 +594,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D46883E429A6132F00DB84D5 /* NotificationViewController.m in Sources */,
+				B356233B2F0917C7C3923B96 /* NotificationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,7 +602,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D46883F829A6134C00DB84D5 /* NotificationService.m in Sources */,
+				165A446CD67D9EEC8760F5B1 /* NotificationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1009,6 +1013,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 74F54B75C1C6FC6B40C9282E /* Pods-InsiderNotificationContent.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1038,6 +1043,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1046,6 +1052,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F7F2CDD3991D62A868516183 /* Pods-InsiderNotificationContent.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1075,6 +1082,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1083,6 +1091,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 90BDFAC64D359E92DFA0C125 /* Pods-InsiderNotificationService.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1112,6 +1121,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1120,6 +1130,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0590C32BBDBE8AB029049FC6 /* Pods-InsiderNotificationService.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1149,6 +1160,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
