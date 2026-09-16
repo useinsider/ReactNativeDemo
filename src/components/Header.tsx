@@ -1,21 +1,28 @@
 import React from 'react';
-import { View, Image, useColorScheme } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
+import { colors } from '../theme';
 
 function Header() {
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: isDarkMode ? '#000000' : '#FFFFFF',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      <Image source={isDarkMode ? require(`../../assets/insider-white-logo.png`) : require(`../../assets/insider-logo.png`)}
-                     style={{ width: 320, height: 140, alignSelf: 'center', justifyContent: 'center', margin: 10 }} />
+    <View style={styles.header}>
+      <Image source={require('../../assets/insider-logo.png')} style={styles.logo} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    flex: 1,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width: 320,
+    height: 140,
+    alignSelf: 'center',
+    margin: 10,
+  },
+});
 
 export default Header;
