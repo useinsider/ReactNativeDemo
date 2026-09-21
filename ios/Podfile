@@ -34,6 +34,26 @@ target 'ReactNativeDemo' do
       # :ccache_enabled => true
     )
 
+    # Xcode 27's iOS Simulator SDK only supports deployment targets 15.0+; some
+    # third-party pods (e.g. RNCAsyncStorage) still pin an older one.
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |build_config|
+        deployment_target = build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+        if deployment_target && deployment_target.to_f < 15.0
+          build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+        end
+      end
+    end
+
+    # fmt 11.0.2 (pulled in by RN's RCT-Folly) hits a consteval regression under
+    # Xcode 27's Clang; building it as C++17 disables the FMT_USE_CONSTEVAL path.
+    installer.pods_project.targets.each do |target|
+      next unless target.name == 'fmt'
+      target.build_configurations.each do |build_config|
+        build_config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'gnu++17'
+      end
+    end
+
     # Modify RCT-Folly Portability.h to disable coroutines
     Dir.glob(installer.sandbox.root + "RCT-Folly/folly/Portability.h") do |file|
       begin
