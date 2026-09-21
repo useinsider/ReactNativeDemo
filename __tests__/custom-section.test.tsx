@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import renderer, { act } from 'react-test-renderer';
 import CustomSection from '../src/components/CustomSection';
+import Card from '../src/components/Card';
 import { colors, typography } from '../src/theme';
 
 const TITLE = 'Reinit With Partner Name';
@@ -32,7 +33,7 @@ describe('CustomSection', () => {
     const child = root.findAllByType(Text).find((node: any) => node.props.children === 'child');
 
     expect(child).toBeDefined();
-    expect(child.parent.type).not.toBe('Card');
+    expect(root.findAllByType(Card)).toHaveLength(0);
   });
 
   it('styles the title with the title typography token', () => {

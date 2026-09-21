@@ -35,7 +35,16 @@ target 'ReactNativeDemo' do
     )
 
     # Xcode 27's iOS Simulator SDK only supports deployment targets 15.0+; some
-    # third-party pods (e.g. RNCAsyncStorage) still pin an older one.
+    # third-party pods (e.g. RNCAsyncStorage) still pin an older one. The
+    # project-level pass covers targets that inherit the setting instead of
+    # writing it per build config.
+    installer.pods_project.build_configurations.each do |build_config|
+      deployment_target = build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
+      if deployment_target.nil? || deployment_target.to_f < 15.0
+        build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+      end
+    end
+
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |build_config|
         deployment_target = build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']

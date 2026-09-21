@@ -27,7 +27,9 @@ function format(value: unknown): string {
     return value.message;
   }
   try {
-    return JSON.stringify(value);
+    // undefined and functions have no JSON form; String() keeps them visible
+    // so the on-screen console never silently drops an argument.
+    return JSON.stringify(value) ?? String(value);
   } catch {
     return String(value);
   }
@@ -59,23 +61,36 @@ export const playgroundLog = {
   },
 };
 
-let installed = false;
+const CAPTURED_METHODS = ['log', 'warn', 'error'] as const;
+
+let originals: Partial<Record<(typeof CAPTURED_METHODS)[number], typeof console.log>> = {};
 
 /**
- * Mirrors `console.log` and `console.warn` into the Playground console while
- * keeping the original developer-console output.
+ * Mirrors `console.log`, `console.warn` and `console.error` into the Playground
+ * console while keeping the original developer-console output.
  */
 export function installConsoleCapture() {
-  if (installed) {
+  if (Object.keys(originals).length > 0) {
     return;
   }
-  installed = true;
 
-  (['log', 'warn'] as const).forEach((method) => {
+  CAPTURED_METHODS.forEach((method) => {
     const original = console[method].bind(console);
+    originals[method] = original;
     console[method] = (...values: unknown[]) => {
       playgroundLog.add(...values);
       original(...values);
     };
   });
+}
+
+/** Restores the console methods `installConsoleCapture` replaced. */
+export function uninstallConsoleCapture() {
+  CAPTURED_METHODS.forEach((method) => {
+    const original = originals[method];
+    if (original) {
+      console[method] = original;
+    }
+  });
+  originals = {};
 }

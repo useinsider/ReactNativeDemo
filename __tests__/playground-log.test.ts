@@ -1,4 +1,9 @@
-import { MAX_LINES, installConsoleCapture, playgroundLog } from '../src/playground/playgroundLog';
+import {
+  MAX_LINES,
+  installConsoleCapture,
+  playgroundLog,
+  uninstallConsoleCapture,
+} from '../src/playground/playgroundLog';
 
 describe('playgroundLog', () => {
   beforeEach(() => {
@@ -32,18 +37,28 @@ describe('playgroundLog', () => {
     expect(listener).toHaveBeenCalledTimes(1);
   });
 
-  it('mirrors console.log into the store and still calls the original', () => {
-    const original = jest.fn();
-    const saved = console.log;
-    console.log = original;
-    try {
-      installConsoleCapture();
-      console.log('[INSIDER] initialized');
+  it.each(['log', 'warn', 'error'] as const)(
+    'mirrors console.%s into the store and still calls the original',
+    (method) => {
+      const original = jest.fn();
+      const saved = console[method];
+      console[method] = original;
+      try {
+        installConsoleCapture();
+        console[method]('[INSIDER] initialized');
 
-      expect(playgroundLog.getLines()).toEqual(['[INSIDER] initialized']);
-      expect(original).toHaveBeenCalledWith('[INSIDER] initialized');
-    } finally {
-      console.log = saved;
-    }
+        expect(playgroundLog.getLines()).toEqual(['[INSIDER] initialized']);
+        expect(original).toHaveBeenCalledWith('[INSIDER] initialized');
+      } finally {
+        uninstallConsoleCapture();
+        console[method] = saved;
+      }
+    },
+  );
+
+  it('keeps undefined arguments visible', () => {
+    playgroundLog.add('value:', undefined);
+
+    expect(playgroundLog.getLines()).toEqual(['value: undefined']);
   });
 });

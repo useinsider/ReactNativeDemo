@@ -23,6 +23,9 @@ function Header() {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: colors.surface,
+    // The absolutely positioned 48dp button is only touchable inside the
+    // header's own bounds, so the bar is at least as tall as the button.
+    minHeight: 48,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 10,
