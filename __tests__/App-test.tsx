@@ -60,3 +60,7 @@ it('keeps the header out of the scrolling section list', () => {
 it('keeps the Playground console out of the scrolling section list', () => {
   expect(sectionScrollView(renderApp()).findAllByType(PlaygroundConsole)).toHaveLength(0);
 });
+
+it('shows the header once at the top of the screen', () => {
+  expect(renderApp().findAllByType(Header)).toHaveLength(1);
+});

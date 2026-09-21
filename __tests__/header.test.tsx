@@ -65,4 +65,32 @@ describe('Header', () => {
 
     expect(playgroundLog.getLines()).toEqual([]);
   });
+
+  it('lifts the clear button out of the header flow', () => {
+    const [button] = render().root.findAllByProps({ accessibilityLabel: 'Clear' });
+    const style = StyleSheet.flatten(button.props.style);
+
+    expect(style.position).toBe('absolute');
+  });
+
+  it('pins the clear button to the trailing edge', () => {
+    const [button] = render().root.findAllByProps({ accessibilityLabel: 'Clear' });
+    const style = StyleSheet.flatten(button.props.style);
+
+    expect(style.right).toBe(10);
+  });
+
+  it('renders the logo at its design size', () => {
+    const [image] = render().root.findAllByType(Image);
+    const style = StyleSheet.flatten(image.props.style);
+
+    expect(style).toMatchObject({ width: 173, height: 24 });
+  });
+
+  it('scales the logo down without cropping it', () => {
+    const [image] = render().root.findAllByType(Image);
+    const style = StyleSheet.flatten(image.props.style);
+
+    expect(style.resizeMode).toBe('contain');
+  });
 });

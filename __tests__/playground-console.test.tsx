@@ -2,6 +2,7 @@ import React from 'react';
 import { Platform, ScrollView, StyleSheet, Text } from 'react-native';
 import renderer, { act } from 'react-test-renderer';
 import PlaygroundConsole, { CONSOLE_HEIGHT } from '../src/components/PlaygroundConsole';
+import { colors } from '../src/theme';
 import { playgroundLog } from '../src/playground/playgroundLog';
 
 function render(): any {
@@ -117,5 +118,36 @@ describe('PlaygroundConsole', () => {
 
       expect(style.fontFamily).toBe('monospace');
     });
+  });
+
+  it('separates the console lines with a newline', () => {
+    const component = render();
+
+    act(() => {
+      playgroundLog.add('a');
+      playgroundLog.add('b');
+    });
+
+    expect(component.root.findByType(Text).props.children).toBe('a\nb');
+  });
+
+  it('lets the console lines be selected for copying', () => {
+    expect(render().root.findByType(Text).props.selectable).toBe(true);
+  });
+
+  it('paints the card on the white surface colour', () => {
+    expect(cardStyle(render()).backgroundColor).toBe(colors.white);
+  });
+
+  it('outlines the card with a one point border', () => {
+    expect(cardStyle(render()).borderWidth).toBe(1);
+  });
+
+  it('draws the card outline with the outline colour token', () => {
+    expect(cardStyle(render()).borderColor).toBe(colors.outline);
+  });
+
+  it('rounds the card corners', () => {
+    expect(cardStyle(render()).borderRadius).toBe(14);
   });
 });

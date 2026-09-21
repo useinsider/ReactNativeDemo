@@ -106,4 +106,41 @@ describe('playgroundLog', () => {
       console.log = saved;
     }
   });
+
+  it.each(['warn', 'error'] as const)(
+    'stops capturing console.%s after uninstall',
+    (method) => {
+      const saved = console[method];
+      console[method] = jest.fn();
+      try {
+        installConsoleCapture();
+        uninstallConsoleCapture();
+        console[method]('[INSIDER] initialized');
+
+        expect(playgroundLog.getLines()).toEqual([]);
+      } finally {
+        console[method] = saved;
+      }
+    },
+  );
+
+  it('notifies subscribers when clearing a non-empty store', () => {
+    playgroundLog.add('[INSIDER] initialized');
+    const listener = jest.fn();
+    const unsubscribe = playgroundLog.subscribe(listener);
+
+    playgroundLog.clear();
+    unsubscribe();
+
+    expect(listener).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps a value JSON cannot serialize visible', () => {
+    const circular: Record<string, unknown> = {};
+    circular.self = circular;
+
+    playgroundLog.add(circular);
+
+    expect(playgroundLog.getLines()).toEqual(['[object Object]']);
+  });
 });

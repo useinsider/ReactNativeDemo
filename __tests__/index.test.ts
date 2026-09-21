@@ -26,4 +26,27 @@ describe('index', () => {
       uninstallConsoleCapture();
     }
   });
+
+  // A fresh registry is required because the entry point runs its registration
+  // once, at module evaluation; the console patch the isolated copy installs is
+  // bound to that copy, so it is undone by restoring the saved methods.
+  it('registers the app component under the name from app.json', () => {
+    const { name: appName } = require('../app.json');
+    const saved = { log: console.log, warn: console.warn, error: console.error };
+
+    try {
+      jest.isolateModules(() => {
+        const RN = require('react-native');
+        const registerComponent = jest
+          .spyOn(RN.AppRegistry, 'registerComponent')
+          .mockImplementation(() => 'ReactNativeDemo');
+
+        require('../index');
+
+        expect(registerComponent).toHaveBeenCalledWith(appName, expect.any(Function));
+      });
+    } finally {
+      Object.assign(console, saved);
+    }
+  });
 });
