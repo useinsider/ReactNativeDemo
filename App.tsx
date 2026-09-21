@@ -8,8 +8,6 @@
 import React, { useEffect } from "react";
 import {
   ScrollView,
-  StyleSheet,
-  Text,
   View,
   Alert,
   PermissionsAndroid,
@@ -20,10 +18,11 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { colors, typography } from './src/theme';
+import { colors } from './src/theme';
 
 import Header from "./src/components/Header";
 import CustomSection from "./src/components/CustomSection";
+import PlaygroundConsole from "./src/components/PlaygroundConsole";
 
 import UserAttribute from "./src/insider/UserAttribute";
 import UserIdentifier from "./src/insider/UserIdentifier";
@@ -43,20 +42,6 @@ import BlockInApps from "./src/insider/BlockInApps";
 
 import Insider from "react-native-insider";
 import InsiderCallbackType from "react-native-insider/src/InsiderCallbackType";
-
-type SectionProps = {
-  title: string;
-  children: React.ReactNode;
-};
-
-function Section({ children, title }: SectionProps) {
-  return (
-    <View style={styles.sectionContainer}>
-      <Text style={styles.sectionTitle}>{title}</Text>
-      <Text style={styles.sectionDescription}>{children}</Text>
-    </View>
-  );
-}
 
 async function requestLocationPermission() {
   try {
@@ -182,17 +167,13 @@ function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={[backgroundStyle, { flex: 1 }]}>
+        <Header />
+        <PlaygroundConsole />
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={backgroundStyle}
         >
-          <Header />
           <View style={{ backgroundColor: colors.surface }}>
-            <Section title="[RN] Insider SDK Demo">
-              This Demo contains simple methods that you can use with the Insider
-              SDK.
-            </Section>
-
             <CustomSection title="Reinit With Partner Name">
               <ReinitWithPartnerName />
             </CustomSection>
@@ -258,22 +239,5 @@ function App() {
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    ...typography.title,
-    color: colors.onSurface,
-  },
-  sectionDescription: {
-    ...typography.body,
-    fontSize: 18,
-    marginTop: 8,
-    color: colors.onSurfaceVariant,
-  },
-});
 
 export default App;

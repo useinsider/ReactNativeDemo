@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { colors, typography } from '../theme';
-import Card from './Card';
 
 type CustomSectionProps = {
   title: string;
@@ -13,7 +12,7 @@ function CustomSection({ title, children, style }: CustomSectionProps) {
   return (
     <View style={[styles.section, style]}>
       <Text style={styles.title}>{title}</Text>
-      <Card>{children}</Card>
+      {children}
     </View>
   );
 }

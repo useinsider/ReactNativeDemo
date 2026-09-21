@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import renderer, { act } from 'react-test-renderer';
 import CustomSection from '../src/components/CustomSection';
-import Card from '../src/components/Card';
 import { colors, typography } from '../src/theme';
 
 const TITLE = 'Reinit With Partner Name';
@@ -28,19 +27,12 @@ function titleStyle(root: any) {
 }
 
 describe('CustomSection', () => {
-  it('wraps its children in a Card surface', () => {
+  it('renders the children directly, without a card surface', () => {
     const root = render();
-    const card = root.findByType(Card);
-
-    expect(card).toBeDefined();
-  });
-
-  it('renders the children inside that Card', () => {
-    const root = render();
-    const card = root.findByType(Card);
-    const child = card.findAllByType(Text).find((node: any) => node.props.children === 'child');
+    const child = root.findAllByType(Text).find((node: any) => node.props.children === 'child');
 
     expect(child).toBeDefined();
+    expect(child.parent.type).not.toBe('Card');
   });
 
   it('styles the title with the title typography token', () => {
