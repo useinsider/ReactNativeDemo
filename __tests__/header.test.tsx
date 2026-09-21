@@ -33,6 +33,28 @@ describe('Header', () => {
     expect(style.backgroundColor).toBe(colors.surface);
   });
 
+  it('renders the trash icon asset in the clear button', () => {
+    const [, icon] = render().root.findAllByType(Image);
+
+    expect(icon.props.source).toEqual(require('../assets/trash.png'));
+  });
+
+  it('tints the trash icon with the on-surface color', () => {
+    const [, icon] = render().root.findAllByType(Image);
+    const style = StyleSheet.flatten(icon.props.style);
+
+    expect(style.tintColor).toBe(colors.onSurface);
+  });
+
+  it('keeps the header at least as tall as the clear button', () => {
+    const component = render();
+    const headerStyle = StyleSheet.flatten(component.toJSON().props.style);
+    const [button] = component.root.findAllByProps({ accessibilityLabel: 'Clear' });
+    const buttonStyle = StyleSheet.flatten(button.props.style);
+
+    expect(headerStyle.minHeight).toBeGreaterThanOrEqual(buttonStyle.height);
+  });
+
   it('clears the Playground console from the trash button', () => {
     playgroundLog.add('[INSIDER] initialized');
     const button = render().root.findByProps({ accessibilityLabel: 'Clear' });

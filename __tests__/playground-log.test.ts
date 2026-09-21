@@ -61,4 +61,49 @@ describe('playgroundLog', () => {
 
     expect(playgroundLog.getLines()).toEqual(['value: undefined']);
   });
+
+  it('shows the message of a logged Error', () => {
+    playgroundLog.add(new Error('boom'));
+
+    expect(playgroundLog.getLines()).toEqual(['boom']);
+  });
+
+  it('does not notify subscribers when clearing an empty store', () => {
+    const listener = jest.fn();
+    const unsubscribe = playgroundLog.subscribe(listener);
+
+    playgroundLog.clear();
+    unsubscribe();
+
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  it('captures a console line once when installed twice', () => {
+    const saved = console.log;
+    console.log = jest.fn();
+    try {
+      installConsoleCapture();
+      installConsoleCapture();
+      console.log('[INSIDER] initialized');
+
+      expect(playgroundLog.getLines()).toEqual(['[INSIDER] initialized']);
+    } finally {
+      uninstallConsoleCapture();
+      console.log = saved;
+    }
+  });
+
+  it('stops capturing console output after uninstall', () => {
+    const saved = console.log;
+    console.log = jest.fn();
+    try {
+      installConsoleCapture();
+      uninstallConsoleCapture();
+      console.log('[INSIDER] initialized');
+
+      expect(playgroundLog.getLines()).toEqual([]);
+    } finally {
+      console.log = saved;
+    }
+  });
 });

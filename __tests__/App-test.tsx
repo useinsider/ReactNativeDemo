@@ -25,6 +25,7 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 
 import React from 'react';
 import App from '../App';
+import Header from '../src/components/Header';
 import PlaygroundConsole from '../src/components/PlaygroundConsole';
 
 // Note: test renderer must be required after react-native.
@@ -44,4 +45,18 @@ it('renders correctly', () => {
 
 it('shows the Playground console above the sections', () => {
   expect(renderApp().findAllByType(PlaygroundConsole)).toHaveLength(1);
+});
+
+// The section list is the only scrolling area; the header and the console stay
+// pinned outside it.
+function sectionScrollView(root: any): any {
+  return root.findAllByProps({ contentInsetAdjustmentBehavior: 'automatic' })[0];
+}
+
+it('keeps the header out of the scrolling section list', () => {
+  expect(sectionScrollView(renderApp()).findAllByType(Header)).toHaveLength(0);
+});
+
+it('keeps the Playground console out of the scrolling section list', () => {
+  expect(sectionScrollView(renderApp()).findAllByType(PlaygroundConsole)).toHaveLength(0);
 });
