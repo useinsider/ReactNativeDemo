@@ -1,0 +1,147 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: react-native-demo-run-tests-${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 22
+  NPM_REGISTRY: https://registry.npmjs.org
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --registry="$NPM_REGISTRY"
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Unit Tests
+        run: npx jest --ci
+
+  integration-android:
+    name: Integration (android)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      ARCHITECTURES: x86_64
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Install dependencies
+        run: npm ci --registry="$NPM_REGISTRY"
+
+      # The debug build type signs with the gitignored release keystore, so CI generates a throwaway one.
+      - name: Write fake service configs and keystore
+        run: |
+          set -euo pipefail
+          cp ci/fixtures/*.json android/app/
+          keytool -genkeypair -noprompt \
+            -keystore android/app/mykeystore.jks \
+            -alias ecommerce -storepass 123456 -keypass 123456 \
+            -keyalg RSA -keysize 2048 -validity 1 \
+            -dname "CN=CI Throwaway"
+
+      - name: Integration Tests
+        working-directory: android
+        run: ./gradlew :app:assembleDebug -PreactNativeArchitectures="$ARCHITECTURES" --stacktrace
+
+  integration-ios:
+    name: Integration (ios)
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      DESTINATION: generic/platform=iOS Simulator
+      SCHEME: ReactNativeDemo
+      EXTENSIONS: |
+        InsiderNotificationContent
+        InsiderNotificationService
+      # The Start Packager build phase would otherwise try to launch Metro.
+      RCT_NO_LAUNCH_PACKAGER: 1
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --registry="$NPM_REGISTRY"
+
+      - name: Install pods
+        working-directory: ios
+        run: |
+          set -euo pipefail
+          echo "export NODE_BINARY=$(command -v node)" > .xcode.env
+          pod install
+
+      - name: Integration Tests
+        run: |
+          set -euo pipefail
+          xcodebuild build \
+            -workspace ios/ReactNativeDemo.xcworkspace \
+            -scheme "$SCHEME" \
+            -configuration Debug \
+            -destination "$DESTINATION" \
+            -derivedDataPath "$RUNNER_TEMP/build" \
+            CODE_SIGNING_ALLOWED=NO
+          app="$RUNNER_TEMP/build/Build/Products/Debug-iphonesimulator/$SCHEME.app"
+          IFS=$'\n'
+          for extension in $EXTENSIONS; do
+            test -d "$app/PlugIns/$extension.appex" || { echo "::error::$extension.appex missing from $SCHEME.app"; exit 1; }
+          done
+
+  integration-tests:
+    name: Integration Tests
+    needs:
+      - integration-android
+      - integration-ios
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Integration Tests
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          for result in $RESULTS; do
+            [ "$result" = success ] || { echo "::error::Integration platform jobs: $RESULTS"; exit 1; }
+          done
