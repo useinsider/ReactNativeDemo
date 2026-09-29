@@ -1,0 +1,17 @@
+{
+  "agcgw": {
+    "url": "fake-ci-gateway.example.invalid",
+    "backurl": "fake-ci-gateway-back.example.invalid"
+  },
+  "client": {
+    "cp_id": "0000000000000000000",
+    "product_id": "000000000000000000",
+    "client_id": "000000000000000000",
+    "client_secret": "fake-client-secret-000",
+    "project_id": "000000000000000000",
+    "app_id": "000000000",
+    "api_key": "fake-api-key-000",
+    "package_name": "com.useinsider.ecommerce"
+  },
+  "configuration_version": "3.0"
+}

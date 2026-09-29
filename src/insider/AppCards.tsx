@@ -152,12 +152,12 @@ const CardDetail = ({
           <View style={styles.detailCardButtons}>
             {card.buttons.map((button) => (
               <CustomButton
-                key={button.buttonId}
+                key={button.id}
                 text={button.text}
                 buttonStyle={{ backgroundColor: colors.navy }}
                 onPress={() => {
                   logCardAction(
-                    `[INSIDER][AppCardButtonClick]: card=${button.appCardId} button=${button.buttonId}`,
+                    `[INSIDER][AppCardButtonClick]: card=${button.appCardId} button=${button.id}`,
                     button.action
                   );
                   button.click();
@@ -174,7 +174,7 @@ const CardDetail = ({
             <CustomButton
               text="Open"
               onPress={() => {
-                logCardAction(`[INSIDER][AppCardItemClick]: card=${card.appCardId}`, card.action);
+                logCardAction(`[INSIDER][AppCardItemClick]: card=${card.id}`, card.action);
                 card.click();
               }}
             />
@@ -239,7 +239,7 @@ const AppCardsInbox = () => {
   }, [fetchCampaigns]);
 
   const handleOpenDetail = useCallback((item: InsiderAppCard) => {
-    console.log("[INSIDER][AppCardItem]: Opening detail: " + item.appCardId);
+    console.log("[INSIDER][AppCardItem]: Opening detail: " + item.id);
     setSelectedCard(item);
   }, []);
 
@@ -247,10 +247,10 @@ const AppCardsInbox = () => {
     async (item: InsiderAppCard) => {
       try {
         if (item.isRead) {
-          console.log("[INSIDER][AppCardItem]: Marking card as unread: " + item.appCardId);
+          console.log("[INSIDER][AppCardItem]: Marking card as unread: " + item.id);
           await item.markAsUnread();
         } else {
-          console.log("[INSIDER][AppCardItem]: Marking card as read: " + item.appCardId);
+          console.log("[INSIDER][AppCardItem]: Marking card as read: " + item.id);
           await item.markAsRead();
         }
         await refreshMessages();
@@ -266,7 +266,7 @@ const AppCardsInbox = () => {
   const handleDelete = useCallback(
     async (item: InsiderAppCard) => {
       try {
-        console.log("[INSIDER][AppCardItem]: Deleting card: " + item.appCardId);
+        console.log("[INSIDER][AppCardItem]: Deleting card: " + item.id);
         await item.delete();
         Alert.alert("Success", "Message deleted");
         await refreshMessages();
@@ -293,7 +293,7 @@ const AppCardsInbox = () => {
           style: "destructive",
           onPress: async () => {
             try {
-              const ids = messages.map((m) => m.appCardId);
+              const ids = messages.map((m) => m.id);
               console.log("[INSIDER][AppCards]: Deleting all " + ids.length + " cards");
               await Insider.appCards.delete(ids);
               Alert.alert("Success", "All messages deleted");
@@ -313,9 +313,9 @@ const AppCardsInbox = () => {
   const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
     viewableItems.forEach(({ item }) => {
       const card = item as InsiderAppCard;
-      if (card && !viewedRef.current.has(card.appCardId)) {
-        viewedRef.current.add(card.appCardId);
-        console.log("[INSIDER][AppCardItem]: View tracked: " + card.appCardId);
+      if (card && !viewedRef.current.has(card.id)) {
+        viewedRef.current.add(card.id);
+        console.log("[INSIDER][AppCardItem]: View tracked: " + card.id);
         card.view();
       }
     });
@@ -340,7 +340,7 @@ const AppCardsInbox = () => {
       )}
       <FlatList
         data={messages}
-        keyExtractor={(item) => item.appCardId}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <AppCardItem
             item={item}

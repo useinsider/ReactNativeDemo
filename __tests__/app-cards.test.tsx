@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import renderer, { act } from 'react-test-renderer';
 
 jest.mock('react-native-safe-area-context', () => require('../test-utils/insiderMocks').safeAreaModule());
@@ -18,11 +18,11 @@ import Insider from 'react-native-insider';
 import AppCards from '../src/insider/AppCards';
 import { colors } from '../src/theme';
 
-function makeCard(appCardId: string, isRead: boolean): any {
+function makeCard(id: string, isRead: boolean): any {
   return {
-    appCardId,
+    id,
     isRead,
-    content: { title: `Title ${appCardId}`, description: `Body ${appCardId}` },
+    content: { title: `Title ${id}`, description: `Body ${id}` },
     images: [],
     buttons: [],
     action: null,
@@ -34,6 +34,8 @@ function makeCard(appCardId: string, isRead: boolean): any {
   };
 }
 
+const mounted: any[] = [];
+
 async function renderInbox(cards: any[]): Promise<any> {
   (Insider as any).appCards.getCampaigns.mockResolvedValue({ appCards: cards });
 
@@ -41,6 +43,7 @@ async function renderInbox(cards: any[]): Promise<any> {
   await act(async () => {
     component = renderer.create(<AppCards />);
   });
+  mounted.push(component);
 
   const openButton = component.root
     .findAllByType(TouchableHighlight)
@@ -63,6 +66,13 @@ function unreadIndicators(root: any): any[] {
 
 beforeEach(() => {
   jest.clearAllMocks();
+});
+
+// FlatList schedules a cell-render timer; unmounting clears it before Jest tears the file down.
+afterEach(() => {
+  act(() => {
+    mounted.splice(0).forEach(component => component.unmount());
+  });
 });
 
 describe('AppCardItem', () => {
@@ -204,5 +214,75 @@ describe('AppCardItem Delete action', () => {
     expect(card.delete).toHaveBeenCalledTimes(1);
     expect((Insider as any).appCards.getCampaigns).toHaveBeenCalled();
     spy.mockRestore();
+  });
+});
+
+describe('AppCardsInbox Remove All', () => {
+  it('deletes every listed card by id once the prompt is confirmed', async () => {
+    const root = await renderInbox([makeCard('c1', false), makeCard('c2', true)]);
+    const spy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+
+    await act(async () => {
+      touchableWithLabel(root, 'Remove All')[0].props.onPress();
+    });
+    const buttons = spy.mock.calls[spy.mock.calls.length - 1][2] as any[];
+    const deleteAll = buttons.find(button => button.style === 'destructive');
+
+    expect(deleteAll.text).toBe('Delete All');
+    await act(async () => {
+      await deleteAll.onPress();
+    });
+
+    expect((Insider as any).appCards.delete).toHaveBeenCalledTimes(1);
+    expect((Insider as any).appCards.delete).toHaveBeenCalledWith(['c1', 'c2']);
+    spy.mockRestore();
+  });
+});
+
+describe('AppCardsInbox FlatList bindings', () => {
+  it('tracks a view once per card id, however often the card becomes visible', async () => {
+    const c1 = makeCard('c1', false);
+    const c2 = makeCard('c2', false);
+    const root = await renderInbox([c1, c2]);
+    c1.view.mockClear();
+    c2.view.mockClear();
+    const list = root.findByType(FlatList);
+
+    act(() => {
+      list.props.onViewableItemsChanged({
+        viewableItems: [{ item: c1 }, { item: c2 }, { item: c1 }],
+        changed: [],
+      });
+    });
+
+    expect(c1.view).toHaveBeenCalledTimes(1);
+    expect(c2.view).toHaveBeenCalledTimes(1);
+  });
+
+  it('keys each row by the card id', async () => {
+    const root = await renderInbox([makeCard('c1', false)]);
+    const list = root.findByType(FlatList);
+
+    expect(list.props.keyExtractor(makeCard('c1', false), 0)).toBe('c1');
+  });
+});
+
+describe('CardDetail buttons', () => {
+  it('forwards a detail button press to that button click', async () => {
+    const button = { id: 'b1', appCardId: 'c1', text: 'Go Now', action: null, click: jest.fn() };
+    const card = { ...makeCard('c1', false), buttons: [button] };
+    const root = await renderInbox([card]);
+    const row = root
+      .findAllByType(TouchableOpacity)
+      .find((node: any) => typeof node.props.onLongPress === 'function');
+
+    await act(async () => {
+      row.props.onPress();
+    });
+    await act(async () => {
+      touchableWithLabel(root, 'Go Now')[0].props.onPress();
+    });
+
+    expect(button.click).toHaveBeenCalledTimes(1);
   });
 });
