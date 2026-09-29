@@ -34,6 +34,8 @@ function makeCard(id: string, isRead: boolean): any {
   };
 }
 
+const mounted: any[] = [];
+
 async function renderInbox(cards: any[]): Promise<any> {
   (Insider as any).appCards.getCampaigns.mockResolvedValue({ appCards: cards });
 
@@ -41,6 +43,7 @@ async function renderInbox(cards: any[]): Promise<any> {
   await act(async () => {
     component = renderer.create(<AppCards />);
   });
+  mounted.push(component);
 
   const openButton = component.root
     .findAllByType(TouchableHighlight)
@@ -63,6 +66,13 @@ function unreadIndicators(root: any): any[] {
 
 beforeEach(() => {
   jest.clearAllMocks();
+});
+
+// FlatList schedules a cell-render timer; unmounting clears it before Jest tears the file down.
+afterEach(() => {
+  act(() => {
+    mounted.splice(0).forEach(component => component.unmount());
+  });
 });
 
 describe('AppCardItem', () => {
