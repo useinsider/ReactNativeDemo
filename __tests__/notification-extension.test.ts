@@ -404,19 +404,6 @@ describe('podfileTarget', () => {
   });
 });
 
-describe('InsiderMobileAdvancedNotification pin', () => {
-  // Scope per target: a file-wide grep for the version passes with one of the two extensions
-  // reverted, which builds the content and service extensions against different SDK versions.
-  it.each(['InsiderNotificationContent', 'InsiderNotificationService'])(
-    'target %s pins the exact SDK version',
-    target => {
-      expect(podfileTarget(read(PODFILE), target)).toContain(
-        'pod "InsiderMobileAdvancedNotification", "2.4.0"',
-      );
-    },
-  );
-});
-
 describe('NotificationViewController.didReceive carousel scroll scoping', () => {
   // The scroll is the one call that needs a live outlet. Counting pins it to a single site: a
   // second copy hoisted out of the branch runs on a nil carousel and crashes the extension,

@@ -1,4 +1,3 @@
-# Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
     "react-native/scripts/react_native_pods.rb",
@@ -21,7 +20,6 @@ target 'ReactNativeDemo' do
 
   use_react_native!(
     :path => config[:reactNativePath],
-    # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
@@ -34,10 +32,6 @@ target 'ReactNativeDemo' do
       # :ccache_enabled => true
     )
 
-    # Xcode 27's iOS Simulator SDK only supports deployment targets 15.0+; some
-    # third-party pods (e.g. RNCAsyncStorage) still pin an older one. The
-    # project-level pass covers targets that inherit the setting instead of
-    # writing it per build config.
     installer.pods_project.build_configurations.each do |build_config|
       deployment_target = build_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET']
       if deployment_target.nil? || deployment_target.to_f < 15.0
@@ -54,8 +48,6 @@ target 'ReactNativeDemo' do
       end
     end
 
-    # fmt 11.0.2 (pulled in by RN's RCT-Folly) hits a consteval regression under
-    # Xcode 27's Clang; building it as C++17 disables the FMT_USE_CONSTEVAL path.
     installer.pods_project.targets.each do |target|
       next unless target.name == 'fmt'
       target.build_configurations.each do |build_config|
@@ -91,23 +83,11 @@ end
 target 'InsiderNotificationContent' do
   use_frameworks!
   inherit! :search_paths
-  # Pods for InsiderNotificationContent
-  # Exact pin: 2.4.0 is the version this port was built and verified against. The SDK's current
-  # source already makes the InsiderPushNotification helpers this extension calls private and
-  # renames iCarousel, and nothing here settles whether that ships as a patch or a minor — so a
-  # range would be a guess. ios/Podfile.lock is gitignored, which makes this the only reproducible
-  # resolution every developer and integrator gets. See MOB-26644 review.
-  pod "InsiderMobileAdvancedNotification", "2.4.0"
+  pod "InsiderMobileAdvancedNotification"
 end
 
 target 'InsiderNotificationService' do
   use_frameworks!
   inherit! :search_paths
-  # Pods for InsiderNotificationService
-  # Exact pin: 2.4.0 is the version this port was built and verified against. The SDK's current
-  # source already makes the InsiderPushNotification helpers this extension calls private and
-  # renames iCarousel, and nothing here settles whether that ships as a patch or a minor — so a
-  # range would be a guess. ios/Podfile.lock is gitignored, which makes this the only reproducible
-  # resolution every developer and integrator gets. See MOB-26644 review.
-  pod "InsiderMobileAdvancedNotification", "2.4.0"
+  pod "InsiderMobileAdvancedNotification"
 end

@@ -18,11 +18,11 @@ import Insider from 'react-native-insider';
 import AppCards from '../src/insider/AppCards';
 import { colors } from '../src/theme';
 
-function makeCard(appCardId: string, isRead: boolean): any {
+function makeCard(id: string, isRead: boolean): any {
   return {
-    appCardId,
+    id,
     isRead,
-    content: { title: `Title ${appCardId}`, description: `Body ${appCardId}` },
+    content: { title: `Title ${id}`, description: `Body ${id}` },
     images: [],
     buttons: [],
     action: null,
