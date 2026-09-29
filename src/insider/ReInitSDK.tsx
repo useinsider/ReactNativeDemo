@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import CustomButton from "../components/CustomButton";
 import RNInsider from "react-native-insider";
 
-function ReInitSDK(): JSX.Element {
+function ReInitSDK(): React.JSX.Element {
   const reInitSDK = () => {
     console.log("[INSIDER][reInitSDK]: Button Pressed");
 
