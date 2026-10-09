@@ -86,6 +86,23 @@ const playgroundStyles = StyleSheet.create({
     color: colors.onSurface,
   },
   empty: { color: colors.onSurfaceVariant, marginBottom: 12 },
+  addButton: { flex: 0 },
+});
+
+const modalStyles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.surface },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.outline,
+  },
+  title: { fontSize: 20, fontWeight: "bold", color: colors.onSurface },
+  closeIcon: { fontSize: 20, color: colors.onSurface },
+  content: { padding: 20 },
 });
 
 /**
@@ -275,7 +292,7 @@ function AppFramesPlayground() {
           autoCorrect={false}
           returnKeyType="done"
         />
-        <CustomButton text="Add Placement" onPress={addPlacement} buttonStyle={{ flex: 0 }} />
+        <CustomButton text="Add Placement" onPress={addPlacement} buttonStyle={styles.addButton} />
       </View>
 
       {placementIds.length === 0 ? (
@@ -312,39 +329,18 @@ function AppFrames() {
         onRequestClose={() => setVisible(false)}
       >
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <SafeAreaView
-            style={{ flex: 1, backgroundColor: colors.surface }}
-            edges={["top", "bottom"]}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                paddingHorizontal: 20,
-                paddingVertical: 12,
-                borderBottomWidth: 1,
-                borderBottomColor: colors.outline,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  color: colors.onSurface,
-                }}
-              >
-                App Frames
-              </Text>
+          <SafeAreaView style={modalStyles.container} edges={["top", "bottom"]}>
+            <View style={modalStyles.header}>
+              <Text style={modalStyles.title}>App Frames</Text>
               <TouchableOpacity
                 onPress={() => setVisible(false)}
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               >
-                <Text style={{ fontSize: 20, color: colors.onSurface }}>✕</Text>
+                <Text style={modalStyles.closeIcon}>✕</Text>
               </TouchableOpacity>
             </View>
 
-            <ScrollView contentContainerStyle={{ padding: 20 }}>
+            <ScrollView contentContainerStyle={modalStyles.content}>
               <AppFramesPlayground />
             </ScrollView>
           </SafeAreaView>

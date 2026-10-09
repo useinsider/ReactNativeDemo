@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import RNInsider from "react-native-insider";
 

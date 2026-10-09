@@ -374,8 +374,6 @@ describe('NotificationViewController.didReceive unwired outlet log contents', ()
   });
 });
 
-const PODFILE = 'ios/Podfile';
-
 /**
  * Returns one `target '…' do` block. A non-anchored slice to the next `end` stops at the `end` of
  * a nested `do`/`begin` block, so split on the target lines instead and keep the matching chunk.
