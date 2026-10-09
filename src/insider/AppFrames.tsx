@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Modal,
   ScrollView,
@@ -7,12 +7,12 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  useColorScheme,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView, initialWindowMetrics } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import CustomButton from "../components/CustomButton";
+import { colors } from "../theme";
 import {
   InsiderAppFrame,
   InsiderAppFrameStatus,
@@ -37,16 +37,56 @@ const DEFAULT_PLACEMENT_IDS = ["placement_1", "placement_2", "placement_3", "pla
 
 const STORAGE_KEY = "insider_app_frames_placement_ids";
 
-// Same three signals the Android demo's chip uses, so a status reads the same on both.
+// Same three states the Android demo's chip signals, drawn from the app palette.
 const STATUS_COLORS = {
-  loading: "#FF6B35",
-  ready: "#2E9E5B",
-  failed: "#D32F2F",
+  loading: colors.orange,
+  ready: colors.navy,
+  failed: colors.orangeDark,
 };
 
 type ChipState = { text: string; color: string };
 
 const INITIAL_CHIP: ChipState = { text: "Detached", color: STATUS_COLORS.loading };
+
+const cardStyles = StyleSheet.create({
+  card: {
+    borderWidth: 1,
+    borderColor: colors.outline,
+    borderRadius: 6,
+    padding: 10,
+    marginBottom: 12,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  placement: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: colors.onSurface,
+    flexShrink: 1,
+  },
+  chipRow: { flexDirection: "row", alignItems: "center", marginTop: 6 },
+  dot: { width: 10, height: 10, borderRadius: 5, marginRight: 6 },
+  chipText: { fontSize: 12, color: colors.onSurfaceVariant, flexShrink: 1 },
+  frameWrapper: { marginTop: 10 },
+  buttonRow: { flexDirection: "row", marginTop: 6 },
+});
+
+const playgroundStyles = StyleSheet.create({
+  addRow: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
+  input: {
+    flex: 1,
+    height: 40,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: colors.outline,
+    borderRadius: 5,
+    color: colors.onSurface,
+  },
+  empty: { color: colors.onSurfaceVariant, marginBottom: 12 },
+});
 
 /**
  * One placement: its own status chip, its own frame, and its own attach state.
@@ -62,40 +102,10 @@ function PlacementCard({
   placementId: string;
   onDelete: () => void;
 }) {
-  const isDarkMode = useColorScheme() === "dark";
+  const styles = cardStyles;
   const [attached, setAttached] = useState(true);
   const [chip, setChip] = useState<ChipState>(INITIAL_CHIP);
   const [height, setHeight] = useState<number | null>(null);
-
-  const styles = useMemo(
-    () =>
-      StyleSheet.create({
-        card: {
-          borderWidth: 1,
-          borderColor: isDarkMode ? "#4A4A4A" : "#DDDDDD",
-          borderRadius: 6,
-          padding: 10,
-          marginBottom: 12,
-        },
-        headerRow: {
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        },
-        placement: {
-          fontSize: 15,
-          fontWeight: "bold",
-          color: isDarkMode ? "white" : "black",
-          flexShrink: 1,
-        },
-        chipRow: { flexDirection: "row", alignItems: "center", marginTop: 6 },
-        dot: { width: 10, height: 10, borderRadius: 5, marginRight: 6 },
-        chipText: { fontSize: 12, color: isDarkMode ? "#CCCCCC" : "#555555", flexShrink: 1 },
-        frameWrapper: { marginTop: 10 },
-        buttonRow: { flexDirection: "row", marginTop: 6 },
-      }),
-    [isDarkMode],
-  );
 
   const handleStatusChange = useCallback(
     (status: InsiderAppFrameStatusType, previousStatus: InsiderAppFrameStatusType) => {
@@ -189,7 +199,7 @@ function PlacementCard({
         />
         <CustomButton
           text="Delete"
-          buttonStyle={{ backgroundColor: "#E57F74" }}
+          buttonStyle={{ backgroundColor: colors.orangeDark }}
           onPress={onDelete}
         />
       </View>
@@ -198,7 +208,7 @@ function PlacementCard({
 }
 
 function AppFramesPlayground() {
-  const isDarkMode = useColorScheme() === "dark";
+  const styles = playgroundStyles;
   const [placementIds, setPlacementIds] = useState<string[]>(DEFAULT_PLACEMENT_IDS);
   const [draft, setDraft] = useState("");
   // Nothing is written back until the stored list has been read, so a save racing the initial
@@ -251,24 +261,6 @@ function AppFramesPlayground() {
     setPlacementIds((current) => current.filter((id) => id !== placementId));
   }, []);
 
-  const styles = useMemo(
-    () =>
-      StyleSheet.create({
-        addRow: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
-        input: {
-          flex: 1,
-          height: 40,
-          paddingHorizontal: 10,
-          borderWidth: 1,
-          borderColor: isDarkMode ? "#4A4A4A" : "#DDDDDD",
-          borderRadius: 5,
-          color: isDarkMode ? "white" : "black",
-        },
-        empty: { color: isDarkMode ? "#CCCCCC" : "#555555", marginBottom: 12 },
-      }),
-    [isDarkMode],
-  );
-
   return (
     <View>
       <View style={styles.addRow}>
@@ -278,7 +270,7 @@ function AppFramesPlayground() {
           onChangeText={setDraft}
           onSubmitEditing={addPlacement}
           placeholder="Placement id"
-          placeholderTextColor={isDarkMode ? "#888888" : "#999999"}
+          placeholderTextColor={colors.onSurfaceVariant}
           autoCapitalize="none"
           autoCorrect={false}
           returnKeyType="done"
@@ -307,7 +299,6 @@ function AppFramesPlayground() {
  * the safe-area context does not cross the Modal boundary on iOS.
  */
 function AppFrames() {
-  const isDarkMode = useColorScheme() === "dark";
   const [visible, setVisible] = useState(false);
 
   return (
@@ -322,7 +313,7 @@ function AppFrames() {
       >
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <SafeAreaView
-            style={{ flex: 1, backgroundColor: isDarkMode ? "#000000" : "#FFFFFF" }}
+            style={{ flex: 1, backgroundColor: colors.surface }}
             edges={["top", "bottom"]}
           >
             <View
@@ -333,14 +324,14 @@ function AppFrames() {
                 paddingHorizontal: 20,
                 paddingVertical: 12,
                 borderBottomWidth: 1,
-                borderBottomColor: isDarkMode ? "#333333" : "#F3F3F3",
+                borderBottomColor: colors.outline,
               }}
             >
               <Text
                 style={{
                   fontSize: 20,
                   fontWeight: "bold",
-                  color: isDarkMode ? "#FFFFFF" : "#000000",
+                  color: colors.onSurface,
                 }}
               >
                 App Frames
@@ -349,7 +340,7 @@ function AppFrames() {
                 onPress={() => setVisible(false)}
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               >
-                <Text style={{ fontSize: 20, color: isDarkMode ? "#FFFFFF" : "#000000" }}>✕</Text>
+                <Text style={{ fontSize: 20, color: colors.onSurface }}>✕</Text>
               </TouchableOpacity>
             </View>
 
