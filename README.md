@@ -29,7 +29,7 @@ This Demo contains simple methods that you can use with the Insider SDK.
 
 ## Installation
 
-Install all npm packages by running the `npm install` command in the home directory.
+Use Node.js 22.11 or later (required by React Native 0.88), then install all npm packages by running the `npm install` command in the home directory.
 
 Replace partner name and app group value in `App.tsx` with your info.
 
