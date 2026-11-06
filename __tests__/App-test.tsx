@@ -20,7 +20,7 @@ jest.mock('react-native-insider/src/InsiderIdentifier', () => require('../test-u
 jest.mock('react-native-safe-area-context', () => require('../test-utils/insiderMocks').safeAreaModule());
 
 jest.mock('@react-native-async-storage/async-storage', () =>
-  require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
+  require('@react-native-async-storage/async-storage/jest'),
 );
 
 import React from 'react';

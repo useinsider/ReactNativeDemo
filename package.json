@@ -12,12 +12,12 @@
     "sync": "npm install \"$(npm pack ../../SDK/react-native-insider)\""
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^2.1.2",
+    "@react-native-async-storage/async-storage": "^3.1.1",
     "react": "19.3.0",
     "react-native": "0.88.1",
     "react-native-insider": "9.1.0",
     "react-native-safe-area-context": "^5.11.1",
-    "react-native-svg-transformer": "^1.5.2"
+    "react-native-svg-transformer": "^1.5.3"
   },
   "devDependencies": {
     "@babel/core": "^7.29.13",
@@ -32,12 +32,12 @@
     "@react-native/metro-config": "0.88.1",
     "@react-native/typescript-config": "0.88.1",
     "@types/jest": "^30.0.0",
-    "@types/node": "^26.5.0",
+    "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
-    "@types/react-test-renderer": "19.1.0",
+    "@types/react-test-renderer": "^19.3.1",
     "eslint": "^8.57.1",
-    "jest": "^30.2.0",
-    "prettier": "^3.7.0",
+    "jest": "^30.5.2",
+    "prettier": "^3.9.10",
     "react-test-renderer": "19.3.0",
     "typescript": "^6.0.3"
   },
