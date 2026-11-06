@@ -13,40 +13,38 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.1.2",
-    "react": "19.1.1",
-    "react-native": "^0.82.1",
+    "react": "19.3.0",
+    "react-native": "0.88.1",
     "react-native-insider": "9.1.0",
-    "react-native-safe-area-context": "^5.6.2",
+    "react-native-safe-area-context": "^5.11.1",
     "react-native-svg-transformer": "^1.5.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.5",
-    "@babel/preset-env": "^7.28.5",
-    "@babel/runtime": "^7.28.4",
-    "@react-native-community/cli": "^20.0.2",
-    "@react-native-community/cli-platform-android": "^20.0.2",
-    "@react-native-community/cli-platform-ios": "^20.0.2",
-    "@react-native/babel-preset": "^0.82.1",
-    "@react-native/eslint-config": "^0.82.1",
-    "@react-native/metro-config": "^0.82.1",
-    "@react-native/typescript-config": "^0.82.1",
+    "@babel/core": "^7.29.13",
+    "@babel/preset-env": "^7.29.7",
+    "@babel/runtime": "^7.29.13",
+    "@react-native-community/cli": "20.2.0",
+    "@react-native-community/cli-platform-android": "20.2.0",
+    "@react-native-community/cli-platform-ios": "20.2.0",
+    "@react-native/babel-preset": "0.88.1",
+    "@react-native/eslint-config": "0.88.1",
+    "@react-native/jest-preset": "0.88.1",
+    "@react-native/metro-config": "0.88.1",
+    "@react-native/typescript-config": "0.88.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.5.0",
-    "@types/react": "^19.1.1",
+    "@types/react": "^19.3.0",
     "@types/react-test-renderer": "19.1.0",
     "eslint": "^8.57.1",
     "jest": "^30.2.0",
     "prettier": "^3.7.0",
-    "react-test-renderer": "19.1.1",
-    "typescript": "^5.9.3"
+    "react-test-renderer": "19.3.0",
+    "typescript": "^6.0.3"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">= 22.11.0"
   },
   "overrides": {
     "joi": "^18.2.1"
-  },
-  "jest": {
-    "preset": "react-native"
   }
 }

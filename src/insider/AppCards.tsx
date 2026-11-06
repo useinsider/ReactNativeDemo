@@ -9,7 +9,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
-  ViewToken,
+  type ListViewToken,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView, initialWindowMetrics } from "react-native-safe-area-context";
 
@@ -310,7 +310,7 @@ const AppCardsInbox = () => {
 
   const viewedRef = useRef<Set<string>>(new Set());
   const viewabilityConfig = useRef({ itemVisiblePercentThreshold: 50 }).current;
-  const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
+  const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ListViewToken[] }) => {
     viewableItems.forEach(({ item }) => {
       const card = item as InsiderAppCard;
       if (card && !viewedRef.current.has(card.id)) {
