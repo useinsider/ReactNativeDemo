@@ -109,11 +109,16 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport (>= 6.1.7.5, != 7.1.0)
+  benchmark
+  bigdecimal
   cocoapods (>= 1.13, != 1.15.1, != 1.15.0)
+  logger
+  mutex_m
+  nkf
   xcodeproj (< 1.26.0)
 
 RUBY VERSION
-   ruby 3.4.6p54
+  ruby 3.4.6p54
 
 BUNDLED WITH
-   2.6.9
+  4.0.3

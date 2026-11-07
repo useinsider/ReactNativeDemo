@@ -1,5 +1,5 @@
 import React, { useRef, useSyncExternalStore } from 'react';
-import { Platform, ScrollView, StyleSheet, Text } from 'react-native';
+import { Platform, ScrollView, type ScrollViewInstance, StyleSheet, Text } from 'react-native';
 import { colors } from '../theme';
 import { playgroundLog } from '../playground/playgroundLog';
 
@@ -11,7 +11,7 @@ export const CONSOLE_HEIGHT = 124;
  * internally to the newest line rather than growing down the screen.
  */
 function PlaygroundConsole() {
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<ScrollViewInstance>(null);
   const lines = useSyncExternalStore(playgroundLog.subscribe, playgroundLog.getLines);
 
   return (

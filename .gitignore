@@ -73,3 +73,6 @@ android/app/mykeystore.jks
 ios/Podfile.lock
 ios/Pods
 package-lock.json
+
+# Local planning notes
+docs/superpowers/
