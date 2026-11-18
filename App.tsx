@@ -125,7 +125,6 @@ const initInsider = async () => {
   Insider.registerWithQuietPermission(false);
   Insider.setActiveForegroundPushView();
   Insider.startTrackingGeofence();
-  Insider.enableIDFACollection(false);
   Insider.enableIpCollection(false);
   Insider.enableLocationCollection(false);
   Insider.enableCarrierCollection(false);
