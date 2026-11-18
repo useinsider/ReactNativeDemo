@@ -58,7 +58,9 @@ function PushMethods() {
         {Platform.OS === "android" && (
           <CustomButton text="Set Hybrid Push Token" onPress={setHybridPushToken} />
         )}
-        <CustomButton text="Set Foreground Push Callback" onPress={setForegroundPushCallback} />
+        {Platform.OS === "ios" && (
+          <CustomButton text="Set Foreground Push Callback" onPress={setForegroundPushCallback} />
+        )}
       </View>
     </View>
   );

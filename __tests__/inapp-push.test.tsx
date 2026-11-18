@@ -79,6 +79,7 @@ it('sets the hybrid push token', async () => {
 });
 
 it('registers a foreground push callback that logs the payload', async () => {
+  jest.replaceProperty(Platform, 'OS', 'ios');
   await press(<PushMethods />, 'Set Foreground Push Callback');
   expect(sdk.setForegroundPushCallback).toHaveBeenCalledWith(expect.any(Function));
 
@@ -95,4 +96,11 @@ it('hides the Android-only buttons on iOS', async () => {
   expect(findButton(inApp.root, 'Close Button Left')).toBeUndefined();
   expect(findButton(push.root, 'Set Hybrid Push Token')).toBeUndefined();
   expect(findButton(push.root, 'Handle Notification')).toBeDefined();
+});
+
+it('hides the foreground push callback button on Android, where the SDK never fires it', async () => {
+  const push = await render(<PushMethods />);
+
+  expect(findButton(push.root, 'Set Foreground Push Callback')).toBeUndefined();
+  expect(findButton(push.root, 'Set Hybrid Push Token')).toBeDefined();
 });
