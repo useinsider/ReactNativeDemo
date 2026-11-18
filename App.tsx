@@ -40,6 +40,8 @@ import ContentOptimizer from "./src/insider/ContentOptimizer";
 import AppFrames from "./src/insider/AppFrames";
 import ReinitWithPartnerName from "./src/insider/ReinitWithPartnerName";
 import BlockInApps from "./src/insider/BlockInApps";
+import InAppMethods from "./src/insider/InAppMethods";
+import PushMethods from "./src/insider/PushMethods";
 
 import Insider from "react-native-insider";
 import InsiderCallbackType from "react-native-insider/src/InsiderCallbackType";
@@ -236,6 +238,14 @@ function App() {
 
             <CustomSection title="Block In App">
                 <BlockInApps />
+            </CustomSection>
+
+            <CustomSection title="In-App">
+              <InAppMethods />
+            </CustomSection>
+
+            <CustomSection title="Push">
+              <PushMethods />
             </CustomSection>
           </View>
         </ScrollView>
