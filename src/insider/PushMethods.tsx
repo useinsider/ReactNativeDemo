@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { View, StyleSheet, Platform } from "react-native";
 
 import CustomButton from "../components/CustomButton";
@@ -22,6 +22,9 @@ function PushMethods() {
     },
   });
 
+  // The SDK adds a JS listener on every setForegroundPushCallback call and never removes it.
+  const foregroundCallbackRegistered = useRef(false);
+
   const handleNotification = () => {
     Insider.handleNotification(SAMPLE_PUSH);
     console.log("[INSIDER][handleNotification]: Method is triggered.");
@@ -38,6 +41,10 @@ function PushMethods() {
   };
 
   const setForegroundPushCallback = () => {
+    if (foregroundCallbackRegistered.current) {
+      return;
+    }
+    foregroundCallbackRegistered.current = true;
     Insider.setForegroundPushCallback((notification) => {
       console.log("[INSIDER][foregroundPush]: ", notification);
     });

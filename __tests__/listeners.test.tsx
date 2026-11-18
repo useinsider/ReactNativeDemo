@@ -34,6 +34,14 @@ it('registers the Insider ID listener and logs the ID it receives', async () => 
   expect(console.log).toHaveBeenCalledWith('[INSIDER][insiderIDListener]: insider-id-4');
 });
 
+it('registers the Insider ID listener once however many times the button is pressed', async () => {
+  const component = await render(<Listeners />);
+  await pressButton(component.root, 'Insider ID Listener');
+  await pressButton(component.root, 'Insider ID Listener');
+
+  expect(sdk.insiderIDListener).toHaveBeenCalledTimes(1);
+});
+
 it('adds one event observer however many times the button is pressed', async () => {
   const component = await render(<Listeners />);
   await pressButton(component.root, 'Add Event Observer');
