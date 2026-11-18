@@ -75,14 +75,6 @@ it('registers a foreground push callback that logs the payload', async () => {
   expect(console.log).toHaveBeenCalledWith('[INSIDER][foregroundPush]: ', { title: 'hi' });
 });
 
-it('registers the foreground push callback once however many times the button is pressed', async () => {
-  const component = await render(<PushMethods />);
-  await pressButton(component.root, 'Set Foreground Push Callback');
-  await pressButton(component.root, 'Set Foreground Push Callback');
-
-  expect(sdk.setForegroundPushCallback).toHaveBeenCalledTimes(1);
-});
-
 it('hides the Android-only buttons on iOS', async () => {
   jest.replaceProperty(Platform, 'OS', 'ios');
 

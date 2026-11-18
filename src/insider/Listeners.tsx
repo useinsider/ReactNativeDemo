@@ -16,8 +16,6 @@ function Listeners() {
   });
 
   const subscription = useRef<InsiderEventSubscription | undefined>(undefined);
-  // The SDK adds a JS listener on every insiderIDListener call and never removes it.
-  const insiderIDListenerRegistered = useRef(false);
 
   useEffect(() => {
     return () => {
@@ -27,10 +25,6 @@ function Listeners() {
   }, []);
 
   const listenInsiderID = () => {
-    if (insiderIDListenerRegistered.current) {
-      return;
-    }
-    insiderIDListenerRegistered.current = true;
     Insider.insiderIDListener((insiderID) => {
       console.log("[INSIDER][insiderIDListener]: " + insiderID);
     });
