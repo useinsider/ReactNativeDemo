@@ -72,3 +72,11 @@ it('logs the error message when reading the Insider ID fails', async () => {
 
   expect(log).toHaveBeenCalledWith('[INSIDER][getInsiderID]: failed: boom');
 });
+
+it('logs the rejection value when reading the Insider ID fails with a non-Error', async () => {
+  mockGetInsiderID.mockRejectedValue('boom');
+
+  await press('Get Insider ID');
+
+  expect(log).toHaveBeenCalledWith('[INSIDER][getInsiderID]: failed: boom');
+});
