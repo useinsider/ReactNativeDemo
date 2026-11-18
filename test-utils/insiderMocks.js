@@ -48,4 +48,26 @@ function safeAreaModule() {
   };
 }
 
-module.exports = { enumModule, sdkModule, safeAreaModule };
+/** The SDK's InsiderIdentifier class: constructible, with chainable adders that record their values. */
+function identifierModule() {
+  class InsiderIdentifier {
+    constructor() {
+      this.identifiers = {};
+    }
+    addEmail(value) {
+      this.identifiers.email = value;
+      return this;
+    }
+    addPhoneNumber(value) {
+      this.identifiers.phoneNumber = value;
+      return this;
+    }
+    addUserID(value) {
+      this.identifiers.userID = value;
+      return this;
+    }
+  }
+  return { __esModule: true, default: InsiderIdentifier };
+}
+
+module.exports = { enumModule, sdkModule, safeAreaModule, identifierModule };
