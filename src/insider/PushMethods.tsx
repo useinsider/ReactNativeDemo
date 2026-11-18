@@ -4,11 +4,15 @@ import { View, StyleSheet, Platform } from "react-native";
 import CustomButton from "../components/CustomButton";
 import Insider from "react-native-insider";
 
-// The native module turns this into an FCM data map; it only has to reach the SDK without a crash.
+// The native module turns this into an FCM data map; image_url makes the SDK download a rich push image.
 export const SAMPLE_PUSH = {
   source: "Insider",
   title: "Demo push",
   message: "Sent from the demo",
+  image_url: "https://www.gstatic.com/webp/gallery/1.jpg",
+  camp_id: "1",
+  camp_type: "1",
+  variant_id: "1",
 };
 
 function PushMethods() {

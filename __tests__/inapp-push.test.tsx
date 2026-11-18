@@ -57,6 +57,17 @@ it('hands the sample push to the SDK', async () => {
   expect(sdk.handleNotification).toHaveBeenCalledWith(SAMPLE_PUSH);
 });
 
+it('sends a rich push with an image and campaign ids', async () => {
+  await press(<PushMethods />, 'Handle Notification');
+  expect(sdk.handleNotification.mock.calls[0][0]).toMatchObject({
+    source: 'Insider',
+    image_url: expect.stringMatching(/^https:\/\//),
+    camp_id: expect.any(String),
+    camp_type: expect.any(String),
+    variant_id: expect.any(String),
+  });
+});
+
 it('triggers the push process with the sample push', async () => {
   await press(<PushMethods />, 'Trigger Push Process');
   expect(sdk.triggerPushProcessWithNotificationData).toHaveBeenCalledWith(SAMPLE_PUSH);
