@@ -58,6 +58,24 @@ function Purchase() {
     console.log("[INSIDER][cartCleared]: Method is triggered.");
   };
 
+  const itemAddedToWishlist = () => {
+    Insider.itemAddedToWishlist(insiderExampleProduct);
+
+    console.log("[INSIDER][itemAddedToWishlist]: Method is triggered.");
+  };
+
+  const itemRemovedFromWishlist = () => {
+    Insider.itemRemovedFromWishlist("productID");
+
+    console.log("[INSIDER][itemRemovedFromWishlist]: Method is triggered.");
+  };
+
+  const wishlistCleared = () => {
+    Insider.wishlistCleared();
+
+    console.log("[INSIDER][wishlistCleared]: Method is triggered.");
+  };
+
   return (
     <View>
       <View style={styles.row}>
@@ -68,6 +86,15 @@ function Purchase() {
       <View style={styles.row}>
         <CustomButton text="Item Purchase" onPress={itemPurchased} />
         <CustomButton text="Cart Clear" onPress={cartCleared} />
+      </View>
+
+      <View style={styles.row}>
+        <CustomButton text="Item Add To Wishlist" onPress={itemAddedToWishlist} />
+        <CustomButton text="Item Remove From Wishlist" onPress={itemRemovedFromWishlist} />
+      </View>
+
+      <View style={styles.row}>
+        <CustomButton text="Wishlist Clear" onPress={wishlistCleared} />
       </View>
     </View>
   );
