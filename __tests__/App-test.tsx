@@ -27,6 +27,9 @@ import React from 'react';
 import App from '../App';
 import Header from '../src/components/Header';
 import PlaygroundConsole from '../src/components/PlaygroundConsole';
+import InAppMethods from '../src/insider/InAppMethods';
+import PushMethods from '../src/insider/PushMethods';
+import Listeners from '../src/insider/Listeners';
 
 // Note: test renderer must be required after react-native.
 import renderer, { act } from 'react-test-renderer';
@@ -63,4 +66,28 @@ it('keeps the Playground console out of the scrolling section list', () => {
 
 it('shows the header once at the top of the screen', () => {
   expect(renderApp().findAllByType(Header)).toHaveLength(1);
+});
+
+it('shows the In-App, Push and Listeners sections once each', () => {
+  const root = renderApp();
+
+  expect(root.findAllByType(InAppMethods)).toHaveLength(1);
+  expect(root.findAllByType(PushMethods)).toHaveLength(1);
+  expect(root.findAllByType(Listeners)).toHaveLength(1);
+});
+
+it('starts the SDK without enableIDFACollection and still applies the collection settings', async () => {
+  const Insider = require('react-native-insider').default;
+  jest.clearAllMocks();
+  await act(async () => {
+    renderer.create(<App />);
+  });
+
+  // The auto-stubbing SDK proxy also answers `calls`, which makes jest treat it as a jasmine
+  // spy, so assert on the underlying mock records instead of the call matchers.
+  expect(Insider.enableIDFACollection.mock.calls).toEqual([]);
+  expect(Insider.enableIpCollection.mock.calls).toContainEqual([false]);
+  expect(Insider.enableLocationCollection.mock.calls).toContainEqual([false]);
+  expect(Insider.enableCarrierCollection.mock.calls).toContainEqual([false]);
+  expect(Insider.setAllowsBackgroundLocationUpdates.mock.calls).toContainEqual([true]);
 });

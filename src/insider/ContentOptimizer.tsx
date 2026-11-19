@@ -59,12 +59,18 @@ function ContentOptimizer() {
     );
   };
 
+  const markContentAsSeen = () => {
+    Insider.markContentOptimizerAsSeen('string_variable_name');
+    console.log('[INSIDER][markContentOptimizerAsSeen]: Method is triggered.');
+  };
+
   return (
     <View>
       <CustomButton
         text="Get Variable With Content Optimizer"
         onPress={triggerContentOptimizer}
       />
+      <CustomButton text="Mark Content As Seen" onPress={markContentAsSeen} />
     </View>
   );
 }

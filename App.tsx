@@ -40,6 +40,9 @@ import ContentOptimizer from "./src/insider/ContentOptimizer";
 import AppFrames from "./src/insider/AppFrames";
 import ReinitWithPartnerName from "./src/insider/ReinitWithPartnerName";
 import BlockInApps from "./src/insider/BlockInApps";
+import InAppMethods from "./src/insider/InAppMethods";
+import PushMethods from "./src/insider/PushMethods";
+import Listeners from "./src/insider/Listeners";
 
 import Insider from "react-native-insider";
 import InsiderCallbackType from "react-native-insider/src/InsiderCallbackType";
@@ -125,7 +128,6 @@ const initInsider = async () => {
   Insider.registerWithQuietPermission(false);
   Insider.setActiveForegroundPushView();
   Insider.startTrackingGeofence();
-  Insider.enableIDFACollection(false);
   Insider.enableIpCollection(false);
   Insider.enableLocationCollection(false);
   Insider.enableCarrierCollection(false);
@@ -237,6 +239,18 @@ function App() {
 
             <CustomSection title="Block In App">
                 <BlockInApps />
+            </CustomSection>
+
+            <CustomSection title="In-App">
+              <InAppMethods />
+            </CustomSection>
+
+            <CustomSection title="Push">
+              <PushMethods />
+            </CustomSection>
+
+            <CustomSection title="Listeners">
+              <Listeners />
             </CustomSection>
           </View>
         </ScrollView>
